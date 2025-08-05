@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<odoo>
+    <record id="custom_address_sale_order_from_view_id" model="ir.ui.view">
+        <field name="name">inherited sale order form view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <span>Shipping Address</span>
+                <div class="o_address_format o_td_label">
+                    <field name="custom_street" placeholder="Street..." class="o_address_street"/>
+                    <field name="custom_street2" placeholder="Street 2..." class="o_address_street"/>
+                    <field name="custom_city" placeholder="City" class="o_address_city"/>
+                    <field name="custom_state_id" class="o_address_state" placeholder="State"
+                           options="{'no_open': True, 'no_quick_create': True}"/>
+                    <field name="custom_zip" placeholder="ZIP" class="o_address_zip"/>
+                    <div name="partner_address_country" class="d-flex justify-content-between">
+                        <field name="custom_country_id" placeholder="Country" class="o_address_country"
+                               options="{&quot;no_open&quot;: True, &quot;no_create&quot;: True}"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>
