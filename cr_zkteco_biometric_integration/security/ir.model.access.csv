@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_biometric_attendance_log_id,access_biometric_attendance_log,model_biometric_attendance_log,,1,1,1,1
 access_device_id,access_device,model_biometric_device,,1,1,1,1
+access_biometric_device_command_id,access_biometric_device_command,model_biometric_device_command,,1,1,1,1

@@ -115,6 +115,12 @@ class BiometricDevice(models.Model):
         compute="_compute_attendance_log_count",
         help="Total number of attendance punch logs received from this device.",
     )
+    command_ids = fields.One2many(
+        comodel_name="biometric.device.command",
+        inverse_name="device_id",
+        string="Commands",
+        help="Remote commands sent to this device via ADMS.",
+    )
 
     # -------------------------------------------------------------------------
     # SQL Constraints
@@ -141,6 +147,24 @@ class BiometricDevice(models.Model):
     # -------------------------------------------------------------------------
     # Action Methods
     # -------------------------------------------------------------------------
+
+    def action_reboot(self):
+        """Send a REBOOT command to the device."""
+        self.ensure_one()
+        self.env["biometric.device.command"].create({
+            "device_id": self.id,
+            "command_text": "REBOOT",
+        })
+        return True
+
+    def action_clear_log(self):
+        """Send a CLEAR LOG command to the device."""
+        self.ensure_one()
+        self.env["biometric.device.command"].create({
+            "device_id": self.id,
+            "command_text": "CLEAR LOG",
+        })
+        return True
 
     def action_view_logs(self):
         """

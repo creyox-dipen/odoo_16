@@ -43,7 +43,62 @@ class AdmsController(http.Controller):
     )
     def adms_getrequest(self, **kwargs):
         serial = (kwargs.get("SN") or "").strip()
-        _logger.info("ADMS: Heartbeat from device SN=%s", serial)
+        _logger.info("ADMS: Heartbeat (GET) from device SN=%s", serial)
+
+        # Check for pending commands for this device
+        command = request.env["biometric.device.command"].sudo().search([
+            ("device_id.serial_number", "=", serial),
+            ("status", "=", "pending")
+        ], order="create_date asc", limit=1)
+
+        if command:
+            # ADMS Command Format: C:ID:COMMAND_TEXT
+            # The device will execute this and report back to /iclock/devicecmd
+            resp_body = f"C:{command.id}:{command.command_text}"
+            _logger.info("ADMS: Sending command to device SN=%s: %s", serial, resp_body)
+            return request.make_response(resp_body, headers=[("Content-Type", "text/plain")])
+
+        return request.make_response("OK", headers=[("Content-Type", "text/plain")])
+
+    @http.route(
+        "/iclock/devicecmd",
+        type="http",
+        auth="public",
+        methods=["POST"],
+        csrf=False,
+    )
+    def adms_devicecmd(self, **kwargs):
+        """
+        Endpoint for the device to report the result of a command execution.
+        Format of POST body: ID=1&Return=0
+        """
+        serial = (kwargs.get("SN") or "").strip()
+        raw_body = request.httprequest.get_data(as_text=True) or ""
+        _logger.info("ADMS: Command result from device SN=%s body=%s", serial, raw_body)
+
+        # Parse response (format: ID=1&Return=0)
+        params = {}
+        for part in raw_body.split("&"):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                params[k.strip()] = v.strip()
+
+        cmd_id = params.get("ID")
+        return_code = params.get("Return")
+
+        if cmd_id:
+            try:
+                command = request.env["biometric.device.command"].sudo().browse(int(cmd_id))
+                if command.exists():
+                    # Return code 0 usually means success in ADMS
+                    status = "success" if return_code == "0" else "failed"
+                    command.write({
+                        "status": status,
+                        "response_text": raw_body
+                    })
+            except Exception as e:
+                _logger.error("ADMS: Error processing devicecmd for SN=%s: %s", serial, e)
+
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
     # ---------------------------------------------------------
@@ -209,86 +264,6 @@ class AdmsController(http.Controller):
         except Exception as e:
             _logger.warning("ADMS: Failed to parse timestamp '%s': %s", ts_str, e)
             return None
-
-    # def _fetch_user_name_from_device(self, device, device_user_id):
-    #     """
-    #     Connect to the ZKTeco device via pyzk SDK and retrieve the user name
-    #     that corresponds to the given device_user_id.
-
-    #     The device is contacted over TCP using the IP address and port stored
-    #     on the ``biometric.device`` record.  If pyzk is not installed, the
-    #     device IP is not configured, or any network/SDK error occurs the
-    #     method returns ``None`` and the caller should fall back to a default
-    #     name.
-
-    #     Args:
-    #         device (biometric.device): The Odoo device record containing
-    #             ``device_ip`` and ``device_port``.
-    #         device_user_id (str): The numeric user ID string as sent by the
-    #             device in the ATTLOG line.
-
-    #     Returns:
-    #         str or None: The user's name stored on the device, or ``None`` if
-    #         it could not be retrieved.
-    #     """
-    #     global _pyzk_warned
-
-    #     if not HAS_PYZK:
-    #         if not _pyzk_warned:
-    #             _logger.warning(
-    #                 "ADMS: pyzk is not installed — cannot fetch user names from device. "
-    #                 "Install it with: pip install pyzk"
-    #             )
-    #             _pyzk_warned = True
-    #         return None
-
-    #     if not device.device_ip:
-    #         _logger.debug(
-    #             "ADMS: Device IP not configured for SN=%s — skipping pyzk name lookup",
-    #             device.serial_number,
-    #         )
-    #         return None
-
-    #     port = device.device_port or 4370
-    #     zk = ZK(
-    #         device.device_ip,
-    #         port=port,
-    #         timeout=5,
-    #         password=0,
-    #         force_udp=False,
-    #         ommit_ping=True,
-    #     )
-    #     conn = None
-    #     try:
-    #         conn = zk.connect()
-    #         users = conn.get_users()
-    #         uid_int = int(device_user_id)
-    #         for user in users:
-    #             if user.uid == uid_int or str(user.user_id) == str(device_user_id):
-    #                 name = (user.name or "").strip()
-    #                 if name:
-    #                     _logger.info(
-    #                         "ADMS: Resolved name='%s' for device_user_id=%s from device SN=%s",
-    #                         name, device_user_id, device.serial_number,
-    #                     )
-    #                     return name
-    #         _logger.info(
-    #             "ADMS: User device_user_id=%s not found on device SN=%s",
-    #             device_user_id, device.serial_number,
-    #         )
-    #         return None
-    #     except Exception as exc:
-    #         _logger.warning(
-    #             "ADMS: pyzk failed to fetch user name for device_user_id=%s from %s:%s — %s",
-    #             device_user_id, device.device_ip, port, exc,
-    #         )
-    #         return None
-    #     finally:
-    #         if conn:
-    #             try:
-    #                 conn.disconnect()
-    #             except Exception:
-    #                 pass
 
     def _get_or_create_employee(self, device, device_user_id):
         """
