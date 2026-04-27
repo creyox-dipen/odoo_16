@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Creyox Technologies.
 {
-    "name": "Custom delivery address | Editable delivery address | One-time shipping location | Sales order address override | Invoice delivery address | Delivery order address customization | Dynamic shipping address | Odoo delivery address module | Temporary delivery location | Custom shipping fields | Unique order address | No contact duplication | Flexible delivery address | Delivery site entry | Construction site delivery | Per-order delivery info | Clean contact management | Address on sales PDF | Address on invoice PDF | Address on delivery PDF",
+    "name": "Custom delivery address | Editable delivery address | Delivery order address customization | shipping location customization",
     "author": "Creyox Technologies",
     "website": "https://www.creyox.com",
     "support": "support@creyox.com",
@@ -80,7 +80,7 @@
     How to avoid creating new contacts for each delivery in Odoo,
     How to show a custom shipping address in Odoo PDF reports,
     """,
-    "depends": ["base", "sale", "stock"],
+    "depends": ["base", "sale_management", "stock", "account"],
     "data": [
         "security/ir.model.access.csv",
         "views/sale_order.xml",

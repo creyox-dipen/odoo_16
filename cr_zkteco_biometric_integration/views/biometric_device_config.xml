@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- =====================================================================
+         Form View: biometric.device
+    ====================================================================== -->
+    <record id="view_biometric_device_form" model="ir.ui.view">
+        <field name="name">biometric.device.form</field>
+        <field name="model">biometric.device</field>
+        <field name="arch" type="xml">
+            <form string="Biometric Device">
+
+                <sheet>
+                    <!-- ── Smart Buttons ─────────────────────────────────── -->
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list-alt">
+                            <field name="attendance_log_count"
+                                   widget="statinfo"
+                                   string="Attendance Logs"/>
+                        </button>
+                    </div>
+
+                    <!-- ── Title ─────────────────────────────────────────── -->
+                    <widget name="web_ribbon"
+                            title="Archived"
+                            bg_color="bg-danger"
+                            attrs="{'invisible': [('active', '=', True)]}"/>
+
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Main Entrance"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <!-- Left: Identity -->
+                        <group string="Device Identity">
+                            <field name="serial_number"
+                                   placeholder="e.g. ABC1234567890"/>
+                            <field name="device_ip"
+                                   placeholder="e.g. 192.168.1.100"/>
+                            <field name="device_port"/>
+                            <!-- <field name="communication_key"
+                                   password="True"
+                                   placeholder="Leave empty if no key configured"/> -->
+                            <field name="timezone"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+
+                        <!-- Right: Status -->
+                        <group string="Connection Status">
+                            <field name="last_seen"
+                                   readonly="1"
+                                   decoration-success="last_seen != False"
+                                   widget="datetime"/>
+                        </group>
+                    </group>
+
+                </sheet>
+
+                <!-- ── Chatter ───────────────────────────────────────────── -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- =====================================================================
+         List View: biometric.device
+    ====================================================================== -->
+    <record id="view_biometric_device_list" model="ir.ui.view">
+        <field name="name">biometric.device.list</field>
+        <field name="model">biometric.device</field>
+        <field name="arch" type="xml">
+            <tree string="Biometric Devices"
+                  decoration-success="last_seen != False"
+                  decoration-muted="last_seen == False">
+                <field name="name"/>
+                <field name="serial_number"/>
+                <field name="timezone"/>
+                <field name="attendance_log_count" string="Logs"/>
+                <field name="last_seen"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- =====================================================================
+         Search View: biometric.device
+    ====================================================================== -->
+    <record id="view_biometric_device_search" model="ir.ui.view">
+        <field name="name">biometric.device.search</field>
+        <field name="model">biometric.device</field>
+        <field name="arch" type="xml">
+            <search string="Search Biometric Devices">
+                <field name="name" string="Device Name"/>
+                <field name="serial_number" string="Serial Number"/>
+
+                <filter string="Active" name="active"
+                        domain="[('active', '=', True)]"/>
+                <filter string="Seen Recently" name="seen"
+                        domain="[('last_seen', '!=', False)]"/>
+                <filter string="Never Seen" name="never_seen"
+                        domain="[('last_seen', '=', False)]"/>
+
+                <!-- Archive filter -->
+                <separator/>
+                <filter string="Archived" name="archived"
+                        domain="[('active', '=', False)]"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Timezone" name="group_timezone"
+                            context="{'group_by': 'timezone'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- =====================================================================
+         Action: biometric.device
+    ====================================================================== -->
+    <record id="action_biometric_device" model="ir.actions.act_window">
+        <field name="name">Biometric Devices</field>
+        <field name="res_model">biometric.device</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_biometric_device_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No biometric devices registered yet!
+            </p>
+            <p>
+                Register a ZKTeco device and configure it to push attendance
+                data to <strong>/iclock/cdata</strong>.
+            </p>
+        </field>
+    </record>
+
+</odoo>

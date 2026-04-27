@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="bi_view_account_payment_invoice_form_exchange_rate_field_add_inherit" model="ir.ui.view">
+            <field name="name">bi.view.account.payment.invoice.form.exchange.rate.field.add.inherit</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='group2']/field[@name='communication']" position="after">
+                    <field name="manual_currency_rate_active"/>
+                    <field name="manual_currency_rate" attrs="{'invisible': [('manual_currency_rate_active', '=', False)],'required':[('manual_currency_rate_active', '=', True)]}"/>
+                </xpath>
+            </field>
+        </record>
+
+
+
+
+        <!-- <record id="bi_view_account_payment_exchange_rate_inherit" model="ir.ui.view">
+            <field name="name">bi.view.account.payment.exchange.rate.field.add.inherit</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field name="manual_currency_rate_active"/>
+                    <field name="manual_currency_rate" attrs="{'invisible': [('manual_currency_rate_active', '=', False)],'required':[('manual_currency_rate_active', '=', True)]}"/>
+                </xpath>
+            </field>
+        </record> -->
+
+        <record model="ir.ui.view" id="account_payment_rate_form">
+            <field name="name">account.payment.rate.form</field>
+            <field name="model">account.payment</field>
+            <field name="inherit_id" ref="account.view_account_payment_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='date']" position="before">
+
+                    <field name="is_company_currency" invisible="1"/>
+                    <field name="manual_currency_rate_active" attrs="{'invisible':[('is_company_currency','=',True)]}"/>
+                    <field name="manual_currency_rate" attrs="{'invisible': [('manual_currency_rate_active', '=', False)],'required':[('manual_currency_rate_active', '=', True)]}"/>
+
+
+                    <!-- <field name="currency_rate" attrs="{'required':[('is_company_currency','=',False)],'readonly':[('state','!=','draft')],'invisible':[('is_company_currency','=',True)]}"/> -->
+                    <!-- <field name="company_amount" attrs="{'invisible':[('manual_currency_rate_active','=',False)]}"/> -->
+
+
+                </xpath>
+            </field>
+        </record>
+
+
+    </data>
+</odoo>

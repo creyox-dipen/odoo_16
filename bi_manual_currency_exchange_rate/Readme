@@ -1,0 +1,30 @@
+14.0.0.1 ==>1.fixed issue of demo data warning.
+         ==>2.fixed issue of traceback when validating receipt.
+14.0.0.2 ==> 31-3-2021 ==> 1. Make rate field readonly if record is not editable for sale/purchase/invoice/vendor bill
+                            2. Issue is solved for Passed automatic currency active and rate from purchase to bill.
+14.0.0.3 ==> 1-4-2021 ==> 1.Issue is solved for create a new invoice that time when apply the manual exchange rate again
+                          second time create a new invoice that time when not applying the manual exchange rate it's
+                          automatically considered the before invoice rate in this invoice in Product price
+                          2.Issue is solved for create a new bill that time when apply the manual exchange rate again
+                          second time create a new bill that time when not applying the manual exchange rate it's
+                          automatically considered the before bill rate in this bill in Product price
+14.0.0.4 ==> 5-4-2021 ==> - readonly currency_rate_active fields when state "locked and cancel" in sale order
+                         - readonly currency_rate_active fields when state is "posted and cancel" in Invoice
+                         - readonly currency_rate_active fields when state is "purchase order, Locked and cancel" in purchase Order
+14.0.0.5 ==> 14-4-2021 ==> as per the Issue getting the difference while journal entry and invoice line when currency is different then company currency
+14.0.0.6 ==> 5-5-2021 ==> 1. Journal entry is not match with the invoice
+                          2. when apply for register payment at that time always partial payment was apply
+14.0.0.7 ==> 11-5-2021 ==> 1. purchase order in when change currency that is not calculated properly with exchange currency rate
+                           2. journal item was not getting properly when current is different then company currency
+14.0.0.8 ==> 14/5/2021 ==> 1.add warning when journal is same as company journal and need to use the exchange rate.
+                           2.Issue solved for debit and credit
+14.0.0.9 ==> 19/5/2021 ==> As per Formula rate calculate the price unit and journal Item.
+
+14.0.1.0 ==>1.fixed issue of price unit is wrong calculated in sale ,purchase and invoice/bill.
+            2.fixed issue of journal item calculation from invoice and and invoice/bill created from sale and purchase.
+
+14.0.1.1 ==> fixed issue of journal item calculation for payment according rate.
+
+14.0.1.2 ==>fixed issue of payment Wrong amount is calculating in the company currency.
+
+14.0.1.3 ==>fixed issue of When we select multipler invoice and register the payment it throws error .
