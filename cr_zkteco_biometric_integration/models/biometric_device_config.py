@@ -166,6 +166,42 @@ class BiometricDevice(models.Model):
         })
         return True
 
+    def action_sync_all_biometrics(self):
+        """
+        Requests all Users, Fingerprints, and Faces from the device.
+        This is a bulk operation.
+        """
+        self.ensure_one()
+        Command = self.env["biometric.device.command"].sudo()
+        # 1. Fetch all User Info
+        Command.create({"device_id": self.id, "command_text": "DATA QUERY UserInfo OpStamp=0"})
+        # 2. Fetch all Fingerprints
+        Command.create({"device_id": self.id, "command_text": "DATA QUERY FingerTmp OpStamp=0"})
+        # 3. Fetch all Face Templates
+        Command.create({"device_id": self.id, "command_text": "DATA QUERY Face OpStamp=0"})
+        
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Sync Started"),
+                "message": _("Commands sent to device. Data will arrive in a few moments."),
+                "sticky": False,
+                "type": "success",
+            }
+        }
+
+    def action_request_attlog(self):
+        """
+        Forces the device to push all attendance logs.
+        """
+        self.ensure_one()
+        self.env["biometric.device.command"].create({
+            "device_id": self.id,
+            "command_text": "DATA QUERY ATTLOG OpStamp=0",
+        })
+        return True
+
     def action_view_logs(self):
         """
         Open the attendance logs list view filtered to this device.

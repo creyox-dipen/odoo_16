@@ -9,6 +9,28 @@
             <xpath expr="//field[@name='work_email']" position="after">
                 <field name="device_user_id"/>
             </xpath>
+
+            <!-- Add Sync Buttons to Header -->
+            <xpath expr="//header" position="inside">
+                <button name="action_sync_to_devices"
+                        string="Push to Biometric"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"/>
+            </xpath>
+
+            <!-- Add Biometric Templates Tab -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Biometric Data" name="biometric_data">
+                    <field name="biometric_template_ids" readonly="1">
+                        <tree>
+                            <field name="type"/>
+                            <field name="finger_index" string="Index"/>
+                            <field name="template_data" password="True"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 

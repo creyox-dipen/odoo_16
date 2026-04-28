@@ -10,10 +10,20 @@
         <field name="arch" type="xml">
             <form string="Biometric Device">
                 <header>
+                    <button name="action_sync_all_biometrics"
+                            string="Download All Biometrics"
+                            type="object"
+                            class="btn-primary"
+                            groups="hr_attendance.group_hr_attendance_manager"
+                            help="Fetch all users, fingerprints, and faces from the device."/>
+                    <button name="action_request_attlog"
+                            string="Download All Logs"
+                            type="object"
+                            groups="hr_attendance.group_hr_attendance_manager"
+                            help="Forces the device to re-send all attendance logs."/>
                     <button name="action_reboot"
                             string="Reboot Device"
                             type="object"
-                            class="btn-primary"
                             groups="hr_attendance.group_hr_attendance_manager"/>
                     <button name="action_clear_log"
                             string="Clear Device Logs"

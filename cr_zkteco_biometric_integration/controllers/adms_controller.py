@@ -211,22 +211,37 @@ class AdmsController(http.Controller):
         #         status=403,
         #     )
 
-        if table != "ATTLOG":
-            return request.make_response("OK", headers=[("Content-Type", "text/plain")])
-
-        raw_body = request.httprequest.get_data(as_text=True) or ""
+        table_upper = table.upper()
+        raw_body = request.httprequest.data.decode("utf-8")
         lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
-        # print("body : ",raw_body)
+        _logger.info("ADMS: Received table=%s with %d lines of data from SN=%s", table_upper, len(lines), serial)
+        _logger.debug("ADMS: Raw Body: %s", raw_body)
 
-        if not lines:
-            return request.make_response("OK", headers=[("Content-Type", "text/plain")])
-
-        _logger.info(
-            "ADMS: Processing %d ATTLOG line(s) from SN=%s", len(lines), serial
-        )
-
-        for line in lines:
-            self._process_attlog_line(device, line)
+        if table_upper == "ATTLOG":
+            _logger.info("ADMS: Processing %d ATTLOG line(s) from SN=%s", len(lines), serial)
+            for line in lines:
+                self._process_attlog_line(device, line)
+        elif table_upper in ["USER", "USERINFO"]:
+            _logger.info("ADMS: Processing %d USER info line(s) from SN=%s", len(lines), serial)
+            self._process_user_data(device, raw_body)
+        elif table_upper == "OPERLOG":
+            _logger.info("ADMS: Processing OPERLOG from SN=%s", serial)
+            # Some devices (like yours) send biometric data inside OPERLOG!
+            for line in lines:
+                if line.startswith("FP "):
+                    clean_line = line[3:]
+                    self._process_template_data(device, clean_line, "finger")
+                elif line.startswith("FACE "):
+                    clean_line = line[5:]
+                    self._process_template_data(device, clean_line, "face")
+        elif table_upper in ["FINGERTMP", "FP", "TEMPLATEV10", "TEMPLATEV9", "FINGERPRINT"]:
+            _logger.info("ADMS: Processing %d Fingerprint template(s) from SN=%s", len(lines), serial)
+            self._process_template_data(device, raw_body, "finger")
+        elif table_upper in ["FACETMP", "FACE", "FACETEMPLATE"]:
+            _logger.info("ADMS: Processing %d Face template(s) from SN=%s", len(lines), serial)
+            self._process_template_data(device, raw_body, "face")
+        else:
+            _logger.warning("ADMS: Received UNKNOWN table '%s' from SN=%s. Data: %s", table_upper, serial, raw_body[:100])
 
         device.sudo().write({"last_seen": fields.Datetime.now()})
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
@@ -593,3 +608,75 @@ class AdmsController(http.Controller):
                 e,
             )
             Log.search([("unique_key", "=", unique_key)]).write({"status": "failed"})
+
+    def _process_user_data(self, device, raw_body):
+        """
+        Parses USER table data from ADMS.
+        """
+        lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
+        for line in lines:
+            params = self._parse_adms_line(line)
+            pin = params.get("PIN") or params.get("UserPin")
+            if pin:
+                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                if employee:
+                    new_name = params.get("Name")
+                    if new_name and employee.name == f"Biometric User {pin}":
+                        _logger.info("ADMS: Data fetched for user PIN=%s, updating name to %s", pin, new_name)
+                        employee.sudo().write({"name": new_name})
+                    else:
+                        _logger.info("ADMS: Data fetched for user PIN=%s", pin)
+
+    def _process_template_data(self, device, raw_body, template_type):
+        """
+        Parses biometric templates (FINGERTMP or FACETMP).
+        """
+        lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
+        Template = request.env["biometric.user.template"].sudo()
+        for line in lines:
+            params = self._parse_adms_line(line)
+            pin = params.get("PIN") or params.get("UserPin")
+            tmp = params.get("Tmp") or params.get("Template") or params.get("TMP")
+            idx = params.get("FingerID") or params.get("FaceID") or params.get("FID") or "0"
+
+            if not pin and 'TMP=' in line:
+                pin_match = re.search(r'PIN=(\d+)', line)
+                idx_match = re.search(r'FID=(\d+)', line)
+                tmp_match = re.search(r'TMP=([A-Za-z0-9+/=]+)', line)
+                if pin_match and idx_match and tmp_match:
+                    pin = pin_match.group(1)
+                    idx = idx_match.group(1)
+                    tmp = tmp_match.group(1)
+                    template_type = 'face' if 'FACE' in line else 'finger'
+
+            if pin and tmp:
+                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                if employee:
+                    # Deduplicate
+                    existing = Template.search([
+                        ("employee_id", "=", employee.id),
+                        ("type", "=", template_type),
+                        ("finger_index", "=", int(idx))
+                    ], limit=1)
+
+                    if not existing:
+                        Template.create({
+                            "employee_id": employee.id,
+                            "type": template_type,
+                            "template_data": tmp,
+                            "finger_index": int(idx)
+                        })
+                        _logger.info("ADMS: Biometric %s fetched and SAVED for user PIN=%s index=%s", template_type, pin, idx)
+                    else:
+                        _logger.info("ADMS: Biometric %s already exists for user PIN=%s index=%s", template_type, pin, idx)
+                else:
+                    _logger.warning("ADMS: Received template for PIN=%s but no employee found in Odoo", pin)
+
+    def _parse_adms_line(self, line):
+        """Helper to parse tab-separated Key=Value pairs."""
+        params = {}
+        for part in line.split("\t"):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                params[k.strip()] = v.strip()
+        return params

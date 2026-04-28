@@ -5,3 +5,4 @@ from . import biometric_device_config
 from . import biometric_attendance_log
 from . import hr_employee_extend
 from . import biometric_device_command
+from . import biometric_user_template
