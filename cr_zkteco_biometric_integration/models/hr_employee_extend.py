@@ -106,3 +106,16 @@ class HrEmployeeExtend(models.Model):
             
             # 3. Fetch all Face Templates
             Command.create({"device_id": device.id, "command_text": "DATA QUERY Face OpStamp=0"})
+
+    def action_open_enroll_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Remote Biometric Enrollment',
+            'type': 'ir.actions.act_window',
+            'res_model': 'biometric.enroll.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            }
+        }

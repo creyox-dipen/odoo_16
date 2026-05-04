@@ -312,6 +312,8 @@ class AdmsController(http.Controller):
         for line in lines:
             params = self._parse_adms_line(line)
             pin = params.get("PIN") or params.get("UserPin")
+            if pin:
+                pin = str(pin).split(' ')[0]
             # The photo content can be in 'Content' or sometimes the entire body is the photo
             content = params.get("Content") or params.get("TMP")
 
@@ -712,6 +714,8 @@ class AdmsController(http.Controller):
             params = self._parse_adms_line(line)
             pin = params.get("PIN") or params.get("UserPin")
             if pin:
+                pin = str(pin).split(' ')[0]
+            if pin:
                 employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
                 if employee:
                     new_name = params.get("Name")
@@ -730,6 +734,8 @@ class AdmsController(http.Controller):
         for line in lines:
             params = self._parse_adms_line(line)
             pin = params.get("PIN") or params.get("UserPin")
+            if pin:
+                pin = str(pin).split(' ')[0]
             tmp = params.get("Tmp") or params.get("Template") or params.get("TMP")
             idx = params.get("FingerID") or params.get("FaceID") or params.get("FID") or "0"
 

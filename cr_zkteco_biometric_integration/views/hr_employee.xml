@@ -17,6 +17,11 @@
                         type="object"
                         class="btn-primary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"/>
+                <button name="action_open_enroll_wizard"
+                        string="Remote Enrollment"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"/>
             </xpath>
 
             <!-- Add Biometric Templates Tab -->
