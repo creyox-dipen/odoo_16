@@ -32,12 +32,16 @@ class HrEmployeeExtend(models.Model):
         help="Fingerprint and Face templates stored for this employee.",
     )
 
-    def action_sync_to_devices(self):
+    def action_sync_to_devices(self, device_ids=None):
         self.ensure_one()
         if not self.device_user_id:
             return
     
-        devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
+        if device_ids:
+            devices = self.env["biometric.device"].sudo().browse(device_ids)
+        else:
+            devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
+            
         Command = self.env["biometric.device.command"].sudo()
     
         for device in devices:
@@ -113,6 +117,19 @@ class HrEmployeeExtend(models.Model):
             'name': 'Remote Biometric Enrollment',
             'type': 'ir.actions.act_window',
             'res_model': 'biometric.enroll.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_employee_id': self.id,
+            }
+        }
+
+    def action_open_transfer_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Transfer to Devices',
+            'type': 'ir.actions.act_window',
+            'res_model': 'biometric.user.transfer.wizard',
             'view_mode': 'form',
             'target': 'new',
             'context': {

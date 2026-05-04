@@ -12,13 +12,13 @@
 
             <!-- Add Sync Buttons to Header -->
             <xpath expr="//header" position="inside">
-                <button name="action_sync_to_devices"
-                        string="Push to Biometric"
+                <button name="action_open_enroll_wizard"
+                        string="Remote Enrollment"
                         type="object"
                         class="btn-primary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"/>
-                <button name="action_open_enroll_wizard"
-                        string="Remote Enrollment"
+                <button name="action_open_transfer_wizard"
+                        string="Transfer to Devices"
                         type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"/>
