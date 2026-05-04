@@ -35,6 +35,9 @@
             <form string="Attendance Log" create="false" edit="false">
                 <sheet>
                     <group>
+                        <group string="Punch Photo">
+                            <field name="image" widget="image" nolabel="1"/>
+                        </group>
                         <group string="Punch Details">
                             <field name="device_id"/>
                             <field name="device_user_id"/>

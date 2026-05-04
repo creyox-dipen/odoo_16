@@ -281,10 +281,18 @@ class AdmsController(http.Controller):
                             image_start = raw_data.find(b"\xff\xd8", search_start)
                             if image_start == -1: image_start = search_start # Fallback
                             
-                            import base64
-                            image_b64 = base64.b64encode(raw_data[image_start:]).decode('utf-8')
-                            employee.sudo().write({"image_1920": image_b64})
-                            _logger.info("ADMS: Photo saved successfully from fdata for PIN=%s", pin)
+                            # Find the most recent attendance log for this user to attach the photo
+                            log = request.env["biometric.attendance.log"].sudo().search([
+                                ("device_user_id", "=", pin),
+                                ("device_id.serial_number", "=", serial)
+                            ], order="timestamp desc", limit=1)
+                            if log:
+                                import base64
+                                image_b64 = base64.b64encode(raw_data[image_start:]).decode('utf-8')
+                                log.sudo().write({"image": image_b64})
+                                _logger.info("ADMS: Photo saved to Attendance Log for PIN=%s", pin)
+                            else:
+                                _logger.warning("ADMS: Photo received for PIN=%s but no attendance log found to attach it to.", pin)
             except Exception as e:
                 _logger.error("ADMS: Failed to process fdata photo: %s", e)
 
@@ -323,8 +331,16 @@ class AdmsController(http.Controller):
                             # but we'll try to encode it just in case
                             image_data = base64.b64encode(image_data.encode('utf-8')).decode('utf-8')
 
-                        _logger.info("ADMS: Photo received for user PIN=%s, updating Odoo image.", pin)
-                        employee.sudo().write({"image_1920": image_data})
+                        # Find the most recent attendance log for this user to attach the photo
+                        log = request.env["biometric.attendance.log"].sudo().search([
+                            ("device_user_id", "=", pin),
+                            ("device_id.serial_number", "=", device.serial_number)
+                        ], order="timestamp desc", limit=1)
+                        if log:
+                            log.sudo().write({"image": image_data})
+                            _logger.info("ADMS: Photo saved to Attendance Log for PIN=%s", pin)
+                        else:
+                            _logger.warning("ADMS: Photo received for PIN=%s but no attendance log found to attach it to.", pin)
                     except Exception as e:
                         _logger.error("ADMS: Failed to process photo for PIN=%s: %s", pin, e)
 

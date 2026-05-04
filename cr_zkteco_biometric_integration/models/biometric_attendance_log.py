@@ -86,6 +86,10 @@ class BiometricAttendanceLog(models.Model):
         index=True,
         help="Composite deduplication key: {serial_number}_{device_user_id}_{utc_timestamp}.",
     )
+    image = fields.Binary(
+        string="Punch Photo",
+        help="Photo captured by the device at the moment of the attendance punch.",
+    )
 
     # -------------------------------------------------------------------------
     # SQL Constraints
