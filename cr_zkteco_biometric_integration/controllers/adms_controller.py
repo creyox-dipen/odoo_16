@@ -3,9 +3,7 @@
 
 import logging
 import pytz
-
-# import threading
-
+import re
 from datetime import datetime
 from odoo import http, fields
 from odoo.http import request
@@ -161,14 +159,14 @@ class AdmsController(http.Controller):
                 "\n".join(
                     [
                         f"GET OPTION FROM: {serial}",
-                        "ATTLOGStamp=9999",
-                        "OPERLOGStamp=9999",
-                        "ATTPHOTOStamp=9999",
+                        "ATTLOGStamp=0",
+                        "OPERLOGStamp=0",
+                        "ATTPHOTOStamp=0",
                         "ErrorDelay=30",
                         "Delay=10",
                         "TransTimes=00:00;14:05",
                         "TransInterval=1",
-                        "TransFlag=TransData AttLog OpLog AttPhoto",
+                        "TransFlag=TransData AttLog OpLog AttPhoto Photo",
                         "Realtime=1",
                         "Encrypt=None",
                     ]
@@ -240,15 +238,95 @@ class AdmsController(http.Controller):
         elif table_upper in ["FACETMP", "FACE", "FACETEMPLATE"]:
             _logger.info("ADMS: Processing %d Face template(s) from SN=%s", len(lines), serial)
             self._process_template_data(device, raw_body, "face")
+        elif table_upper in ["ATTPHOTO", "PHOTO", "USERPIC", "USERPHOTO", "PERS_PIC"]:
+            _logger.info("ADMS: Processing %d Photo(s) from SN=%s", len(lines), serial)
+            self._process_photo_data(device, raw_body)
         else:
             _logger.warning("ADMS: Received UNKNOWN table '%s' from SN=%s. Data: %s", table_upper, serial, raw_body[:100])
 
         device.sudo().write({"last_seen": fields.Datetime.now()})
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
+    @http.route(
+        "/iclock/fdata",
+        type="http",
+        auth="public",
+        methods=["POST"],
+        csrf=False,
+    )
+    def adms_fdata(self, **kwargs):
+        """
+        Endpoint for File Data (Photos on SpeedFace firmware).
+        """
+        serial = (kwargs.get("SN") or "").strip()
+        table = (kwargs.get("table") or "").strip()
+        raw_data = request.httprequest.data
+        
+        if table.upper() == "ATTPHOTO" and raw_data:
+            try:
+                body_head = raw_data[:500].decode('utf-8', errors='ignore')
+                pin = ""
+                # SpeedFace format: PIN=20260504151344-1.jpg
+                pin_filename_match = re.search(r'PIN=[^-\n]+-(\d+)\.jpg', body_head)
+                if pin_filename_match:
+                    pin = pin_filename_match.group(1)
+                
+                if pin:
+                    employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                    if employee:
+                        marker = b"CMD=uploadphoto"
+                        if marker in raw_data:
+                            # Extract binary JPEG after marker, skipping potential metadata junk
+                            search_start = raw_data.find(marker) + len(marker)
+                            image_start = raw_data.find(b"\xff\xd8", search_start)
+                            if image_start == -1: image_start = search_start # Fallback
+                            
+                            import base64
+                            image_b64 = base64.b64encode(raw_data[image_start:]).decode('utf-8')
+                            employee.sudo().write({"image_1920": image_b64})
+                            _logger.info("ADMS: Photo saved successfully from fdata for PIN=%s", pin)
+            except Exception as e:
+                _logger.error("ADMS: Failed to process fdata photo: %s", e)
+
+        return request.make_response("OK", headers=[("Content-Type", "text/plain")])
+
     # -------------------------------------------------------------------------
     # Private Helpers
     # -------------------------------------------------------------------------
+
+    def _process_photo_data(self, device, raw_body):
+        """
+        Parses Photo data from the device and updates the Employee profile.
+        Format: PIN=1\tFileName=1.jpg\tSize=... \tContent=...
+        """
+        import base64
+        lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
+        for line in lines:
+            params = self._parse_adms_line(line)
+            pin = params.get("PIN") or params.get("UserPin")
+            # The photo content can be in 'Content' or sometimes the entire body is the photo
+            content = params.get("Content") or params.get("TMP")
+
+            if pin and content:
+                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                if employee:
+                    try:
+                        # Some devices send data with headers, some raw base64
+                        # We try to clean it if it has common base64 issues
+                        image_data = content.strip()
+                        
+                        # Validate if it's base64
+                        try:
+                            base64.b64decode(image_data, validate=True)
+                        except:
+                            # If not valid base64, it might be raw binary (less common in ADMS text lines)
+                            # but we'll try to encode it just in case
+                            image_data = base64.b64encode(image_data.encode('utf-8')).decode('utf-8')
+
+                        _logger.info("ADMS: Photo received for user PIN=%s, updating Odoo image.", pin)
+                        employee.sudo().write({"image_1920": image_data})
+                    except Exception as e:
+                        _logger.error("ADMS: Failed to process photo for PIN=%s: %s", pin, e)
 
     def _parse_attlog_timestamp(self, ts_str, device_tz_name):
         """
