@@ -512,76 +512,7 @@ class AdmsController(http.Controller):
             bool: ``True`` if an attendance record was written, ``False`` if the
             punch was invalid and was deliberately skipped.
         """
-        Attendance = request.env["hr.attendance"].sudo()
-
-        if punch_type == "in":
-            # Guard: skip if an open check-in already exists (no check_out yet)
-            open_attendance = Attendance.search(
-                [
-                    ("employee_id", "=", employee.id),
-                    ("check_out", "=", False),
-                ],
-                limit=1,
-            )
-            if open_attendance:
-                _logger.warning(
-                    "ADMS: Check-in punch received but employee=%s already has an "
-                    "open check-in at %s — playing duplicate voice and skipping",
-                    employee.name,
-                    open_attendance.check_in,
-                )
-                # self._play_device_voice_async(device, 9)
-                return False
-
-            Attendance.create(
-                {
-                    "employee_id": employee.id,
-                    "check_in": utc_dt,
-                }
-            )
-            _logger.info(
-                "ADMS: Check-in created for employee=%s at %s (UTC)",
-                employee.name,
-                utc_dt,
-            )
-            return True
-
-        # punch_type == "out"
-        open_attendance = Attendance.search(
-            [
-                ("employee_id", "=", employee.id),
-                ("check_out", "=", False),
-            ],
-            order="check_in desc",
-            limit=1,
-        )
-
-        if not open_attendance:
-            _logger.warning(
-                "ADMS: Check-out punch received but no open check-in exists "
-                "for employee=%s — playing 'please try again' voice and skipping",
-                employee.name,
-            )
-            # self._play_device_voice_async(device, 4)
-            return False
-
-        if utc_dt > open_attendance.check_in:
-            open_attendance.write({"check_out": utc_dt})
-            _logger.info(
-                "ADMS: Check-out set for employee=%s at %s (UTC)",
-                employee.name,
-                utc_dt,
-            )
-            return True
-
-        _logger.warning(
-            "ADMS: Punch time %s is not after last check-in %s "
-            "for employee=%s — skipping attendance update",
-            utc_dt,
-            open_attendance.check_in,
-            employee.name,
-        )
-        return False
+        return employee._process_biometric_punch(device, utc_dt, punch_type)
 
     def _process_attlog_line(self, device, line):
         """
@@ -633,11 +564,20 @@ class AdmsController(http.Controller):
             status_code = -1
 
         punch_type = PUNCH_TYPE_MAP.get(status_code)
+
+        # Skip punches that don't match the device role (Used For)
+        if device.used_for == 'in' and punch_type != 'in':
+            _logger.info("ADMS: Skipping punch for SN=%s (Device is Check-in Only but received %s)", device.serial_number, punch_type)
+            return
+        if device.used_for == 'out' and punch_type != 'out':
+            _logger.info("ADMS: Skipping punch for SN=%s (Device is Check-out Only but received %s)", device.serial_number, punch_type)
+            return
+
         if punch_type is None:
             _logger.info(
                 "ADMS: Unsupported punch status=%r for device_user_id=%s — "
                 "attendance record will not be created",
-                verify_mode,
+                status_code,
                 device_user_id,
             )
 

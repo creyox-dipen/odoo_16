@@ -123,6 +123,31 @@ class BiometricDevice(models.Model):
     )
 
     # -------------------------------------------------------------------------
+    # Calculation & Processing Rules
+    # -------------------------------------------------------------------------
+
+    min_punch_interval = fields.Integer(
+        string="Min. Punch Interval (Mins)",
+        default=5,
+        help="Ignore punches from the same employee that occur within this many minutes of each other.",
+    )
+    auto_checkout = fields.Boolean(
+        string="Auto Check-out",
+        default=False,
+        help="If enabled, the system will automatically close open attendances at a specific time.",
+    )
+    auto_checkout_time = fields.Float(
+        string="Auto Check-out Time",
+        default=20.0,
+        help="The time of day (0-24) to automatically close open attendances (e.g. 20.0 = 8:00 PM).",
+    )
+    used_for = fields.Selection([
+        ('in', 'Check-in Only'),
+        ('out', 'Check-out Only'),
+        ('both', 'Both (Check-in and Check-out)'),
+    ], string="Used For", default='both', required=True, help="Define if this device is used only for check-ins, only for check-outs, or both.")
+
+    # -------------------------------------------------------------------------
     # SQL Constraints
     # -------------------------------------------------------------------------
 

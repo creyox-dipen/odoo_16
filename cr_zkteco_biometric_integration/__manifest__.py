@@ -20,6 +20,7 @@
     # },
     "data": [
         "security/ir.model.access.csv",
+        "data/ir_cron.xml",
         "wizard/biometric_enroll_wizard_view.xml",
         "wizard/biometric_user_transfer_wizard_view.xml",
         "views/biometric_device_config.xml",

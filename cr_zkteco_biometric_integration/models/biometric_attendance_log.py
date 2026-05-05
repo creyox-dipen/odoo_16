@@ -133,3 +133,49 @@ class BiometricAttendanceLog(models.Model):
             uid = (record.device_user_id or "").strip()
             ts = fields.Datetime.to_string(record.timestamp) if record.timestamp else ""
             record.unique_key = f"{serial}_{uid}_{ts}"
+            
+    def action_process_logs(self):
+        """
+        Scheduled action to process 'new' logs.
+        """
+        # Find all devices that have real-time disabled or just process all 'new' logs
+        # To be safe and respect the user's choice, we only process 'new' logs from
+        # devices where real-time is disabled.
+        batch_devices = self.env["biometric.device"].search([("active", "=", True)])
+        
+        # We filter logs that are 'new' and have an employee linked
+        new_logs = self.search([
+            ("status", "=", "new"),
+            ("device_id", "in", batch_devices.ids),
+            ("employee_id", "!=", False)
+        ], order="timestamp asc")
+
+        # Mapping verify_state to punch type
+        PUNCH_TYPE_MAP = {
+            "0": "in", "4": "in",
+            "1": "out", "5": "out",
+        }
+
+        for log in new_logs:
+            # If the device is in real-time mode, it should have already been processed
+            # but if it's 'new', it means it was skipped or the flag was toggled.
+            
+            punch_type = PUNCH_TYPE_MAP.get(log.verify_state)
+            if not punch_type:
+                # Logic to guess: In if no open attendance, Out otherwise
+                open_att = self.env["hr.attendance"].search([
+                    ("employee_id", "=", log.employee_id.id),
+                    ("check_out", "=", False)
+                ], limit=1)
+                punch_type = "out" if open_att else "in"
+
+            success = log.employee_id._process_biometric_punch(log.device_id, log.timestamp, punch_type)
+            if success:
+                log.write({"status": "processed"})
+            else:
+                # It might fail if it's a duplicate or within interval
+                # We mark as processed so we don't try again forever, but we can log it
+                log.write({"status": "processed"})
+
+        # After processing all logs, run auto-checkout
+        self.env["hr.employee"]._run_biometric_auto_checkout()

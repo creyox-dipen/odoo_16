@@ -74,11 +74,16 @@
                         </group>
 
                         <!-- Right: Status -->
-                        <group string="Connection Status">
+                        <!-- Right: Status & Rules -->
+                        <group string="Rules &amp; Status">
                             <field name="last_seen"
                                    readonly="1"
                                    decoration-success="last_seen != False"
                                    widget="datetime"/>
+                            <field name="used_for"/>
+                            <field name="min_punch_interval"/>
+                            <field name="auto_checkout"/>
+                            <field name="auto_checkout_time" widget="float_time" attrs="{'invisible': [('auto_checkout', '=', False)]}"/>
                         </group>
                     </group>
 
