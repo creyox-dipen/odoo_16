@@ -104,6 +104,23 @@ class BiometricDevice(models.Model):
         tracking=True,
         help="Timestamp of the last successful ADMS push received from this device.",
     )
+    connection_status = fields.Selection([
+        ('not_connected', 'Not Connected'),
+        ('connected', 'Connected'),
+    ], string="Connection Status", compute="_compute_connection_status", store=False)
+
+    def _compute_connection_status(self):
+        """
+        Calculates status based on the last_seen timestamp.
+        If the device has pushed data in the last 2 minutes, it is 'Connected'.
+        """
+        from datetime import datetime, timedelta
+        now = datetime.now()
+        for record in self:
+            if record.last_seen and (now - record.last_seen) < timedelta(minutes=2):
+                record.connection_status = 'connected'
+            else:
+                record.connection_status = 'not_connected'
     attendance_log_ids = fields.One2many(
         comodel_name="biometric.attendance.log",
         inverse_name="device_id",

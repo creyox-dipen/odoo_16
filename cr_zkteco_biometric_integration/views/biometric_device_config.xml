@@ -30,6 +30,7 @@
                             type="object"
                             groups="hr_attendance.group_hr_attendance_manager"
                             confirm="Are you sure you want to clear all attendance logs from the physical device? This cannot be undone."/>
+                    <field name="connection_status" widget="statusbar" statusbar_visible="not_connected,connected"/>
                 </header>
 
                 <sheet>

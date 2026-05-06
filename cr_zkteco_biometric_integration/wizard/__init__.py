@@ -3,3 +3,4 @@
 
 from . import biometric_enroll_wizard
 from . import biometric_user_transfer_wizard
+from . import biometric_attendance_report_wizard
