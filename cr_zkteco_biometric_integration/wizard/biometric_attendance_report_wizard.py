@@ -63,6 +63,11 @@ class BiometricAttendanceReportWizard(models.TransientModel):
         for i, col in enumerate(columns):
             sheet.write(0, i, col, header_format)
             sheet.set_column(i, i, 25)
+        
+        # 1. Resolve Timezone from User Profile (Source of Truth)
+        import pytz
+        user_tz_name = self.env.user.tz or 'Asia/Kolkata'
+        local_tz = pytz.timezone(user_tz_name)
 
         domain = [('employee_id', '!=', False)]
         
@@ -88,7 +93,10 @@ class BiometricAttendanceReportWizard(models.TransientModel):
             # ── Detailed Report: Show Every Record ─────────────────────────────
             for rec in records:
                 if is_log_report:
-                    ts_local = fields.Datetime.context_timestamp(self, rec.timestamp)
+                    # Manual Localize UTC to User Timezone
+                    ts_utc = pytz.utc.localize(rec.timestamp)
+                    ts_local = ts_utc.astimezone(local_tz)
+                    
                     # 1. Device
                     sheet.write(row, 0, rec.device_id.name, cell_format)
                     # 2. Device UID
@@ -102,8 +110,10 @@ class BiometricAttendanceReportWizard(models.TransientModel):
                     # 6. Status
                     sheet.write(row, 5, dict(rec._fields['status'].selection).get(rec.status, ''), cell_format)
                 else:
-                    check_in_local = fields.Datetime.context_timestamp(self, rec.check_in) if rec.check_in else None
-                    check_out_local = fields.Datetime.context_timestamp(self, rec.check_out) if rec.check_out else None
+                    # Manual Localize UTC to User Timezone
+                    check_in_local = pytz.utc.localize(rec.check_in).astimezone(local_tz) if rec.check_in else None
+                    check_out_local = pytz.utc.localize(rec.check_out).astimezone(local_tz) if rec.check_out else None
+                    
                     sheet.write(row, 0, rec.employee_id.name, cell_format)
                     sheet.write(row, 1, check_in_local.strftime('%d/%m/%Y %H:%M:%S') if check_in_local else '', cell_format)
                     sheet.write(row, 2, check_out_local.strftime('%d/%m/%Y %H:%M:%S') if check_out_local else '', cell_format)
@@ -119,8 +129,10 @@ class BiometricAttendanceReportWizard(models.TransientModel):
             for rec in records:
                 emp_id = rec.employee_id.id
                 ts = rec.timestamp if is_log_report else rec.check_in
-                local_ts = fields.Datetime.context_timestamp(self, ts)
-                att_date = local_ts.date()
+                
+                # Use User TZ to determine the date boundary
+                ts_local = pytz.utc.localize(ts).astimezone(local_tz)
+                att_date = ts_local.date()
                 
                 if emp_id not in summary_data:
                     summary_data[emp_id] = {}
@@ -145,8 +157,9 @@ class BiometricAttendanceReportWizard(models.TransientModel):
                         last_out = max(r.check_out for r in recs) if all(r.check_out for r in recs) else None
                         total_worked = sum(r.worked_hours for r in recs)
                     
-                    first_in_local = fields.Datetime.context_timestamp(self, first_in)
-                    last_out_local = fields.Datetime.context_timestamp(self, last_out) if last_out else None
+                    # Convert to Local Strings using User TZ
+                    first_in_local = pytz.utc.localize(first_in).astimezone(local_tz)
+                    last_out_local = pytz.utc.localize(last_out).astimezone(local_tz) if last_out else None
                     
                     sheet.write(row, 0, emp_name, cell_format)
                     sheet.write(row, 1, first_in_local.strftime('%d/%m/%Y %H:%M:%S'), cell_format)
