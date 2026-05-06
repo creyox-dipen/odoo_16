@@ -45,6 +45,9 @@ class BiometricAttendanceReportWizard(models.TransientModel):
         header_format = workbook.add_format({
             'bold': True, 'bg_color': '#D3D3D3', 'border': 1, 'align': 'center'
         })
+        title_format = workbook.add_format({
+            'bold': True, 'align': 'center', 'valign': 'vcenter', 'font_size': 14
+        })
         date_format = workbook.add_format({'num_format': 'yyyy-mm-dd hh:mm:ss', 'border': 1})
         cell_format = workbook.add_format({'border': 1})
 
@@ -60,8 +63,17 @@ class BiometricAttendanceReportWizard(models.TransientModel):
             else:
                 columns = ['Employee', 'Check In', 'Check Out', 'Work Hours']
 
+        # Add Title
+        if is_log_report:
+            title = f"Attendance Log from {self.from_date} to {self.to_date}"
+        else:
+            title = f"Attendance from {self.from_date} to {self.to_date}"
+        
+        sheet.merge_range(0, 0, 0, len(columns) - 1, title, title_format)
+
+        # Header Row
         for i, col in enumerate(columns):
-            sheet.write(0, i, col, header_format)
+            sheet.write(2, i, col, header_format)
             sheet.set_column(i, i, 25)
         
         # 1. Resolve Timezone from User Profile (Source of Truth)
@@ -88,7 +100,7 @@ class BiometricAttendanceReportWizard(models.TransientModel):
                 domain.append(('id', 'in', self.attendance_ids.ids))
             records = self.env['hr.attendance'].search(domain, order='check_in asc')
 
-        row = 1
+        row = 3
         if self.report_type == 'detailed':
             # ── Detailed Report: Show Every Record ─────────────────────────────
             for rec in records:

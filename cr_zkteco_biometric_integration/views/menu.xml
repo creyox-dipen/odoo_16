@@ -19,6 +19,13 @@
               sequence="10"
               groups="hr_attendance.group_hr_attendance_manager"/>
 
+    <!-- ── Management under Attendances ────────────────────────── -->
+    <menuitem id="menu_hr_attendance_management"
+              name="Manager"
+              parent="hr_attendance.menu_hr_attendance_root"
+              sequence="20"
+              groups="hr_attendance.group_hr_attendance_manager"/>
+
     <!-- ── Attendance Logs under Attendances ─────────────────────── -->
     <menuitem id="menu_biometric_attendance_log"
               name="Biometric Attendance Logs"

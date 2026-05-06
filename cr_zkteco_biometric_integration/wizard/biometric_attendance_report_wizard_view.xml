@@ -64,4 +64,10 @@ action['context'] = {'default_log_ids': records.ids, 'default_is_log_report': Tr
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
+
+    <menuitem id="menu_biometric_attendance_report"
+              name="Attendance Report (Excel)"
+              parent="cr_zkteco_biometric_integration.menu_hr_attendance_management"
+              action="action_biometric_attendance_report_wizard"
+              sequence="20"/>
 </odoo>
