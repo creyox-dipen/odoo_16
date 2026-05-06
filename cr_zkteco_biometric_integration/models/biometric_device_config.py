@@ -163,6 +163,12 @@ class BiometricDevice(models.Model):
         ('out', 'Check-out Only'),
         ('both', 'Both (Check-in and Check-out)'),
     ], string="Used For", default='both', required=True, help="Define if this device is used only for check-ins, only for check-outs, or both.")
+    status_code_based = fields.Boolean(
+        string="Status Code Based",
+        default=True,
+        help="If enabled, the system uses the device's status code (In/Out) to determine punch type. "
+             "If disabled (only for 'Both'), the first punch of the day is In and the second is Out."
+    )
 
     # -------------------------------------------------------------------------
     # SQL Constraints

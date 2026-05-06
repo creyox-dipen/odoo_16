@@ -565,13 +565,24 @@ class AdmsController(http.Controller):
 
         punch_type = PUNCH_TYPE_MAP.get(status_code)
 
-        # Skip punches that don't match the device role (Used For)
-        if device.used_for == 'in' and punch_type != 'in':
-            _logger.info("ADMS: Skipping punch for SN=%s (Device is Check-in Only but received %s)", device.serial_number, punch_type)
-            return
-        if device.used_for == 'out' and punch_type != 'out':
-            _logger.info("ADMS: Skipping punch for SN=%s (Device is Check-out Only but received %s)", device.serial_number, punch_type)
-            return
+        # Get or auto-create employee (needed for 'both' logic)
+        employee = self._get_or_create_employee(device, device_user_id)
+
+        # Override punch type based on device settings
+        if device.used_for == 'in':
+            punch_type = 'in'
+            verify_state = "0" # Force Check-in code in logs
+        elif device.used_for == 'out':
+            punch_type = 'out'
+            verify_state = "1" # Force Check-out code in logs
+        elif device.used_for == 'both' and not device.status_code_based:
+            # If not status code based, we guess: In if no open attendance, Out otherwise
+            open_attendance = request.env["hr.attendance"].sudo().search([
+                ("employee_id", "=", employee.id),
+                ("check_out", "=", False),
+            ], limit=1)
+            punch_type = "out" if open_attendance else "in"
+            verify_state = "1" if open_attendance else "0"
 
         if punch_type is None:
             _logger.info(

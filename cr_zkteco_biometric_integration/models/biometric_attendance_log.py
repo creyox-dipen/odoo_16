@@ -157,17 +157,35 @@ class BiometricAttendanceLog(models.Model):
         }
 
         for log in new_logs:
-            # If the device is in real-time mode, it should have already been processed
-            # but if it's 'new', it means it was skipped or the flag was toggled.
+            device = log.device_id
+            punch_type = False
             
-            punch_type = PUNCH_TYPE_MAP.get(log.verify_state)
-            if not punch_type:
-                # Logic to guess: In if no open attendance, Out otherwise
+            if device.used_for == 'in':
+                punch_type = 'in'
+            elif device.used_for == 'out':
+                punch_type = 'out'
+            elif device.used_for == 'both' and not device.status_code_based:
+                # If not status code based, we guess: In if no open attendance, Out otherwise
                 open_att = self.env["hr.attendance"].search([
                     ("employee_id", "=", log.employee_id.id),
                     ("check_out", "=", False)
                 ], limit=1)
                 punch_type = "out" if open_att else "in"
+            else:
+                punch_type = PUNCH_TYPE_MAP.get(log.verify_state)
+                if not punch_type:
+                    # Logic to guess: In if no open attendance, Out otherwise
+                    open_att = self.env["hr.attendance"].search([
+                        ("employee_id", "=", log.employee_id.id),
+                        ("check_out", "=", False)
+                    ], limit=1)
+                    punch_type = "out" if open_att else "in"
+            
+            # Update log's verify_state to reflect what was actually considered
+            # 0=In, 1=Out
+            new_verify_state = "0" if punch_type == "in" else "1"
+            if log.verify_state != new_verify_state:
+                log.verify_state = new_verify_state
 
             success = log.employee_id._process_biometric_punch(log.device_id, log.timestamp, punch_type)
             if success:
