@@ -180,6 +180,35 @@ class HrEmployeeExtend(models.Model):
             }
         }
 
+    def action_delete_from_devices(self, device_ids=None):
+        """Send a DELETE command to remove this user from the hardware."""
+        self.ensure_one()
+        if not self.device_user_id:
+            return
+            
+        if device_ids:
+            devices = self.env["biometric.device"].sudo().browse(device_ids)
+        else:
+            devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
+            
+        Command = self.env["biometric.device.command"].sudo()
+        for device in devices:
+            Command.create({
+                "device_id": device.id,
+                "command_text": f"DATA DELETE UserInfo PIN={self.device_user_id}",
+            })
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Deletion Queued'),
+                'message': _('Delete command sent to %s device(s).') % len(devices),
+                'type': 'warning',
+                'sticky': False,
+            }
+        }
+
     def _process_biometric_punch(self, device, utc_dt, punch_type):
         """
         Processes a single punch for this employee and updates hr.attendance.
@@ -255,5 +284,5 @@ class HrEmployeeExtend(models.Model):
                 
                 # Only close if it's currently later than the checkout time
                 if datetime.now() > checkout_dt_utc and att.check_in < checkout_dt_utc:
-                    _logger.info("Auto-Checkout: Closing attendance for %s at %s", att.employee_id.name, checkout_dt_utc)
+                    logger.info("Auto-Checkout: Closing attendance for %s at %s", att.employee_id.name, checkout_dt_utc)
                     att.write({"check_out": checkout_dt_utc})

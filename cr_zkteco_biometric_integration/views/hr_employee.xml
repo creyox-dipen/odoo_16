@@ -8,7 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
                 <field name="device_user_id"/>
-                <field name="biometric_privilege"/>
+                <field name="biometric_privilege" attrs="{'invisible': [('device_user_id', '=', False)]}"/>
             </xpath>
 
             <!-- Add Sync Buttons to Header -->
@@ -30,11 +30,17 @@
                         type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"/>
+                <button name="action_delete_from_devices"
+                        string="Delete from Device"
+                        type="object"
+                        class="btn-danger"
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"
+                        confirm="Are you sure you want to remove this user from all biometric devices? This will wipe their templates from the machines."/>
             </xpath>
 
             <!-- Add Biometric Templates Tab -->
             <xpath expr="//notebook" position="inside">
-                <page string="Biometric Data" name="biometric_data">
+                <page string="Biometric Data" name="biometric_data" attrs="{'invisible': [('device_user_id', '=', False)]}">
                     <field name="biometric_template_ids" readonly="1">
                         <tree>
                             <field name="type"/>
