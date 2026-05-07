@@ -14,14 +14,14 @@
             <!-- Add Sync Buttons to Header -->
             <xpath expr="//header" position="inside">
                 <button name="action_sync_to_devices"
-                        string="Sync User Data"
+                        string="Push User Data"
                         type="object"
                         class="btn-primary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"
                         groups="hr_attendance.group_hr_attendance_manager"
                         help="Push this employee's Name and ID to all active biometric devices."/>
                 <button name="action_request_templates_from_device"
-                        string="Fetch Templates"
+                        string="Fetch Biometric Data"
                         type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"
@@ -30,12 +30,14 @@
                         string="Remote Enrollment"
                         type="object"
                         class="btn-secondary"
-                        attrs="{'invisible': [('device_user_id', '=', False)]}"/>
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"
+                        help="Trigger the physical device to start scanning this employee's fingerprint or face."/>
                 <button name="action_open_transfer_wizard"
                         string="Transfer to Devices"
                         type="object"
                         class="btn-secondary"
-                        attrs="{'invisible': [('device_user_id', '=', False)]}"/>
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"
+                        help="Copy this employee's biometric templates from one machine to another."/>
                 <button name="action_delete_from_devices"
                         string="Delete from Device"
                         type="object"
