@@ -250,6 +250,27 @@ class BiometricDevice(models.Model):
         })
         return True
 
+    def action_export_all_users(self):
+        """
+        Push all employees with a Biometric User ID to this device.
+        """
+        self.ensure_one()
+        employees = self.env['hr.employee'].sudo().search([('device_user_id', '!=', False)])
+        
+        for emp in employees:
+            emp._generate_sync_commands(self)
+            
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Export Started'),
+                'message': _('Queued %d users for export to "%s".') % (len(employees), self.name),
+                'sticky': False,
+                'type': 'success',
+            }
+        }
+
     def action_view_logs(self):
         """
         Open the attendance logs list view filtered to this device.

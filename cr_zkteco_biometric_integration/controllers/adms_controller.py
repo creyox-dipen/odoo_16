@@ -43,16 +43,24 @@ class AdmsController(http.Controller):
         serial = (kwargs.get("SN") or "").strip()
         _logger.info("ADMS: Heartbeat (GET) from device SN=%s", serial)
 
-        # Check for pending commands for this device
-        command = request.env["biometric.device.command"].sudo().search([
-            ("device_id.serial_number", "=", serial),
-            ("status", "=", "pending")
-        ], order="create_date asc", limit=1)
+        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        if not device:
+            return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
-        if command:
-            # ADMS Command Format: C:ID:COMMAND_TEXT
-            # The device will execute this and report back to /iclock/devicecmd
-            resp_body = f"C:{command.id}:{command.command_text}"
+        # Check for pending commands for this device
+        # Fetch the oldest pending commands (Batch of 5 to speed up processing)
+        commands = request.env["biometric.device.command"].sudo().search([
+            ("device_id", "=", device.id),
+            ("status", "=", "pending")
+        ], order="id asc", limit=5)
+
+        if commands:
+            # Build multi-line response: C:ID:COMMAND
+            resp_lines = []
+            for cmd in commands:
+                resp_lines.append("C:%s:%s" % (cmd.id, cmd.command_text))
+            
+            resp_body = "\n".join(resp_lines)
             _logger.info("ADMS: Sending command to device SN=%s: %s", serial, resp_body)
             return request.make_response(resp_body, headers=[("Content-Type", "text/plain")])
 
@@ -67,35 +75,38 @@ class AdmsController(http.Controller):
     )
     def adms_devicecmd(self, **kwargs):
         """
-        Endpoint for the device to report the result of a command execution.
-        Format of POST body: ID=1&Return=0
+        Endpoint for the device to report the result of command executions.
+        Handles both single-line (ID=1&Return=0) and multi-line responses.
         """
         serial = (kwargs.get("SN") or "").strip()
         raw_body = request.httprequest.get_data(as_text=True) or ""
         _logger.info("ADMS: Command result from device SN=%s body=%s", serial, raw_body)
 
-        # Parse response (format: ID=1&Return=0)
-        params = {}
-        for part in raw_body.split("&"):
-            if "=" in part:
-                k, v = part.split("=", 1)
-                params[k.strip()] = v.strip()
+        # Split by newline in case the device returns results for multiple commands at once
+        lines = [line.strip() for line in raw_body.split("\n") if line.strip()]
+        
+        for line in lines:
+            params = {}
+            for part in line.split("&"):
+                if "=" in part:
+                    k, v = part.split("=", 1)
+                    params[k.strip()] = v.strip()
 
-        cmd_id = params.get("ID")
-        return_code = params.get("Return")
+            cmd_id = params.get("ID")
+            return_code = params.get("Return")
 
-        if cmd_id:
-            try:
-                command = request.env["biometric.device.command"].sudo().browse(int(cmd_id))
-                if command.exists():
-                    # Return code 0 usually means success in ADMS
-                    status = "success" if return_code == "0" else "failed"
-                    command.write({
-                        "status": status,
-                        "response_text": raw_body
-                    })
-            except Exception as e:
-                _logger.error("ADMS: Error processing devicecmd for SN=%s: %s", serial, e)
+            if cmd_id:
+                try:
+                    command = request.env["biometric.device.command"].sudo().browse(int(cmd_id))
+                    if command.exists():
+                        # Return code 0 usually means success in ADMS
+                        status = "success" if return_code == "0" else "failed"
+                        command.write({
+                            "status": status,
+                            "response_text": line,
+                        })
+                except Exception as e:
+                    _logger.error("ADMS: Error processing devicecmd for SN=%s: %s", serial, e)
 
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 

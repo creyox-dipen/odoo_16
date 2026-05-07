@@ -39,6 +39,10 @@ class HrEmployeeExtend(models.Model):
     ], string='Biometric Privilege', default='0',
        help="User privilege level on the biometric device.\n0=Normal User, 3=Enroller (can enroll users), 14=Super Admin (full device access).")
 
+    _sql_constraints = [
+        ('device_user_id_unique', 'unique(device_user_id)', 'The Biometric User ID must be unique per employee!'),
+    ]
+
     def action_sync_to_devices(self, device_ids=None):
         self.ensure_one()
         if not self.device_user_id:
@@ -49,78 +53,8 @@ class HrEmployeeExtend(models.Model):
         else:
             devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
             
-        Command = self.env["biometric.device.command"].sudo()
-    
         for device in devices:
-            # 1. Push User Info — fields TAB separated
-            priv = self.biometric_privilege
-            priv_fields = (
-                f"Pri={priv}\t"
-                f"Privilege={priv}\t"
-                f"UserRole={priv}\t"
-            ) if priv else ""
-            logger.info("➡️➡️ priv : %s",priv)
-            logger.info("➡️➡️ priv_fields : %s",priv_fields)
-
-            Command.create({
-                "device_id": device.id,
-                "command_text": (
-                    f"DATA UPDATE UserInfo\t"
-                    f"PIN={self.device_user_id}\t"
-                    f"Name={self.name}\t"
-                    f"{priv_fields}"
-                    f"Passwd=\t"
-                    f"Card=\t"
-                    f"Grp=1\t"
-                    f"TZ=0000000000000000000000000000\t"
-                    f"Verify=0\t"
-                    f"ViceCard="
-                ),
-            })
-            temp_var = {
-                "device_id": device.id,
-                "command_text": (
-                    f"DATA UPDATE UserInfo\t"
-                    f"PIN={self.device_user_id}\t"
-                    f"Name={self.name}\t"
-                    f"{priv_fields}"
-                    f"Passwd=\t"
-                    f"Card=\t"
-                    f"Grp=1\t"
-                    f"TZ=0000000000000000000000000000\t"
-                    f"Verify=0\t"
-                    f"ViceCard="
-                ),
-            }
-            logger.info("➡️➡️ command value : %s",temp_var)
-    
-            # 2. Push Fingerprints / Face Templates
-            for template in self.biometric_template_ids:
-                if template.type == "finger":
-                    # ✅ Fingerprint — table: FingerTmp, Type=1, TAB separated
-                    cmd = (
-                        f"DATA UPDATE FingerTmp\t"
-                        f"PIN={self.device_user_id}\t"
-                        f"FID={template.finger_index}\t"
-                        f"Size={len(template.template_data)}\t"
-                        f"Valid=1\t"
-                        f"TMP={template.template_data}"
-                    )
-                else:
-                    # ✅ Face — table: FaceTemp, Type=2, TAB separated
-                    cmd = (
-                        f"DATA UPDATE Face\t"
-                        f"PIN={self.device_user_id}\t"
-                        f"FID={template.finger_index}\t"
-                        f"Size={len(template.template_data)}\t"
-                        f"Valid=1\t"
-                        f"TMP={template.template_data}"
-                    )
-    
-                Command.create({
-                    "device_id": device.id,
-                    "command_text": cmd,
-                })
+            self._generate_sync_commands(device)
         
         return {
             'type': 'ir.actions.client',
@@ -133,9 +67,68 @@ class HrEmployeeExtend(models.Model):
             }
         }
 
+    def _generate_sync_commands(self, device):
+        """Creates the ADMS commands to push user info and templates to a specific device."""
+        self.ensure_one()
+        Command = self.env["biometric.device.command"].sudo()
+        
+        # 1. Push User Info — fields TAB separated
+        priv = self.biometric_privilege
+        priv_fields = (
+            f"Pri={priv}\t"
+            f"Privilege={priv}\t"
+            f"UserRole={priv}\t"
+        ) if priv else ""
+        
+        logger.info("➡️ Sending User Sync for PIN=%s Name=%s to Device SN=%s", self.device_user_id, self.name, device.serial_number)
+
+        Command.create({
+            "device_id": device.id,
+            "command_text": (
+                f"DATA UPDATE UserInfo\t"
+                f"PIN={self.device_user_id}\t"
+                f"Name={self.name}\t"
+                f"{priv_fields}"
+                f"Passwd=\t"
+                f"Card=\t"
+                f"Grp=1\t"
+                f"TZ=0000000000000000000000000000\t"
+                f"Verify=0\t"
+                f"ViceCard="
+            ),
+        })
+
+        # 2. Push Fingerprints / Face Templates
+        for template in self.biometric_template_ids:
+            if template.type == "finger":
+                # ✅ Fingerprint — table: FingerTmp
+                cmd = (
+                    f"DATA UPDATE FingerTmp\t"
+                    f"PIN={self.device_user_id}\t"
+                    f"FID={template.finger_index}\t"
+                    f"Size={len(template.template_data)}\t"
+                    f"Valid=1\t"
+                    f"TMP={template.template_data}"
+                )
+            else:
+                # ✅ Face — table: FaceTemp
+                cmd = (
+                    f"DATA UPDATE Face\t"
+                    f"PIN={self.device_user_id}\t"
+                    f"FID={template.finger_index}\t"
+                    f"Size={len(template.template_data)}\t"
+                    f"Valid=1\t"
+                    f"TMP={template.template_data}"
+                )
+
+            Command.create({
+                "device_id": device.id,
+                "command_text": cmd,
+            })
+
     def action_request_templates_from_device(self):
         """
-        Sends query commands without the DATA prefix.
+        Sends specific query commands to fetch this employee's info and templates.
         """
         self.ensure_one()
         if not self.device_user_id:
@@ -143,16 +136,34 @@ class HrEmployeeExtend(models.Model):
 
         devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
         Command = self.env["biometric.device.command"].sudo()
+        
         for device in devices:
-            # Using OpStamp=0 (based on device logs showing OpStamp usage)
-            # 1. Fetch all User Info
-            Command.create({"device_id": device.id, "command_text": "DATA QUERY UserInfo OpStamp=0"})
-            
-            # 2. Fetch all Fingerprints
-            Command.create({"device_id": device.id, "command_text": "DATA QUERY FingerTmp OpStamp=0"})
-            
-            # 3. Fetch all Face Templates
-            Command.create({"device_id": device.id, "command_text": "DATA QUERY Face OpStamp=0"})
+            # 1. Fetch User Info (Name, Role)
+            Command.create({
+                "device_id": device.id, 
+                "command_text": f"DATA QUERY UserInfo PIN={self.device_user_id}"
+            })
+            # 2. Fetch Fingerprints
+            Command.create({
+                "device_id": device.id, 
+                "command_text": f"DATA QUERY FingerTmp PIN={self.device_user_id}"
+            })
+            # 3. Fetch Face Templates
+            Command.create({
+                "device_id": device.id, 
+                "command_text": f"DATA QUERY Face PIN={self.device_user_id}"
+            })
+
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Request Sent'),
+                'message': _('Commands sent to fetch templates for "%s".') % self.name,
+                'sticky': False,
+                'type': 'info',
+            }
+        }
 
     def action_open_enroll_wizard(self):
         self.ensure_one()

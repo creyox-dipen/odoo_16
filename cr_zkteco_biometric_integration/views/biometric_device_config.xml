@@ -16,6 +16,12 @@
                             class="btn-primary"
                             groups="hr_attendance.group_hr_attendance_manager"
                             help="Fetch all users, fingerprints, and faces from the device."/>
+                    <button name="action_export_all_users"
+                            string="Export Users"
+                            type="object"
+                            groups="hr_attendance.group_hr_attendance_manager"
+                            confirm="This will push all Odoo employees (with Biometric IDs) to the machine. It may overwrite existing names on the device. Do you want to proceed?"
+                            help="Push all Odoo employees to this biometric device."/>
                     <button name="action_request_attlog"
                             string="Download All Logs"
                             type="object"

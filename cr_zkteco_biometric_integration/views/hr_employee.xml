@@ -20,6 +20,12 @@
                         attrs="{'invisible': [('device_user_id', '=', False)]}"
                         groups="hr_attendance.group_hr_attendance_manager"
                         help="Push this employee's Name and ID to all active biometric devices."/>
+                <button name="action_request_templates_from_device"
+                        string="Fetch Templates"
+                        type="object"
+                        class="btn-secondary"
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"
+                        help="Pull this user's Name, Role, Fingerprints, and Faces from the machine."/>
                 <button name="action_open_enroll_wizard"
                         string="Remote Enrollment"
                         type="object"
