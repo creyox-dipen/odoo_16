@@ -287,3 +287,38 @@ class BiometricDevice(models.Model):
             "domain": [("device_id", "=", self.id)],
             "context": {"default_device_id": self.id},
         }
+
+    def _notify_admin(self, notification_type="discovered"):
+        """
+        Creates an activity for all Attendance Managers when a device 
+        event occurs (discovered or came back online).
+        """
+        self.ensure_one()
+        _logger.info("🚀🚀🚀 NOTIFY ADMIN TRIGGERED: Device=%s, Type=%s", self.name, notification_type)
+        
+        group = self.env.ref("hr_attendance.group_hr_attendance_manager", raise_if_not_found=False)
+        if not group:
+            _logger.error("🚀🚀🚀 ERROR: Group 'hr_attendance.group_hr_attendance_manager' NOT FOUND!")
+            return
+            
+        managers = group.users
+        _logger.info("🚀🚀🚀 Found %d Managers in group", len(managers))
+        
+        subject = _("Biometric Device Alert: %s") % self.name
+        if notification_type == "discovered":
+            note = _("A new biometric device with SN: <b>%s</b> has been discovered and automatically registered.") % self.serial_number
+        else:
+            note = _("Device <b>%s</b> (SN: %s) has just come back ONLINE.") % (self.name, self.serial_number)
+
+        for manager in managers:
+            _logger.info("🚀🚀🚀 Scheduling Activity for Manager: %s", manager.name)
+            self.activity_schedule(
+                'mail.mail_activity_data_todo',
+                user_id=manager.id,
+                summary=subject,
+                note=note
+            )
+        
+        # Also post to chatter
+        self.message_post(body=note, subtype_xmlid="mail.mt_note")
+        _logger.info("🚀🚀🚀 Notification completed successfully.")

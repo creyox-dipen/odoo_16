@@ -47,6 +47,15 @@ class AdmsController(http.Controller):
         if not device:
             return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
+        # Notify if device was offline (> 10 mins) and just came back
+        if device.last_seen:
+            from datetime import datetime, timedelta
+            if (datetime.now() - device.last_seen) > timedelta(minutes=10):
+                device._notify_admin(notification_type="online")
+        elif not device.last_seen:
+             # First time seeing a discovered device heartbeat
+             device._notify_admin(notification_type="online")
+
         # Check for pending commands for this device
         # Fetch the oldest pending commands (Batch of 5 to speed up processing)
         commands = request.env["biometric.device.command"].sudo().search([
@@ -157,6 +166,8 @@ class AdmsController(http.Controller):
                     "serial_number": serial,
                     "active": True,
                 })
+                # 🚀🚀🚀 Notify admin about new discovery
+                device._notify_admin(notification_type="discovered")
 
             if not device or not device.active:
                 _logger.warning("ADMS: Unknown or inactive device SN=%s", serial)
@@ -204,6 +215,8 @@ class AdmsController(http.Controller):
                 "serial_number": serial,
                 "active": True,
             })
+            # 🚀🚀🚀 Notify admin about new discovery
+            device._notify_admin(notification_type="discovered")
 
         if not device or not device.active:
             _logger.warning("ADMS: Unknown or inactive device SN=%s", serial)
