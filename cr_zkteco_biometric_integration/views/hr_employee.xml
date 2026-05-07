@@ -8,14 +8,22 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_email']" position="after">
                 <field name="device_user_id"/>
+                <field name="biometric_privilege"/>
             </xpath>
 
             <!-- Add Sync Buttons to Header -->
             <xpath expr="//header" position="inside">
+                <button name="action_sync_to_devices"
+                        string="Sync User Data"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('device_user_id', '=', False)]}"
+                        groups="hr_attendance.group_hr_attendance_manager"
+                        help="Push this employee's Name and ID to all active biometric devices."/>
                 <button name="action_open_enroll_wizard"
                         string="Remote Enrollment"
                         type="object"
-                        class="btn-primary"
+                        class="btn-secondary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"/>
                 <button name="action_open_transfer_wizard"
                         string="Transfer to Devices"

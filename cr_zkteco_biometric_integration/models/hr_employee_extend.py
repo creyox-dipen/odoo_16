@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Creyox Technologies.
 
-from odoo import models, fields
-
+from odoo import api, models, fields, _
+import logging
+logger = logging.getLogger(__name__)
 
 class HrEmployeeExtend(models.Model):
     """
@@ -31,6 +32,12 @@ class HrEmployeeExtend(models.Model):
         string="Biometric Templates",
         help="Fingerprint and Face templates stored for this employee.",
     )
+    biometric_privilege = fields.Selection([
+        ('0', 'Normal User'),
+        ('3', 'Enroller'),
+        ('14', 'Super Admin'),
+    ], string='Biometric Privilege', default='0',
+       help="User privilege level on the biometric device.\n0=Normal User, 3=Enroller (can enroll users), 14=Super Admin (full device access).")
 
     def action_sync_to_devices(self, device_ids=None):
         self.ensure_one()
@@ -46,13 +53,22 @@ class HrEmployeeExtend(models.Model):
     
         for device in devices:
             # 1. Push User Info — fields TAB separated
+            priv = self.biometric_privilege
+            priv_fields = (
+                f"Pri={priv}\t"
+                f"Privilege={priv}\t"
+                f"UserRole={priv}\t"
+            ) if priv else ""
+            logger.info("➡️➡️ priv : %s",priv)
+            logger.info("➡️➡️ priv_fields : %s",priv_fields)
+
             Command.create({
                 "device_id": device.id,
                 "command_text": (
                     f"DATA UPDATE UserInfo\t"
                     f"PIN={self.device_user_id}\t"
                     f"Name={self.name}\t"
-                    f"Pri=0\t"
+                    f"{priv_fields}"
                     f"Passwd=\t"
                     f"Card=\t"
                     f"Grp=1\t"
@@ -61,6 +77,22 @@ class HrEmployeeExtend(models.Model):
                     f"ViceCard="
                 ),
             })
+            temp_var = {
+                "device_id": device.id,
+                "command_text": (
+                    f"DATA UPDATE UserInfo\t"
+                    f"PIN={self.device_user_id}\t"
+                    f"Name={self.name}\t"
+                    f"{priv_fields}"
+                    f"Passwd=\t"
+                    f"Card=\t"
+                    f"Grp=1\t"
+                    f"TZ=0000000000000000000000000000\t"
+                    f"Verify=0\t"
+                    f"ViceCard="
+                ),
+            }
+            logger.info("➡️➡️ command value : %s",temp_var)
     
             # 2. Push Fingerprints / Face Templates
             for template in self.biometric_template_ids:
@@ -89,6 +121,17 @@ class HrEmployeeExtend(models.Model):
                     "device_id": device.id,
                     "command_text": cmd,
                 })
+        
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Sync Initiated'),
+                'message': _('Employee "%s" data has been queued for syncing to %d device(s).') % (self.name, len(devices)),
+                'sticky': False,
+                'type': 'success',
+            }
+        }
 
     def action_request_templates_from_device(self):
         """

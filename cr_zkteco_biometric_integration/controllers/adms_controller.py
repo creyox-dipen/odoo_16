@@ -232,6 +232,9 @@ class AdmsController(http.Controller):
                 elif line.startswith("FACE "):
                     clean_line = line[5:]
                     self._process_template_data(device, clean_line, "face")
+                elif line.startswith("USER "):
+                    clean_line = line[5:]
+                    self._process_user_data(device, clean_line)
         elif table_upper in ["FINGERTMP", "FP", "TEMPLATEV10", "TEMPLATEV9", "FINGERPRINT"]:
             _logger.info("ADMS: Processing %d Fingerprint template(s) from SN=%s", len(lines), serial)
             self._process_template_data(device, raw_body, "finger")
@@ -411,10 +414,25 @@ class AdmsController(http.Controller):
                 }
             )
             _logger.info(
-                "ADMS: Created employee name='%s' device_user_id=%s",
+                "ADMS: Created employee name='%s' device_user_id=%s. Requesting full details from device...",
                 employee_name,
                 device_user_id,
             )
+
+            # Automatically request full details (Name, Role, Templates) from device
+            Command = request.env["biometric.device.command"].sudo()
+            Command.create({
+                "device_id": device.id,
+                "command_text": f"DATA QUERY UserInfo PIN={device_user_id}",
+            })
+            Command.create({
+                "device_id": device.id,
+                "command_text": f"DATA QUERY FingerTmp PIN={device_user_id}",
+            })
+            Command.create({
+                "device_id": device.id,
+                "command_text": f"DATA QUERY Face PIN={device_user_id}",
+            })
         return employee
 
     # -------------------------------------------------------------------------
@@ -661,20 +679,36 @@ class AdmsController(http.Controller):
         Parses USER table data from ADMS.
         """
         lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
+        _logger.info("🚀🚀🚀 lines : %s",lines)
         for line in lines:
             params = self._parse_adms_line(line)
+            _logger.info("🚀🚀🚀 ADMS: Processing UserInfo line params: %s", params)
             pin = params.get("PIN") or params.get("UserPin")
             if pin:
                 pin = str(pin).split(' ')[0]
             if pin:
-                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
-                if employee:
-                    new_name = params.get("Name")
-                    if new_name and employee.name == f"Biometric User {pin}":
-                        _logger.info("ADMS: Data fetched for user PIN=%s, updating name to %s", pin, new_name)
-                        employee.sudo().write({"name": new_name})
-                    else:
-                        _logger.info("ADMS: Data fetched for user PIN=%s", pin)
+                # Ensure employee exists (Auto-create if missing)
+                employee = self._get_or_create_employee(device, pin)
+                
+                vals = {}
+                new_name = params.get("Name")
+                if new_name and employee.name == f"Biometric User {pin}":
+                    _logger.info("ADMS: Data fetched for user PIN=%s, updating name to %s", pin, new_name)
+                    vals['name'] = new_name
+                
+                # Sync Privilege/Role from device to Odoo
+                pri = params.get("Pri") or params.get("Privilege") or params.get("UserRole")
+                if pri and employee.biometric_privilege != str(pri):
+                    # Protection: Only upgrade privilege or set if Odoo is currently 'Normal User' (0)
+                    # This prevents the device from demoting an Admin to Normal user in Odoo.
+                    if employee.biometric_privilege == '0' or str(pri) in ['3', '14']:
+                        _logger.info("ADMS: Privilege sync for user PIN=%s, updating Odoo to %s", pin, pri)
+                        vals['biometric_privilege'] = str(pri)
+
+                if vals:
+                    employee.sudo().write(vals)
+                else:
+                    _logger.info("ADMS: Data synced for existing user PIN=%s", pin)
 
     def _process_template_data(self, device, raw_body, template_type):
         """
@@ -701,7 +735,7 @@ class AdmsController(http.Controller):
                     template_type = 'face' if 'FACE' in line else 'finger'
 
             if pin and tmp:
-                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                employee = self._get_or_create_employee(device, pin)
                 if employee:
                     # Deduplicate
                     existing = Template.search([
