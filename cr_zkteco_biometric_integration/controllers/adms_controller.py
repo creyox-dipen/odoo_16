@@ -725,11 +725,15 @@ class AdmsController(http.Controller):
                 
                 # Sync Privilege/Role from device to Odoo
                 pri = params.get("Pri") or params.get("Privilege") or params.get("UserRole")
-                if pri is not None and employee.biometric_privilege != str(pri):
-                    # We update if different, but we still keep a small safety: 
-                    # If device says '0' (Normal) but Odoo is '14' (Admin), we log it.
-                    _logger.info("ADMS: Privilege sync for user PIN=%s, updating Odoo to %s", pin, pri)
-                    vals['biometric_privilege'] = str(pri)
+                if pri is not None:
+                    pri_str = str(pri)
+                    # If it's a standard role, sync it. 
+                    # If it's a CUSTOM role (1, 2, 3...), set Odoo field to EMPTY (False).
+                    target_pri = pri_str if pri_str in ['0', '14'] else False
+                    
+                    if employee.biometric_privilege != target_pri:
+                        _logger.info("ADMS: Privilege sync for user PIN=%s, setting Odoo to %s (Device has custom role %s)", pin, target_pri, pri)
+                        vals['biometric_privilege'] = target_pri
 
                 if vals:
                     employee.sudo().write(vals)

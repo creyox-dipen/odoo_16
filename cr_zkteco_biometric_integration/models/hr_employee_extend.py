@@ -73,12 +73,13 @@ class HrEmployeeExtend(models.Model):
         
         # 1. Push User Info — fields TAB separated
         priv = self.biometric_privilege
-        if priv == '2':
-            priv_fields = f"Privilege=0\tUserRole=1\t"
-        elif priv == '14':
-            priv_fields = f"Privilege=14\tUserRole=0\t"
-        else:
-            priv_fields = f"Privilege=0\tUserRole=0\t"
+        priv_fields = ""
+        if priv == '14':
+            priv_fields = f"Pri=14\t"
+        elif priv == '0':
+            priv_fields = f"Pri=0\t"
+        # If priv is empty or a custom code, we don't send any privilege fields.
+        # This keeps the device's existing role untouched.
         
         logger.info("➡️ Sending User Sync for PIN=%s Name=%s to Device SN=%s", self.device_user_id, self.name, device.serial_number)
 
