@@ -162,18 +162,19 @@ class AdmsController(http.Controller):
             if not device:
                 _logger.info("ADMS: New device discovered SN=%s. Auto-creating...", serial)
                 device = request.env["biometric.device"].sudo().create({
-                    "name": f"New Device: {serial}",
+                    "name": f"Discovered Device: {serial}",
                     "serial_number": serial,
+                    "state": 'draft',
                     "active": True,
                     "last_seen": fields.Datetime.now(),
                 })
                 # Notify admin about new discovery
                 device._notify_admin(notification_type="discovered")
 
-            if not device or not device.active:
-                _logger.warning("ADMS: Unknown or inactive device SN=%s", serial)
+            if not device or device.state != 'confirmed':
+                _logger.warning("ADMS: Device SN=%s is pending approval or unknown", serial)
                 return request.make_response(
-                    "ERROR", headers=[("Content-Type", "text/plain")]
+                    "ERROR: Device pending approval", headers=[("Content-Type", "text/plain")]
                 )
 
             device.sudo().write({"last_seen": fields.Datetime.now()})
@@ -212,18 +213,19 @@ class AdmsController(http.Controller):
         if not device:
             _logger.info("ADMS: New device discovered via POST SN=%s. Auto-creating...", serial)
             device = request.env["biometric.device"].sudo().create({
-                "name": f"New Device: {serial}",
+                "name": f"Discovered Device: {serial}",
                 "serial_number": serial,
+                "state": 'draft',
                 "active": True,
                 "last_seen": fields.Datetime.now(),
             })
             # Notify admin about new discovery
             device._notify_admin(notification_type="discovered")
 
-        if not device or not device.active:
-            _logger.warning("ADMS: Unknown or inactive device SN=%s", serial)
+        if not device or device.state != 'confirmed':
+            _logger.warning("ADMS: Device SN=%s is pending approval or unknown", serial)
             return request.make_response(
-                "ERROR: Device not recognised",
+                "ERROR: Device pending approval",
                 headers=[("Content-Type", "text/plain")],
                 status=403,
             )

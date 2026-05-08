@@ -109,6 +109,16 @@ class BiometricDevice(models.Model):
         ('connected', 'Connected'),
     ], string="Connection Status", compute="_compute_connection_status", store=False)
 
+    state = fields.Selection([
+        ('draft', 'Pending Approval'),
+        ('confirmed', 'Approved'),
+    ], string="Status", default='draft', tracking=True)
+
+    def action_approve(self):
+        """Approves a discovered device."""
+        self.write({'state': 'confirmed'})
+        return True
+
     def _compute_connection_status(self):
         """
         Calculates status based on the last_seen timestamp.

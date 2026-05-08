@@ -10,33 +10,43 @@
         <field name="arch" type="xml">
             <form string="Biometric Device">
                 <header>
+                    <button name="action_approve"
+                            string="Approve Device"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"
+                            groups="hr_attendance.group_hr_attendance_manager"/>
                     <button name="action_sync_all_biometrics"
                             string="Download All Biometrics"
                             type="object"
-                            class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"
                             help="Fetch all users, fingerprints, and faces from the device."/>
                     <button name="action_export_all_users"
                             string="Export Users"
                             type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"
                             confirm="This will push all Odoo employees (with Biometric IDs) to the machine. It may overwrite existing names on the device. Do you want to proceed?"
                             help="Push all Odoo employees to this biometric device."/>
                     <button name="action_request_attlog"
                             string="Download All Logs"
                             type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"
                             help="Forces the device to re-send all attendance logs."/>
                     <button name="action_reboot"
                             string="Reboot Device"
                             type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"/>
                     <button name="action_clear_log"
                             string="Clear Device Logs"
                             type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"
                             confirm="Are you sure you want to clear all attendance logs from the physical device? This cannot be undone."/>
-                    <field name="connection_status" widget="statusbar" statusbar_visible="not_connected,connected"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
 
                 <sheet>
