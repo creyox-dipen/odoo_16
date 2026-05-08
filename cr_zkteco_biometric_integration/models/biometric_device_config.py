@@ -170,6 +170,19 @@ class BiometricDevice(models.Model):
              "If disabled (only for 'Both'), the first punch of the day is In and the second is Out."
     )
 
+    # Smart Policies
+    attendance_policy = fields.Selection([
+        ('raw', 'Raw (Exact Time)'),
+        ('calendar', 'Calendar-Based (Smart Rounding)'),
+    ], string="Attendance Policy", default='raw', required=True,
+       help="Raw: Records the exact time from the machine.\n"
+            "Calendar-Based: Rounds the punch time to the employee's shift start/end if within the grace period.")
+
+    grace_start_in = fields.Integer(string="Grace Start-In (Mins)", default=15, help="Round up to shift start if check-in is X mins early.")
+    grace_end_in = fields.Integer(string="Grace End-In (Mins)", default=15, help="Round down to shift start if check-in is X mins late.")
+    grace_start_out = fields.Integer(string="Grace Start-Out (Mins)", default=15, help="Round up to shift end if check-out is X mins early.")
+    grace_end_out = fields.Integer(string="Grace End-Out (Mins)", default=15, help="Round down to shift end if check-out is X mins late.")
+
     # -------------------------------------------------------------------------
     # SQL Constraints
     # -------------------------------------------------------------------------
@@ -294,16 +307,11 @@ class BiometricDevice(models.Model):
         event occurs (discovered or came back online).
         """
         self.ensure_one()
-        _logger.info("🚀🚀🚀 NOTIFY ADMIN TRIGGERED: Device=%s, Type=%s", self.name, notification_type)
-        
         group = self.env.ref("hr_attendance.group_hr_attendance_manager", raise_if_not_found=False)
         if not group:
-            _logger.error("🚀🚀🚀 ERROR: Group 'hr_attendance.group_hr_attendance_manager' NOT FOUND!")
             return
             
         managers = group.users
-        _logger.info("🚀🚀🚀 Found %d Managers in group", len(managers))
-        
         subject = _("Biometric Device Alert: %s") % self.name
         if notification_type == "discovered":
             note = _("A new biometric device with SN: <b>%s</b> has been discovered and automatically registered.") % self.serial_number
@@ -311,7 +319,6 @@ class BiometricDevice(models.Model):
             note = _("Device <b>%s</b> (SN: %s) has just come back ONLINE.") % (self.name, self.serial_number)
 
         for manager in managers:
-            _logger.info("🚀🚀🚀 Scheduling Activity for Manager: %s", manager.name)
             self.activity_schedule(
                 'mail.mail_activity_data_todo',
                 user_id=manager.id,
@@ -319,6 +326,6 @@ class BiometricDevice(models.Model):
                 note=note
             )
         
-        # Also post to chatter
-        self.message_post(body=note, subtype_xmlid="mail.mt_note")
-        _logger.info("🚀🚀🚀 Notification completed successfully.")
+        # Only post to chatter for 'online' status (Discovery already has a default Odoo log)
+        if notification_type == "online":
+            self.message_post(body=note, subtype_xmlid="mail.mt_note")

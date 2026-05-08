@@ -34,10 +34,9 @@ class HrEmployeeExtend(models.Model):
     )
     biometric_privilege = fields.Selection([
         ('0', 'Normal User'),
-        ('3', 'Enroller'),
         ('14', 'Super Admin'),
     ], string='Biometric Privilege', default='0',
-       help="User privilege level on the biometric device.\n0=Normal User, 3=Enroller (can enroll users), 14=Super Admin (full device access).")
+       help="User privilege level on the biometric device.\n0=Normal User, 1/3=Enroller, 2=Manager, 14=Super Admin.")
 
     _sql_constraints = [
         ('device_user_id_unique', 'unique(device_user_id)', 'The Biometric User ID must be unique per employee!'),
@@ -74,11 +73,12 @@ class HrEmployeeExtend(models.Model):
         
         # 1. Push User Info — fields TAB separated
         priv = self.biometric_privilege
-        priv_fields = (
-            f"Pri={priv}\t"
-            f"Privilege={priv}\t"
-            f"UserRole={priv}\t"
-        ) if priv else ""
+        if priv == '2':
+            priv_fields = f"Privilege=0\tUserRole=1\t"
+        elif priv == '14':
+            priv_fields = f"Privilege=14\tUserRole=0\t"
+        else:
+            priv_fields = f"Privilege=0\tUserRole=0\t"
         
         logger.info("➡️ Sending User Sync for PIN=%s Name=%s to Device SN=%s", self.device_user_id, self.name, device.serial_number)
 
@@ -92,7 +92,7 @@ class HrEmployeeExtend(models.Model):
                 f"Passwd=\t"
                 f"Card=\t"
                 f"Grp=1\t"
-                f"TZ=0000000000000000000000000000\t"
+                f"TZ=0000000100000000\t"
                 f"Verify=0\t"
                 f"ViceCard="
             ),
@@ -227,8 +227,13 @@ class HrEmployeeExtend(models.Model):
         """
         self.ensure_one()
         Attendance = self.env["hr.attendance"].sudo()
+        
+        # --- SMART POLICY: Calendar-Based Rounding ---
+        final_dt = utc_dt
+        if device.attendance_policy == 'calendar' and self.resource_calendar_id:
+            final_dt = self._get_smart_punch_time(device, utc_dt, punch_type)
 
-        # 1. Rule: Min. Punch Interval
+        # 1. Rule: Min. Punch Interval (use the original utc_dt for interval check)
         if device.min_punch_interval > 0:
             last_attendance = Attendance.search([
                 ("employee_id", "=", self.id)
@@ -251,7 +256,7 @@ class HrEmployeeExtend(models.Model):
                 ("check_out", "=", False),
             ], limit=1)
             if not open_attendance:
-                Attendance.create({"employee_id": self.id, "check_in": utc_dt})
+                Attendance.create({"employee_id": self.id, "check_in": final_dt})
                 return True
             return False
         
@@ -260,12 +265,75 @@ class HrEmployeeExtend(models.Model):
                 ("employee_id", "=", self.id),
                 ("check_out", "=", False),
             ], order="check_in desc", limit=1)
-            if open_attendance and utc_dt > open_attendance.check_in:
-                open_attendance.write({"check_out": utc_dt})
+            if open_attendance and final_dt > open_attendance.check_in:
+                open_attendance.write({"check_out": final_dt})
                 return True
             return False
             
         return False
+
+    def _get_smart_punch_time(self, device, utc_dt, punch_type):
+        """
+        Calculates the 'Smart' punch time by rounding the raw UTC time to the 
+        nearest shift boundary if within the device's grace period.
+        """
+        import pytz
+        from datetime import datetime, timedelta, time
+
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return utc_dt
+
+        # 1. Convert UTC punch to local employee/device timezone
+        tz_name = device.timezone or self.env.user.tz or 'UTC'
+        tz = pytz.timezone(tz_name)
+        local_dt = pytz.utc.localize(utc_dt).astimezone(tz)
+        local_date = local_dt.date()
+
+        # 2. Get shift intervals for this day
+        # We search a slightly wider window (e.g. +/- 4 hours) to catch night shifts or early starts
+        day_start = tz.localize(datetime.combine(local_date, time.min))
+        day_end = tz.localize(datetime.combine(local_date, time.max))
+        
+        # Get intervals (this handles both standard and global calendars)
+        intervals = calendar._attendance_intervals_batch(day_start, day_end, self.resource_id)[self.resource_id.id]
+        
+        if not intervals:
+            return utc_dt
+
+        # 3. Find the best shift boundary to round to
+        smart_dt = utc_dt
+        
+        for start, end, meta in intervals:
+            # Shift boundaries in UTC
+            shift_start_utc = start.replace(tzinfo=None)
+            shift_end_utc = end.replace(tzinfo=None)
+
+            if punch_type == 'in':
+                # Check-In Grace
+                diff_early = (shift_start_utc - utc_dt).total_seconds() / 60.0 # Positive if early
+                diff_late = (utc_dt - shift_start_utc).total_seconds() / 60.0  # Positive if late
+                
+                if 0 <= diff_early <= device.grace_start_in:
+                    # Early check-in within grace -> round UP to shift start
+                    return shift_start_utc
+                if 0 <= diff_late <= device.grace_end_in:
+                    # Late check-in within grace -> round DOWN to shift start
+                    return shift_start_utc
+
+            elif punch_type == 'out':
+                # Check-Out Grace
+                diff_early = (shift_end_utc - utc_dt).total_seconds() / 60.0 # Positive if early
+                diff_late = (utc_dt - shift_end_utc).total_seconds() / 60.0  # Positive if late
+
+                if 0 <= diff_early <= device.grace_start_out:
+                    # Early check-out within grace -> round UP to shift end
+                    return shift_end_utc
+                if 0 <= diff_late <= device.grace_end_out:
+                    # Late check-out within grace -> round DOWN to shift end
+                    return shift_end_utc
+
+        return smart_dt
 
     def _run_biometric_auto_checkout(self):
         """

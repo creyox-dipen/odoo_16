@@ -165,8 +165,9 @@ class AdmsController(http.Controller):
                     "name": f"New Device: {serial}",
                     "serial_number": serial,
                     "active": True,
+                    "last_seen": fields.Datetime.now(),
                 })
-                # 🚀🚀🚀 Notify admin about new discovery
+                # Notify admin about new discovery
                 device._notify_admin(notification_type="discovered")
 
             if not device or not device.active:
@@ -214,8 +215,9 @@ class AdmsController(http.Controller):
                 "name": f"New Device: {serial}",
                 "serial_number": serial,
                 "active": True,
+                "last_seen": fields.Datetime.now(),
             })
-            # 🚀🚀🚀 Notify admin about new discovery
+            # Notify admin about new discovery
             device._notify_admin(notification_type="discovered")
 
         if not device or not device.active:
@@ -715,19 +717,19 @@ class AdmsController(http.Controller):
                 employee = self._get_or_create_employee(device, pin)
                 
                 vals = {}
+                # Sync Name from device to Odoo (If name on device is different, update Odoo)
                 new_name = params.get("Name")
-                if new_name and employee.name == f"Biometric User {pin}":
-                    _logger.info("ADMS: Data fetched for user PIN=%s, updating name to %s", pin, new_name)
+                if new_name and employee.name != new_name:
+                    _logger.info("ADMS: Updating employee name from device: %s -> %s", employee.name, new_name)
                     vals['name'] = new_name
                 
                 # Sync Privilege/Role from device to Odoo
                 pri = params.get("Pri") or params.get("Privilege") or params.get("UserRole")
-                if pri and employee.biometric_privilege != str(pri):
-                    # Protection: Only upgrade privilege or set if Odoo is currently 'Normal User' (0)
-                    # This prevents the device from demoting an Admin to Normal user in Odoo.
-                    if employee.biometric_privilege == '0' or str(pri) in ['3', '14']:
-                        _logger.info("ADMS: Privilege sync for user PIN=%s, updating Odoo to %s", pin, pri)
-                        vals['biometric_privilege'] = str(pri)
+                if pri is not None and employee.biometric_privilege != str(pri):
+                    # We update if different, but we still keep a small safety: 
+                    # If device says '0' (Normal) but Odoo is '14' (Admin), we log it.
+                    _logger.info("ADMS: Privilege sync for user PIN=%s, updating Odoo to %s", pin, pri)
+                    vals['biometric_privilege'] = str(pri)
 
                 if vals:
                     employee.sudo().write(vals)

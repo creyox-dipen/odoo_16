@@ -94,6 +94,19 @@
                             <field name="auto_checkout_time" widget="float_time" attrs="{'invisible': [('auto_checkout', '=', False)]}"/>
                         </group>
                     </group>
+                    <group string="Smart Policies" name="smart_policies">
+                        <field name="attendance_policy"/>
+                        <label for="grace_start_in" string="Check-In Grace" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
+                        <div class="o_row" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}">
+                            <span>Before:</span> <field name="grace_start_in"/> <span>mins</span>
+                            <span>After:</span> <field name="grace_end_in"/> <span>mins</span>
+                        </div>
+                        <label for="grace_start_out" string="Check-Out Grace" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
+                        <div class="o_row" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}">
+                            <span>Before:</span> <field name="grace_start_out"/> <span>mins</span>
+                            <span>After:</span> <field name="grace_end_out"/> <span>mins</span>
+                        </div>
+                    </group>
 
                     <notebook>
                         <page string="Recent Logs" name="logs">
