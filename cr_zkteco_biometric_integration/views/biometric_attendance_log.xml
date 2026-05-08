@@ -32,7 +32,11 @@
         <field name="name">biometric.attendance.log.form</field>
         <field name="model">biometric.attendance.log</field>
         <field name="arch" type="xml">
-            <form string="Attendance Log" create="false" edit="false">
+            <form string="Attendance Log">
+                <header>
+                    <button name="action_process_punch" string="Process Punch" type="object" class="oe_highlight" attrs="{'invisible': [('status', '=', 'processed')]}"/>
+                    <field name="status" widget="statusbar" statusbar_visible="new,processed,failed"/>
+                </header>
                 <sheet>
                     <group>
                         <group string="Punch Photo">

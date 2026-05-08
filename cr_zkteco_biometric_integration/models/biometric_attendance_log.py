@@ -134,6 +134,42 @@ class BiometricAttendanceLog(models.Model):
             ts = fields.Datetime.to_string(record.timestamp) if record.timestamp else ""
             record.unique_key = f"{serial}_{uid}_{ts}"
             
+    def action_process_punch(self):
+        """
+        Manually trigger the processing logic for this specific log.
+        Useful for testing policies or re-processing failed logs.
+        """
+        self.ensure_one()
+        if not self.employee_id:
+            return
+            
+        PUNCH_TYPE_MAP = {
+            "0": "in", "4": "in",
+            "1": "out", "5": "out",
+        }
+        
+        device = self.device_id
+        punch_type = PUNCH_TYPE_MAP.get(self.verify_state)
+        
+        # Override punch type based on device settings if needed
+        if device.used_for == 'in':
+            punch_type = 'in'
+        elif device.used_for == 'out':
+            punch_type = 'out'
+        elif not punch_type:
+            # Guessing logic
+            open_att = self.env["hr.attendance"].sudo().search([
+                ("employee_id", "=", self.employee_id.id),
+                ("check_out", "=", False)
+            ], limit=1)
+            punch_type = "out" if open_att else "in"
+        
+        success = self.employee_id._process_biometric_punch(device, self.timestamp, punch_type)
+        if success:
+            self.status = "processed"
+        else:
+            self.status = "failed"
+
     def action_process_logs(self):
         """
         Scheduled action to process 'new' logs.

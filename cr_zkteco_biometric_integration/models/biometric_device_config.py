@@ -178,6 +178,13 @@ class BiometricDevice(models.Model):
        help="Raw: Records the exact time from the machine.\n"
             "Calendar-Based: Rounds the punch time to the employee's shift start/end if within the grace period.")
 
+    flexible_period = fields.Boolean(
+        string="Flexible Period (Overnight)",
+        default=False,
+        help="If enabled, the system will search for shifts across the midnight boundary (+/- 14 hours). "
+             "This is recommended for night shifts but can be disabled to improve performance."
+    )
+
     grace_start_in = fields.Integer(string="Grace Start-In (Mins)", default=15, help="Round up to shift start if check-in is X mins early.")
     grace_end_in = fields.Integer(string="Grace End-In (Mins)", default=15, help="Round down to shift start if check-in is X mins late.")
     grace_start_out = fields.Integer(string="Grace Start-Out (Mins)", default=15, help="Round up to shift end if check-out is X mins early.")

@@ -96,6 +96,7 @@
                     </group>
                     <group string="Smart Policies" name="smart_policies">
                         <field name="attendance_policy"/>
+                        <field name="flexible_period" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
                         <label for="grace_start_in" string="Check-In Grace" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
                         <div class="o_row" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}">
                             <span>Before:</span> <field name="grace_start_in"/> <span>mins</span>

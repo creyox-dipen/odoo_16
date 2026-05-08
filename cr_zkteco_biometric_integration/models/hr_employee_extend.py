@@ -285,16 +285,22 @@ class HrEmployeeExtend(models.Model):
         if not calendar:
             return utc_dt
 
-        # 1. Convert UTC punch to local employee/device timezone
-        tz_name = device.timezone or self.env.user.tz or 'UTC'
+        # 1. Convert UTC punch to the Employee's Local timezone (from Calendar)
+        # We prioritize the Calendar timezone, then Device, then User, then UTC
+        tz_name = calendar.tz or device.timezone or self.env.user.tz or 'UTC'
         tz = pytz.timezone(tz_name)
         local_dt = pytz.utc.localize(utc_dt).astimezone(tz)
         local_date = local_dt.date()
 
-        # 2. Get shift intervals for this day
-        # We search a slightly wider window (e.g. +/- 4 hours) to catch night shifts or early starts
-        day_start = tz.localize(datetime.combine(local_date, time.min))
-        day_end = tz.localize(datetime.combine(local_date, time.max))
+        # 2. Get shift intervals around the punch time
+        if device.flexible_period:
+            # Flexible: Search +/- 14 hours around the punch to catch overnight shifts
+            day_start = local_dt - timedelta(hours=14)
+            day_end = local_dt + timedelta(hours=14)
+        else:
+            # Standard: Only search the exact same day as the punch (High Performance)
+            day_start = tz.localize(datetime.combine(local_date, time.min))
+            day_end = tz.localize(datetime.combine(local_date, time.max))
         
         # Get intervals (this handles both standard and global calendars)
         intervals = calendar._attendance_intervals_batch(day_start, day_end, self.resource_id)[self.resource_id.id]
@@ -303,38 +309,38 @@ class HrEmployeeExtend(models.Model):
             return utc_dt
 
         # 3. Find the best shift boundary to round to
-        smart_dt = utc_dt
-        
+        # We perform the comparison in LOCAL time to avoid UTC offset confusion
         for start, end, meta in intervals:
-            # Shift boundaries in UTC
-            shift_start_utc = start.replace(tzinfo=None)
-            shift_end_utc = end.replace(tzinfo=None)
+            # start and end from Odoo are UTC-aware datetimes. 
+            # We convert them to the same local timezone as the punch.
+            shift_start_local = start.astimezone(tz)
+            shift_end_local = end.astimezone(tz)
 
             if punch_type == 'in':
                 # Check-In Grace
-                diff_early = (shift_start_utc - utc_dt).total_seconds() / 60.0 # Positive if early
-                diff_late = (utc_dt - shift_start_utc).total_seconds() / 60.0  # Positive if late
+                diff_early = (shift_start_local - local_dt).total_seconds() / 60.0 # Positive if early
+                diff_late = (local_dt - shift_start_local).total_seconds() / 60.0  # Positive if late
                 
                 if 0 <= diff_early <= device.grace_start_in:
-                    # Early check-in within grace -> round UP to shift start
-                    return shift_start_utc
+                    # Early check-in within grace -> round UP to shift start (return as UTC)
+                    return shift_start_local.astimezone(pytz.utc).replace(tzinfo=None)
                 if 0 <= diff_late <= device.grace_end_in:
-                    # Late check-in within grace -> round DOWN to shift start
-                    return shift_start_utc
+                    # Late check-in within grace -> round DOWN to shift start (return as UTC)
+                    return shift_start_local.astimezone(pytz.utc).replace(tzinfo=None)
 
             elif punch_type == 'out':
                 # Check-Out Grace
-                diff_early = (shift_end_utc - utc_dt).total_seconds() / 60.0 # Positive if early
-                diff_late = (utc_dt - shift_end_utc).total_seconds() / 60.0  # Positive if late
+                diff_early = (shift_end_local - local_dt).total_seconds() / 60.0 # Positive if early
+                diff_late = (local_dt - shift_end_local).total_seconds() / 60.0  # Positive if late
 
                 if 0 <= diff_early <= device.grace_start_out:
-                    # Early check-out within grace -> round UP to shift end
-                    return shift_end_utc
+                    # Early check-out within grace -> round UP to shift end (return as UTC)
+                    return shift_end_local.astimezone(pytz.utc).replace(tzinfo=None)
                 if 0 <= diff_late <= device.grace_end_out:
-                    # Late check-out within grace -> round DOWN to shift end
-                    return shift_end_utc
+                    # Late check-late within grace -> round DOWN to shift end (return as UTC)
+                    return shift_end_local.astimezone(pytz.utc).replace(tzinfo=None)
 
-        return smart_dt
+        return utc_dt
 
     def _run_biometric_auto_checkout(self):
         """
