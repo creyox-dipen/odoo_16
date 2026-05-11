@@ -56,6 +56,16 @@ export class BiometricDashboard extends Component {
             target: 'current',
         });
     }
+
+    openDevice(deviceId) {
+        this.action.doAction({
+            type: 'ir.actions.act_window',
+            res_model: 'biometric.device',
+            res_id: deviceId,
+            views: [[false, 'form']],
+            target: 'current',
+        });
+    }
 }
 
 BiometricDashboard.template = "cr_zkteco_biometric_integration.BiometricDashboard";

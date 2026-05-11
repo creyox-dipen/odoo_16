@@ -50,6 +50,7 @@ class BiometricDashboard(models.AbstractModel):
                 last_seen_str = dev.last_seen.strftime("%Y-%m-%d %H:%M:%S")
             
             device_stats.append({
+                'id': dev.id,
                 'name': dev.name,
                 'sn': dev.serial_number,
                 'status': 'online' if is_online else 'offline',

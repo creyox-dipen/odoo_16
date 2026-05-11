@@ -105,6 +105,28 @@
         }
     }
 
+    .clickable {
+        cursor: pointer !important;
+    }
+
+    .badge-circle {
+        width: 28px;
+        height: 28px;
+        border-radius: 50% !important;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: 800;
+        padding: 0 !important;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-outline-info, .btn-outline-primary {
+        border-radius: 8px !important;
+        font-weight: 600;
+    }
+
     /* List Items Styling */
     .employee-item {
         background: rgba(255, 255, 255, 0.05);

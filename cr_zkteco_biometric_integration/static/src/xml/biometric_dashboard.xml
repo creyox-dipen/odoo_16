@@ -50,14 +50,16 @@
                             <div class="content-card presented-list">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <span class="title"><i class="fa fa-check-circle me-2 text-success"></i>Presented Today</span>
-                                    <span class="badge bg-success"><t t-esc="state.data.present_count"/></span>
+                                    <span class="badge badge-circle bg-success"><t t-esc="state.data.present_count"/></span>
                                 </div>
                                 <div class="card-body scrollable">
                                     <div t-if="state.data.presented_employees.length == 0" class="empty-state text-center py-5">
                                         <i class="fa fa-user-circle-o fa-3x text-muted mb-2"></i>
                                         <p class="text-muted">No one has punched in yet.</p>
                                     </div>
-                                    <div t-foreach="state.data.presented_employees" t-as="emp" t-key="emp.id" class="employee-item d-flex align-items-center p-2 mb-2 animate__animated animate__fadeIn">
+                                    <div t-foreach="state.data.presented_employees" t-as="emp" t-key="emp.id" 
+                                         class="employee-item d-flex align-items-center p-2 mb-2 animate__animated animate__fadeIn clickable"
+                                         t-on-click="() => this.openEmployee(emp.id)">
                                         <img t-if="emp.image" t-att-src="'data:image/png;base64,' + emp.image" class="emp-avatar me-3"/>
                                         <div t-else="" class="emp-avatar-placeholder me-3"><t t-esc="emp.name[0]"/></div>
                                         <div class="emp-info">
@@ -74,14 +76,16 @@
                             <div class="content-card absented-list">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <span class="title"><i class="fa fa-times-circle me-2 text-danger"></i>Absented Today</span>
-                                    <span class="badge bg-danger"><t t-esc="state.data.absent_count"/></span>
+                                    <span class="badge badge-circle bg-danger"><t t-esc="state.data.absent_count"/></span>
                                 </div>
                                 <div class="card-body scrollable">
                                     <div t-if="state.data.absented_employees.length == 0" class="empty-state text-center py-5">
                                         <i class="fa fa-smile-o fa-3x text-success mb-2"></i>
                                         <p class="text-muted">Everyone is present!</p>
                                     </div>
-                                    <div t-foreach="state.data.absented_employees" t-as="emp" t-key="emp.id" class="employee-item d-flex align-items-center p-2 mb-2 animate__animated animate__fadeIn">
+                                    <div t-foreach="state.data.absented_employees" t-as="emp" t-key="emp.id" 
+                                         class="employee-item d-flex align-items-center p-2 mb-2 animate__animated animate__fadeIn clickable"
+                                         t-on-click="() => this.openEmployee(emp.id)">
                                         <img t-if="emp.image" t-att-src="'data:image/png;base64,' + emp.image" class="emp-avatar me-3"/>
                                         <div t-else="" class="emp-avatar-placeholder me-3"><t t-esc="emp.name[0]"/></div>
                                         <div class="emp-info">
@@ -142,7 +146,9 @@
                             <button class="btn btn-sm btn-outline-primary" t-on-click="() => this.refreshData()"><i class="fa fa-refresh"></i></button>
                         </div>
                         <div class="card-body">
-                            <div t-foreach="state.data.device_stats" t-as="dev" t-key="dev.sn" class="device-item p-3 mb-3 animate__animated animate__slideInRight">
+                            <div t-foreach="state.data.device_stats" t-as="dev" t-key="dev.sn" 
+                                 class="device-item p-3 mb-3 animate__animated animate__slideInRight clickable"
+                                 t-on-click="() => this.openDevice(dev.id)">
                                 <div class="d-flex justify-content-between align-items-center mb-2">
                                     <div class="d-flex align-items-center">
                                         <div t-attf-class="status-indicator me-3 #{dev.status}"></div>
