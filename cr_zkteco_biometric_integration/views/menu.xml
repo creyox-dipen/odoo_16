@@ -5,6 +5,14 @@
          Biometric Menus inside Attendances
     ================================================================ -->
 
+    <!-- ── Dashboard under Attendances ────────────────────────── -->
+    <menuitem id="menu_biometric_dashboard"
+              name="Dashboard"
+              parent="hr_attendance.menu_hr_attendance_root"
+              action="action_biometric_dashboard"
+              sequence="1"
+              groups="hr_attendance.group_hr_attendance_manager"/>
+
     <!-- ── Configuration under Attendances ───────────────────────── -->
     <menuitem id="menu_biometric_configuration"
               name="Biometric Configuration"

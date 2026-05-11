@@ -21,6 +21,7 @@
         "views/biometric_device_config.xml",
         "views/biometric_attendance_log.xml",
         "views/hr_employee.xml",
+        "views/biometric_dashboard_view.xml",
         "views/menu.xml",
         "wizard/biometric_enroll_wizard_view.xml",
         "wizard/biometric_user_transfer_wizard_view.xml",
@@ -31,6 +32,13 @@
         "wizard/daily_attendance_report_wizard_view.xml",
         "report/attendance_reports.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "cr_zkteco_biometric_integration/static/src/xml/biometric_dashboard.xml",
+            "cr_zkteco_biometric_integration/static/src/scss/biometric_dashboard.scss",
+            "cr_zkteco_biometric_integration/static/src/js/biometric_dashboard.js",
+        ],
+    },
     "installable": True,
     "application": True,
     # "price": 0.00,
