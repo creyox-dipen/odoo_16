@@ -85,9 +85,9 @@
                         <group string="Device Identity">
                             <field name="serial_number"
                                    placeholder="e.g. ABC1234567890"/>
-                            <field name="device_ip"
+                            <!-- <field name="device_ip"
                                    placeholder="e.g. 192.168.1.100"/>
-                            <field name="device_port"/>
+                            <field name="device_port"/> -->
                             <field name="password" widget="boolean_toggle"/>
                             <field name="communication_key"
                                    password="True"

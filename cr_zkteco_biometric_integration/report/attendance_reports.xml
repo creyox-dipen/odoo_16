@@ -78,8 +78,8 @@
                                     <td style="padding: 15px; color: #6a4a6e;"><t t-esc="data['total_employees']"/></td>
                                     <td style="padding: 15px; color: #28a745;"><t t-esc="data['present_count']"/></td>
                                     <td style="padding: 15px; color: #dc3545;"><t t-esc="data['absent_count']"/></td>
-                                    <td style="padding: 15px; color: #ffc107;">0</td>
-                                    <td style="padding: 15px; color: #17a2b8;">0</td>
+                                    <td style="padding: 15px; color: #ffc107;"><t t-esc="data['late_count']"/></td>
+                                    <td style="padding: 15px; color: #17a2b8;"><t t-esc="data['early_count']"/></td>
                                 </tr>
                             </tbody>
                         </table>

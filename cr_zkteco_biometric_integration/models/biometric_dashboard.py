@@ -111,12 +111,24 @@ class BiometricDashboard(models.AbstractModel):
                 'image': img
             })
 
+        # 7. Late/Early Counts
+        late_arrival_count = self.env['hr.attendance'].search_count([
+            ('check_in', '>=', today_start_utc),
+            ('check_in', '<=', today_end_utc),
+            ('is_late', '=', True)
+        ])
+        early_leaving_count = self.env['hr.attendance'].search_count([
+            ('check_out', '>=', today_start_utc),
+            ('check_out', '<=', today_end_utc),
+            ('is_early_leaving', '=', True)
+        ])
+
         return {
             'total_employees': total_employees,
             'present_count': present_count,
             'absent_count': absent_count,
-            'late_count': 0, # Placeholder for now
-            'early_count': 0, # Placeholder for now
+            'late_count': late_arrival_count,
+            'early_count': early_leaving_count,
             'device_stats': device_stats,
             'recent_punches': recent_punches,
             'presented_employees': presented_employees,

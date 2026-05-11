@@ -32,7 +32,19 @@ class BiometricDailySummaryReportWizard(models.TransientModel):
         present_count = len(set(present_emp_ids))
         absent_count = total_employees - present_count
 
-        # 3. List of Absent Employees
+        # 3. Late Arrivals and Early Departures
+        late_count = self.env['hr.attendance'].search_count([
+            ('check_in', '>=', start_utc),
+            ('check_in', '<=', end_utc),
+            ('is_late', '=', True)
+        ])
+        early_count = self.env['hr.attendance'].search_count([
+            ('check_out', '>=', start_utc),
+            ('check_out', '<=', end_utc),
+            ('is_early_leaving', '=', True)
+        ])
+
+        # 4. List of Absent Employees
         absent_employees = []
         for emp in all_employees:
             if emp.id not in present_emp_ids:
@@ -48,6 +60,8 @@ class BiometricDailySummaryReportWizard(models.TransientModel):
             'total_employees': total_employees,
             'present_count': present_count,
             'absent_count': absent_count,
+            'late_count': late_count,
+            'early_count': early_count,
             'absent_employees': absent_employees,
             'generated_on': pytz.utc.localize(datetime.utcnow()).astimezone(user_tz).strftime('%Y-%m-%d %H:%M'),
             'generated_by': self.env.user.name,

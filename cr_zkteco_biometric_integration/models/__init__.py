@@ -7,3 +7,4 @@ from . import hr_employee_extend
 from . import biometric_dashboard
 from . import biometric_device_command
 from . import biometric_user_template
+from . import hr_attendance_extend

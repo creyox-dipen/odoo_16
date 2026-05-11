@@ -250,6 +250,9 @@ class HrEmployeeExtend(models.Model):
                 if abs(diff) < device.min_punch_interval:
                     return False
 
+        # --- LATE/EARLY CALCULATION ---
+        perf_stats = self._get_punch_performance_stats(device, utc_dt, punch_type)
+
         if punch_type == "in":
             # Check for existing open attendance
             open_attendance = Attendance.search([
@@ -257,7 +260,12 @@ class HrEmployeeExtend(models.Model):
                 ("check_out", "=", False),
             ], limit=1)
             if not open_attendance:
-                Attendance.create({"employee_id": self.id, "check_in": final_dt})
+                Attendance.create({
+                    "employee_id": self.id, 
+                    "check_in": final_dt,
+                    "is_late": perf_stats.get('is_late', False),
+                    "late_minutes": perf_stats.get('late_minutes', 0.0),
+                })
                 return True
             return False
         
@@ -267,11 +275,102 @@ class HrEmployeeExtend(models.Model):
                 ("check_out", "=", False),
             ], order="check_in desc", limit=1)
             if open_attendance and final_dt > open_attendance.check_in:
-                open_attendance.write({"check_out": final_dt})
+                open_attendance.write({
+                    "check_out": final_dt,
+                    "is_early_leaving": perf_stats.get('is_early_leaving', False),
+                    "early_leaving_minutes": perf_stats.get('early_leaving_minutes', 0.0),
+                })
                 return True
             return False
             
         return False
+
+    def _get_punch_performance_stats(self, device, utc_dt, punch_type):
+        """
+        Calculates if a punch is late or early based on the employee's calendar.
+        Improved to handle multiple shifts (Morning/Afternoon) and late-night punches.
+        """
+        import pytz
+        from datetime import datetime, timedelta, time
+        
+        stats = {
+            'is_late': False,
+            'late_minutes': 0.0,
+            'is_early_leaving': False,
+            'early_leaving_minutes': 0.0
+        }
+
+        calendar = self.resource_calendar_id
+        if not calendar:
+            return stats
+
+        # 1. Convert UTC punch to Local timezone
+        # Use employee's timezone if set, else company/device
+        tz_name = self.tz or calendar.tz or device.timezone or 'UTC'
+        tz = pytz.timezone(tz_name)
+        local_dt = pytz.utc.localize(utc_dt).astimezone(tz)
+        local_date = local_dt.date()
+
+        # 2. Get all shift intervals for the day
+        day_start = tz.localize(datetime.combine(local_date, time.min))
+        day_end = tz.localize(datetime.combine(local_date, time.max))
+        if device.flexible_period:
+            day_start = local_dt - timedelta(hours=14)
+            day_end = local_dt + timedelta(hours=14)
+
+        intervals = calendar._attendance_intervals_batch(day_start, day_end, self.resource_id)[self.resource_id.id]
+        if not intervals:
+            return stats
+
+        # 3. Find the best matching shift
+        if punch_type == 'in':
+            # For check-in, we compare against the START of the relevant shift.
+            # Usually, the employee is checking in for the first shift they haven't worked yet.
+            # If they punch at 17:11, we compare against the start of the last shift of the day.
+            
+            # Sort shifts by start time
+            sorted_intervals = sorted(intervals, key=lambda x: x[0])
+            
+            # Find the shift that should have started before (or is closest to) the punch
+            target_shift = sorted_intervals[0] # Default to first
+            for start, end, meta in sorted_intervals:
+                shift_start_local = start.astimezone(tz)
+                # If the punch is after this shift start, this is a potential target
+                if local_dt >= shift_start_local:
+                    target_shift = (start, end, meta)
+            
+            start, end, meta = target_shift
+            shift_start_local = start.astimezone(tz)
+            
+            diff_late = (local_dt - shift_start_local).total_seconds() / 60.0
+            if diff_late > device.grace_end_in:
+                stats['is_late'] = True
+                stats['late_minutes'] = diff_late
+
+        elif punch_type == 'out':
+            # For check-out, we compare against the END of the relevant shift.
+            # Usually the one that ended closest to the punch.
+            
+            # Sort shifts by end time descending (latest first)
+            sorted_intervals = sorted(intervals, key=lambda x: x[1], reverse=True)
+            
+            # Find the shift that ended closest to the punch
+            target_shift = sorted_intervals[0]
+            for start, end, meta in sorted_intervals:
+                shift_end_local = end.astimezone(tz)
+                # If we punched before this shift ended, or it's the latest shift we completed
+                if local_dt <= shift_end_local:
+                    target_shift = (start, end, meta)
+
+            start, end, meta = target_shift
+            shift_end_local = end.astimezone(tz)
+            
+            diff_early = (shift_end_local - local_dt).total_seconds() / 60.0
+            if diff_early > device.grace_start_out:
+                stats['is_early_leaving'] = True
+                stats['early_leaving_minutes'] = diff_early
+
+        return stats
 
     def _get_smart_punch_time(self, device, utc_dt, punch_type):
         """
