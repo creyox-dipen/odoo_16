@@ -173,6 +173,11 @@ class BiometricDevice(models.Model):
         default=20.0,
         help="The time of day (0-24) to automatically close open attendances (e.g. 20.0 = 8:00 PM).",
     )
+    auto_clear_log = fields.Boolean(
+        string="Auto-Clear Device Logs",
+        default=False,
+        help="If enabled, Odoo will automatically send a command to clear the device's attendance logs after a successful sync.",
+    )
     used_for = fields.Selection([
         ('in', 'Check-in Only'),
         ('out', 'Check-out Only'),

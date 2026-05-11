@@ -275,6 +275,14 @@ class AdmsController(http.Controller):
             _logger.info("ADMS: Processing %d ATTLOG line(s) from SN=%s", len(lines), serial)
             for line in lines:
                 self._process_attlog_line(device, line)
+            
+            # Automatic Post-Sync Cleanup
+            if device.auto_clear_log:
+                _logger.info("ADMS: Auto-clearing logs for SN=%s after successful sync", serial)
+                request.env["biometric.device.command"].sudo().create({
+                    "device_id": device.id,
+                    "command_text": "CLEAR LOG",
+                })
         elif table_upper in ["USER", "USERINFO"]:
             _logger.info("ADMS: Processing %d USER info line(s) from SN=%s", len(lines), serial)
             self._process_user_data(device, raw_body)
