@@ -178,6 +178,11 @@ class BiometricDevice(models.Model):
         default=False,
         help="If enabled, Odoo will automatically send a command to clear the device's attendance logs after a successful sync.",
     )
+    heartbeat_delay = fields.Integer(
+        string="Heartbeat Interval (Seconds)",
+        default=30,
+        help="How often the device checks Odoo for new commands. Higher values save server resources but make commands slower to reach the device.",
+    )
     used_for = fields.Selection([
         ('in', 'Check-in Only'),
         ('out', 'Check-out Only'),
@@ -326,6 +331,27 @@ class BiometricDevice(models.Model):
             "view_mode": "list,form",
             "domain": [("device_id", "=", self.id)],
             "context": {"default_device_id": self.id},
+        }
+
+    def action_push_heartbeat_delay(self):
+        """
+        Creates a SET OPTION command to manually override the heartbeat delay
+        on the device firmware.
+        """
+        self.ensure_one()
+        self.env["biometric.device.command"].sudo().create({
+            "device_id": self.id,
+            "command_text": f"SET OPTION Delay={self.heartbeat_delay}",
+        })
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': _('Success'),
+                'message': _('Command queued: SET OPTION Delay=%d. It will be applied on the next heartbeat.') % self.heartbeat_delay,
+                'type': 'success',
+                'sticky': False,
+            }
         }
 
     def _notify_admin(self, notification_type="discovered"):

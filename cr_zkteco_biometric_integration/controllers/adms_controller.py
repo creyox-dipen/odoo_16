@@ -49,7 +49,6 @@ class AdmsController(http.Controller):
                 break
         
         _logger.info("ADMS: Heartbeat (GET) from SN=%s. Params: %s", serial, kwargs)
-        _logger.info("ADMS: Headers for SN=%s: %s", serial, request.httprequest.headers)
 
         device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
         if not device:
@@ -214,8 +213,8 @@ class AdmsController(http.Controller):
                         "ATTLOGStamp=0",
                         "OPERLOGStamp=0",
                         "ATTPHOTOStamp=0",
-                        "ErrorDelay=30",
-                        "Delay=10",
+                        f"ErrorDelay={device.heartbeat_delay * 2}",
+                        f"Delay={device.heartbeat_delay}",
                         "TransTimes=00:00;14:05",
                         "TransInterval=1",
                         "TransFlag=TransData AttLog OpLog AttPhoto Photo",

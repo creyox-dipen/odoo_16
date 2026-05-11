@@ -46,6 +46,11 @@
                             attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"
                             confirm="Are you sure you want to clear all attendance logs from the physical device? This cannot be undone."/>
+                    <button name="action_push_heartbeat_delay"
+                            string="Push Heartbeat Interval"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirmed')]}"
+                            groups="hr_attendance.group_hr_attendance_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
                 </header>
 
@@ -104,6 +109,7 @@
                             <field name="min_punch_interval"/>
                             <field name="auto_checkout"/>
                             <field name="auto_checkout_time" widget="float_time" attrs="{'invisible': [('auto_checkout', '=', False)]}"/>
+                            <field name="heartbeat_delay" placeholder="Default: 30"/>
                             <field name="auto_clear_log" widget="boolean_toggle"/>
                         </group>
                     </group>
