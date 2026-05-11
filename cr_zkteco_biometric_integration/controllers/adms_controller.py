@@ -41,11 +41,24 @@ class AdmsController(http.Controller):
     )
     def adms_getrequest(self, **kwargs):
         serial = (kwargs.get("SN") or "").strip()
-        _logger.info("ADMS: Heartbeat (GET) from device SN=%s", serial)
+        # Try finding Key case-insensitively
+        comm_key = ""
+        for k, v in kwargs.items():
+            if k.lower() == 'key':
+                comm_key = str(v).strip()
+                break
+        
+        _logger.info("ADMS: Heartbeat (GET) from SN=%s. Params: %s", serial, kwargs)
+        _logger.info("ADMS: Headers for SN=%s: %s", serial, request.httprequest.headers)
 
         device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
         if not device:
             return request.make_response("OK", headers=[("Content-Type", "text/plain")])
+
+        if device.password and device.communication_key != comm_key:
+            _logger.warning("ADMS: Key Mismatch for SN=%s. Expected: '%s', Received: '%s'", 
+                           serial, device.communication_key, comm_key)
+            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
 
         # Notify if device was offline (> 10 mins) and just came back
         if device.last_seen:
@@ -88,8 +101,21 @@ class AdmsController(http.Controller):
         Handles both single-line (ID=1&Return=0) and multi-line responses.
         """
         serial = (kwargs.get("SN") or "").strip()
+        # Try finding Key case-insensitively
+        comm_key = ""
+        for k, v in kwargs.items():
+            if k.lower() == 'key':
+                comm_key = str(v).strip()
+                break
+        
         raw_body = request.httprequest.get_data(as_text=True) or ""
-        _logger.info("ADMS: Command result from device SN=%s body=%s", serial, raw_body)
+        _logger.info("ADMS: Command result from SN=%s. Params: %s", serial, kwargs)
+
+        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        if device and device.password and device.communication_key != comm_key:
+            _logger.warning("ADMS: Key Mismatch in devicecmd for SN=%s. Expected: '%s', Received: '%s'", 
+                           serial, device.communication_key, comm_key)
+            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
 
         # Split by newline in case the device returns results for multiple commands at once
         lines = [line.strip() for line in raw_body.split("\n") if line.strip()]
@@ -131,17 +157,19 @@ class AdmsController(http.Controller):
     )
     def adms_cdata(self, **kwargs):
         serial = (kwargs.get("SN") or "").strip()
-        # comm_key = (kwargs.get("Key") or "").strip()
+        # Try finding Key case-insensitively
+        comm_key = ""
+        for k, v in kwargs.items():
+            if k.lower() == 'key':
+                comm_key = str(v).strip()
+                break
+        
         table = (kwargs.get("table") or "").strip()
         options = (kwargs.get("options") or "").strip()
 
-        _logger.info(
-            "ADMS: Request from SN=%s method=%s table=%s options=%s",
-            serial,
-            request.httprequest.method,
-            table,
-            options,
-        )
+        _logger.info("ADMS: Request from SN=%s method=%s table=%s. Params: %s", 
+                     serial, request.httprequest.method, table, kwargs)
+
 
         # ── GET: Handshake ────────────────────────────────────────────────────
         if request.httprequest.method == "GET":
@@ -230,12 +258,12 @@ class AdmsController(http.Controller):
                 status=403,
             )
 
-        # if device.communication_key and device.communication_key != comm_key:
-        #     return request.make_response(
-        #         "ERROR: Invalid communication key",
-        #         headers=[("Content-Type", "text/plain")],
-        #         status=403,
-        #     )
+        if device.password and device.communication_key != comm_key:
+            return request.make_response(
+                "ERROR: Invalid communication key",
+                headers=[("Content-Type", "text/plain")],
+                status=403,
+            )
 
         table_upper = table.upper()
         raw_body = request.httprequest.data.decode("utf-8")
@@ -290,8 +318,23 @@ class AdmsController(http.Controller):
         Endpoint for File Data (Photos on SpeedFace firmware).
         """
         serial = (kwargs.get("SN") or "").strip()
+        # Try finding Key case-insensitively
+        comm_key = ""
+        for k, v in kwargs.items():
+            if k.lower() == 'key':
+                comm_key = str(v).strip()
+                break
+        
         table = (kwargs.get("table") or "").strip()
         raw_data = request.httprequest.data
+
+        _logger.info("ADMS: File data request from SN=%s table=%s. Params: %s", serial, table, kwargs)
+
+        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        if device and device.password and device.communication_key != comm_key:
+            _logger.warning("ADMS: Key Mismatch in fdata for SN=%s. Expected: '%s', Received: '%s'", 
+                           serial, device.communication_key, comm_key)
+            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
         
         if table.upper() == "ATTPHOTO" and raw_data:
             try:

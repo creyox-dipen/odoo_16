@@ -59,14 +59,19 @@ class BiometricDevice(models.Model):
             "Used together with Device IP to connect via pyzk."
         ),
     )
-    # communication_key = fields.Char(
-    #     string="Communication Key",
-    #     copy=False,
-    #     help=(
-    #         "Optional security key configured on the device. "
-    #         "If set, every ADMS request must include a matching Key= parameter."
-    #     ),
-    # )
+    password = fields.Boolean(
+        string="Use Communication Key",
+        default=False,
+        help="If enabled, the device must provide a valid communication key to push data.",
+    )
+    communication_key = fields.Char(
+        string="Communication Key",
+        copy=False,
+        help=(
+            "Optional security key configured on the device. "
+            "If set, every ADMS request must include a matching Key= parameter."
+        ),
+    )
     timezone = fields.Selection(
         string="Device Timezone",
         selection=[

@@ -83,9 +83,11 @@
                             <field name="device_ip"
                                    placeholder="e.g. 192.168.1.100"/>
                             <field name="device_port"/>
-                            <!-- <field name="communication_key"
+                            <field name="password" widget="boolean_toggle"/>
+                            <field name="communication_key"
                                    password="True"
-                                   placeholder="Leave empty if no key configured"/> -->
+                                   attrs="{'invisible': [('password', '=', False)], 'required': [('password', '=', True)]}"
+                                   placeholder="Enter device communication key"/>
                             <field name="timezone"/>
                             <field name="active" widget="boolean_toggle"/>
                         </group>
