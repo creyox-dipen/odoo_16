@@ -181,7 +181,8 @@ class BiometricDevice(models.Model):
     heartbeat_delay = fields.Integer(
         string="Heartbeat Interval (Seconds)",
         default=30,
-        help="How often the device checks Odoo for new commands. Higher values save server resources but make commands slower to reach the device.",
+        help="How often the device checks Odoo for new commands. Higher values save server resources but make commands slower to reach the device. "
+             "IMPORTANT: After changing this value, you MUST click the 'Push Heartbeat Interval' button to send the update to the device.",
     )
     used_for = fields.Selection([
         ('in', 'Check-in Only'),

@@ -17,7 +17,7 @@
                             attrs="{'invisible': [('state', '!=', 'draft')]}"
                             groups="hr_attendance.group_hr_attendance_manager"/>
                     <button name="action_sync_all_biometrics"
-                            string="Download All Biometrics"
+                            string="Download User Data"
                             type="object"
                             attrs="{'invisible': [('state', '!=', 'confirmed')]}"
                             groups="hr_attendance.group_hr_attendance_manager"

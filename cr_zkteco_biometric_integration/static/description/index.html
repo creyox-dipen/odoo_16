@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Odoo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+</head>
+
+<body>
+<main class="container" style="border-radius:20px;">
+    <header class="py-2">
+        <div class="row align-items-center" style="margin-top: 20px;">
+            <div class="col-12 col-md-12 text-right">
+                <span style="font-size: 19px; font-weight: 500;margin-right: 20px;color: black;"><i
+                        class="fa fa-check-circle mr-1" style="color: #00D100;"></i> Community</span>
+                <span style="font-size: 19px; font-weight: 500;color: black;"><i class="fa fa-check-circle mr-1"
+                                                                                 style="color: #00D100;"></i> Enterprise</span>
+                <span style="font-size: 19px; font-weight: 500;color: black;padding: 15px;"><i
+                        class="fa fa-check-circle mr-1" style="color: #00D100;"></i> Odoo.sh</span>
+            </div>
+        </div>
+        <hr/>
+    </header>
+
+    <div class="px-md-5 py-md-4 p-2 mb-4 shadow" style="background-color: #0f172a; border-radius: 40px; border: 2px solid #3b82f6;">
+        <div class="p-lg-5 p-3 text-center">
+            <h1 style="font-weight: 900; font-size: calc(2rem + 1vw); color: #ffffff; margin-bottom: 15px;">GET <span style="color: #3b82f6;">PERSONALIZED</span> DEMO</h1>
+            <p style="color: #94a3b8; font-size: 18px; margin-bottom: 30px;">Direct connection to our engineering team for a customized walkthrough.</p>
+            <div class="d-flex flex-wrap justify-content-center" style="gap: 15px;">
+                <a href="mailto:support@creyox.com" target="_blank" class="d-flex align-items-center px-4 py-3 shadow" style="background-color: #3b82f6; border-radius: 15px; text-decoration: none; border: none;">
+                    <img src="static_img/email.png" style="width: 24px;" alt="Email">
+                    <span class="ms-2" style="color: #ffffff; font-weight: 800;">Email Our Team</span>
+                </a>
+                <a href="https://creyox.com/helpdesk" target="_blank" class="d-flex align-items-center px-4 py-3 shadow" style="background-color: #ffffff; border-radius: 15px; text-decoration: none; border: none;">
+                    <img src="static_img/helpdesk.png" style="width: 24px;" alt="Helpdesk">
+                    <span class="ms-2" style="color: #0f172a; font-weight: 800;">https://creyox.com/helpdesk</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-md-5 py-md-4 p-2 mb-4 shadow" style="background-color: #ffffff; border-radius: 40px; border: 2px solid #e2e8f0;">
+        <div class="p-lg-5 p-3 text-center">
+            <h2 style="font-weight: 800; color: #1e293b;">Odoo ZKTeco Biometric Integration</h2>
+            <p style="color: #64748b; margin-bottom: 20px;">Seamlessly sync attendance logs and manage biometric devices in real-time.</p>
+            <a class="btn d-inline-flex align-items-center shadow px-5 py-3" target="_blank" style="background-color: #3b82f6; color: #ffffff; border-radius: 15px; font-weight: 800;"
+               href="https://youtu.be/3YMA3hO50WE">
+                <i class="fa fa-play-circle me-2" style="font-size: 20px;"></i> Watch Video </a>
+        </div>
+    </div>
+
+
+    <!-- Futuristic Biometric Showcase -->
+    <div class="p-5 my-5 text-center" style="background-color: #ffffff; border-radius: 50px; border: 4px solid #f1f5f9;">
+        <h1 class="mb-4" style="font-size: 52px; font-weight: 900; color: #0f172a; letter-spacing: -2px;">
+            The Ultimate <span style="color: #3b82f6;">ZKTeco Control</span> Center
+        </h1>
+        <p class="mx-auto" style="max-width: 800px; color: #64748b; font-size: 20px; line-height: 1.8;">
+            Unleash the full potential of your biometric infrastructure with our enterprise-grade ADMS integration. Remote management, real-time sync, and automated intelligence—all in one place.
+        </p>
+        
+        <div class="row g-4 mt-5">
+            <div class="col-md-4">
+                <div class="p-4 shadow d-flex flex-column align-items-center" style="background-color: #f8fafc; border-radius: 30px; border-bottom: 8px solid #10b981;">
+                    <div class="d-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px; background-color: #ffffff; border-radius: 15px; color: #10b981; font-size: 28px;">
+                        <i class="fa fa-refresh"></i>
+                    </div>
+                    <h5 style="font-weight: 800; color: #1e293b;">Live Sync</h5>
+                    <p style="font-size: 14px; color: #64748b;">Instant log fetching via ADMS protocol.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 shadow d-flex flex-column align-items-center" style="background-color: #f8fafc; border-radius: 30px; border-bottom: 8px solid #3b82f6;">
+                    <div class="d-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px; background-color: #ffffff; border-radius: 15px; color: #3b82f6; font-size: 28px;">
+                        <i class="fa fa-dashboard"></i>
+                    </div>
+                    <h5 style="font-weight: 800; color: #1e293b;">Smart Dashboard</h5>
+                    <p style="font-size: 14px; color: #64748b;">Visual analytics of your workforce.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-4 shadow d-flex flex-column align-items-center" style="background-color: #f8fafc; border-radius: 30px; border-bottom: 8px solid #ef4444;">
+                    <div class="d-flex justify-content-center align-items-center mb-3" style="width: 60px; height: 60px; background-color: #ffffff; border-radius: 15px; color: #ef4444; font-size: 28px;">
+                        <i class="fa fa-users"></i>
+                    </div>
+                    <h5 style="font-weight: 800; color: #1e293b;">Remote Mgmt</h5>
+                    <p style="font-size: 14px; color: #64748b;">Enroll and transfer users remotely.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <style>
+        .sync-ring {
+            width: 100px; height: 100px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ticker-content { animation: scroll-up 10s linear infinite; }
+        @keyframes scroll-up { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+
+    <div class="bg-white" style="border-radius: 30px; font-family: 'Outfit', 'Inter', sans-serif; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05);">
+
+        <!-- Tab Navigation -->
+        <div class="px-md-5 px-4 mt-5">
+            <ul class="nav nav-pills justify-content-center mb-5" id="pills-tab" role="tablist" style="gap: 15px; border: none; background-color: white;">
+                <li class="nav-item mx-2" role="presentation">
+                    <a class="nav-link active cursor-pointer" id="pills-features-tab" data-bs-toggle="pill" data-bs-target="#pills-features" href="javascript:void(0)" role="tab" aria-controls="pills-features" aria-selected="true" style="padding: 14px 40px; border-radius: 50px; font-weight: 800; font-size: 16px; border: 1px solid #e2e8f0; transition: all 0.3s; background-color: #f8fafc; color: #475569; text-decoration: none;">Detailed Features</a>
+                </li>
+                <li class="nav-item mx-2" role="presentation">
+                    <a class="nav-link cursor-pointer" id="pills-faq-tab" data-bs-toggle="pill" data-bs-target="#pills-faq" href="javascript:void(0)" role="tab" aria-controls="pills-faq" aria-selected="false" style="padding: 14px 40px; border-radius: 50px; font-weight: 800; font-size: 16px; border: 1px solid #e2e8f0; transition: all 0.3s; background-color: #f8fafc; color: #475569; text-decoration: none;">FAQ</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="pills-tabContent">
+
+            <!-- ============================= -->
+            <!--   TAB 1 : DETAILED FEATURES   -->
+            <!-- ============================= -->
+            <div class="tab-pane fade show active" id="pills-features" role="tabpanel" aria-labelledby="pills-features-tab">
+
+                <div class="px-md-5 px-4 pt-5 pb-5">
+                    
+                    <!-- Futuristic Hero: THE CORE SYNC ENGINE -->
+                    <div class="p-5 mb-5 shadow d-flex align-items-center" style="background-color: #0f172a; border-radius: 40px; border: 4px solid #3b82f6;">
+                        <div class="row w-100 d-flex align-items-center">
+                            <div class="col-lg-7">
+                                <div class="d-flex align-items-center mb-3">
+                                    <span class="px-3 py-1 d-flex align-items-center" style="background-color: #3b82f6; color: #ffffff; border-radius: 10px; font-size: 12px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;">Real-Time Status: Active</span>
+                                </div>
+                                <h2 style="font-weight: 900; color: #ffffff; font-size: 42px; line-height: 1.1; margin-bottom: 20px;">The <span style="color: #3b82f6;">ADMS Live</span> Core Engine</h2>
+                                <p style="color: #94a3b8; font-size: 18px; line-height: 1.8;">Our next-generation synchronization engine creates a persistent bi-directional link between your ZKTeco hardware and Odoo. Every fingerprint scan, face recognition, or card tap is pushed instantly to your server, ensuring zero-latency attendance tracking.</p>
+                            </div>
+                            <div class="col-lg-5 d-flex justify-content-center mt-4 mt-lg-0">
+                                <div class="d-flex justify-content-center align-items-center shadow" style="width: 180px; height: 180px; background-color: rgba(59, 130, 246, 0.1); border: 10px solid #3b82f6; border-radius: 50%; color: #3b82f6; font-size: 80px;">
+                                    <i class="fa fa-bolt"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unique Component: THE COMMAND TILES -->
+                    <div class="row g-4 mb-5">
+                        <div class="col-lg-3 col-md-6">
+                            <div class="p-4 h-100 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-top: 10px solid #10b981;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f0fdf4; border-radius: 20px; color: #10b981; font-size: 30px;">
+                                    <i class="fa fa-microchip"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b;">Device Config</h5>
+                                <p style="font-size: 14px; color: #64748b; margin-bottom: 0;">Complete remote management of ZKTeco settings directly from Odoo.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="p-4 h-100 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-top: 10px solid #f59e0b;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fff7ed; border-radius: 20px; color: #f59e0b; font-size: 30px;">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b;">User Transfer</h5>
+                                <p style="font-size: 14px; color: #64748b; margin-bottom: 0;">Seamlessly migrate employee biometric data between multiple devices.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="p-4 h-100 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-top: 10px solid #3b82f6;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #eff6ff; border-radius: 20px; color: #3b82f6; font-size: 30px;">
+                                    <i class="fa fa-qrcode"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b;">Live Enrollment</h5>
+                                <p style="font-size: 14px; color: #64748b; margin-bottom: 0;">Register new staff members remotely without touching the device.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="p-4 h-100 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-top: 10px solid #ef4444;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fef2f2; border-radius: 20px; color: #ef4444; font-size: 30px;">
+                                    <i class="fa fa-calculator"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b;">Auto Calc</h5>
+                                <p style="font-size: 14px; color: #64748b; margin-bottom: 0;">Intelligent processing of late arrivals and early departures.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unique Component: THE DATA ANALYTICS HUB -->
+                    <div class="row mb-5">
+                        <div class="col-12">
+                            <div class="p-5 shadow d-flex flex-column justify-content-center" style="background-color: #ffffff; border-radius: 40px; border: 2px solid #e2e8f0;">
+                                <div class="row d-flex align-items-center">
+                                    <div class="col-lg-4">
+                                        <div class="d-flex align-items-center mb-4">
+                                            <div class="d-flex justify-content-center align-items-center shadow-sm" style="width: 60px; height: 60px; background-color: #1e293b; border-radius: 15px; color: #ffffff; font-size: 28px;">
+                                                <i class="fa fa-pie-chart"></i>
+                                            </div>
+                                            <div class="ms-3">
+                                                <h4 class="mb-0" style="font-weight: 900; color: #1e293b;">Dynamic Analytics</h4>
+                                                <small style="color: #64748b; font-weight: 700;">REAL-TIME METRICS</small>
+                                            </div>
+                                        </div>
+                                        <p style="color: #475569; font-size: 16px; line-height: 1.7;">Our Biometric Dashboard transforms raw attendance logs into actionable insights. Visualize employee punctuality, device health, and workforce trends with precision-engineered charts and graphs built directly into Odoo.</p>
+                                    </div>
+                                    <div class="col-lg-8">
+                                        <div class="p-4 d-flex flex-wrap justify-content-center" style="background-color: #f8fafc; border-radius: 30px; gap: 20px;">
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #10b981;">
+                                                <span style="font-size: 24px; font-weight: 900; color: #10b981;">100%</span>
+                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">SYNC SUCCESS</span>
+                                            </div>
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #3b82f6;">
+                                                <span style="font-size: 24px; font-weight: 900; color: #3b82f6;">24/7</span>
+                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">ACTIVE MONITORING</span>
+                                            </div>
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #f59e0b;">
+                                                <span style="font-size: 24px; font-weight: 900; color: #f59e0b;">AUTO</span>
+                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">LOG FETCHING</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unique Component: THE REPORTING CONSOLE -->
+                    <div class="p-5 shadow" style="background-color: #3b82f6; border-radius: 40px;">
+                        <div class="row d-flex align-items-center">
+                            <div class="col-lg-8">
+                                <h3 style="font-weight: 900; color: #ffffff; font-size: 32px; margin-bottom: 15px;">Universal Reporting Console</h3>
+                                <p style="color: rgba(255,255,255,0.8); font-size: 17px;">Generate comprehensive intelligence reports for every business need. From automated daily summaries to complex absence audits, get the data you need in PDF or Excel format instantly.</p>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-sm-6">
+                                        <div class="p-3 d-flex align-items-center shadow-sm" style="background-color: rgba(255,255,255,0.1); border-radius: 15px; border-left: 5px solid #ffffff;">
+                                            <i class="fa fa-file-pdf-o text-white me-3" style="font-size: 20px;"></i>
+                                            <span class="text-white font-weight-bold">Daily Attendance Summary</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="p-3 d-flex align-items-center shadow-sm" style="background-color: rgba(255,255,255,0.1); border-radius: 15px; border-left: 5px solid #ffffff;">
+                                            <i class="fa fa-calendar-times-o text-white me-3" style="font-size: 20px;"></i>
+                                            <span class="text-white font-weight-bold">Absence Tracking Report</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="p-3 d-flex align-items-center shadow-sm" style="background-color: rgba(255,255,255,0.1); border-radius: 15px; border-left: 5px solid #ffffff;">
+                                            <i class="fa fa-clock-o text-white me-3" style="font-size: 20px;"></i>
+                                            <span class="text-white font-weight-bold">Detailed Employee Logs</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="p-3 d-flex align-items-center shadow-sm" style="background-color: rgba(255,255,255,0.1); border-radius: 15px; border-left: 5px solid #ffffff;">
+                                            <i class="fa fa-bar-chart text-white me-3" style="font-size: 20px;"></i>
+                                            <span class="text-white font-weight-bold">Punctuality Analytics</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 d-flex justify-content-center mt-4 mt-lg-0">
+                                <div class="d-flex justify-content-center align-items-center shadow" style="width: 140px; height: 140px; background-color: #ffffff; border-radius: 35px; color: #3b82f6; font-size: 70px;">
+                                    <i class="fa fa-print"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Unique Component: AUTOMATION & SECURITY -->
+                    <div class="row mt-5 g-4">
+                        <div class="col-md-6">
+                            <div class="p-4 shadow d-flex align-items-center" style="background-color: #f1f5f9; border-radius: 25px; border: 2px dashed #3b82f6;">
+                                <div class="d-flex justify-content-center align-items-center shadow-sm" style="min-width: 60px; height: 60px; background-color: #ffffff; border-radius: 50%; color: #3b82f6; font-size: 24px;">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 2px;">Cron Automation</h5>
+                                    <p style="font-size: 13px; color: #64748b; margin-bottom: 0;">Smart background jobs ensure your data stays synced without manual triggers.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 shadow d-flex align-items-center" style="background-color: #f1f5f9; border-radius: 25px; border: 2px dashed #10b981;">
+                                <div class="d-flex justify-content-center align-items-center shadow-sm" style="min-width: 60px; height: 60px; background-color: #ffffff; border-radius: 50%; color: #10b981; font-size: 24px;">
+                                    <i class="fa fa-shield"></i>
+                                </div>
+                                <div class="ms-3">
+                                    <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 2px;">Secure Data Persistence</h5>
+                                    <p style="font-size: 13px; color: #64748b; margin-bottom: 0;">Attendance logs are stored as secure Odoo attachments for total data integrity.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ SIMILAR PICKS + OUR SERVICES (bottom of Detailed Features tab) -->
+                <div class="px-md-5 px-4 mt-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                    <center>
+                        <h2 style="font-size:35px; color:#000099; margin-bottom:20px; font-weight:700;">Explore similar picks</h2>
+                        <div style="border: 1px solid black; width:30%;"></div>
+                    </center>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_restrict_mobile_attendance" target="_blank">
+                                        <img src="banner_images/cr_restrict_mobile_attendance.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Attendance Device Restriction Pro
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_loan_management" target="_blank">
+                                        <img src="banner_images/cr_loan_management.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Loan Managment System
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_employee_performance_evaluation" target="_blank">
+                                        <img src="banner_images/cr_employee_performance_evaluation.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Employee Performance Evaluation
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_fleet_fuel_monitoring" target="_blank">
+                                        <img src="banner_images/cr_fleet_fuel_monitoring.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Fleet Fuel Management Pro
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_okta_login" target="_blank">
+                                        <img src="banner_images/cr_okta_login.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Okta Single Sign-On (SSO) for Odoo
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_barcode_multi_user" target="_blank">
+                                        <img src="banner_images/cr_barcode_multi_user.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Barcode Multi User Pro
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <center>
+                        <a class="btn btn-primary btn-lg mt8" target="_blank" style="color: #FFFFFF !important;"
+                           href="https://apps.odoo.com/apps/modules/browse?author=Creyox Technologies">
+                            <i class="fa fa-list"></i> Explore Our Other Apps
+                        </a>
+                    </center>
+                    <br/>
+                    <center><div style="border: 1px solid black; width:50%;"></div></center>
+                </div>
+
+                <!-- Our Services -->
+                <div class="px-md-5 px-4 mt-5">
+                    <div class="row mb-5">
+                        <div class="col-12 text-center" style="margin-top: 40px;">
+                            <h1 style="font-weight: 900; font-size: 42px; color: #0f172a; margin-bottom: 10px;">Enterprise <span style="color: #3b82f6;">Services</span></h1>
+                            <p style="color: #64748b; font-size: 18px;">Powering your business growth with world-class Odoo expertise.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Service 1 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #3b82f6; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #eff6ff; border-radius: 20px; color: #3b82f6; font-size: 32px;">
+                                    <i class="fa fa-cloud-upload"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo <br/> Implementation</h5>
+                            </div>
+                        </div>
+                        <!-- Service 2 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #10b981; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #ecfdf5; border-radius: 20px; color: #10b981; font-size: 32px;">
+                                    <i class="fa fa-gear"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo <br/> Customization</h5>
+                            </div>
+                        </div>
+                        <!-- Service 3 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #a855f7; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #faf5ff; border-radius: 20px; color: #a855f7; font-size: 32px;">
+                                    <i class="fa fa-magic"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">AI Powered <br/> Odoo Solutions</h5>
+                            </div>
+                        </div>
+                        <!-- Service 4 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #f97316; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fff7ed; border-radius: 20px; color: #f97316; font-size: 32px;">
+                                    <i class="fa fa-exchange"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Data & <br/> Module Migration</h5>
+                            </div>
+                        </div>
+                        <!-- Service 5 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #eab308; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fefce8; border-radius: 20px; color: #eab308; font-size: 32px;">
+                                    <i class="fa fa-link"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Third Party <br/> App Integration</h5>
+                            </div>
+                        </div>
+                        <!-- Service 6 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #06b6d4; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #ecfeff; border-radius: 20px; color: #06b6d4; font-size: 32px;">
+                                    <i class="fa fa-lightbulb-o"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Artificial <br/> Intelligence Services</h5>
+                            </div>
+                        </div>
+                        <!-- Service 7 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #0f172a; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f1f5f9; border-radius: 20px; color: #0f172a; font-size: 32px;">
+                                    <i class="fa fa-mobile"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Mobile App <br/> Development</h5>
+                            </div>
+                        </div>
+                        <!-- Service 8 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #22c55e; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f0fdf4; border-radius: 20px; color: #22c55e; font-size: 32px;">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Support & <br/> Maintenance</h5>
+                            </div>
+                        </div>
+                        <!-- Service 9 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #0284c7; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f0f9ff; border-radius: 20px; color: #0284c7; font-size: 32px;">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Training <br/> & Guidance</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 60px;"></div>
+                <!-- ✅ END OF DETAILED FEATURES TAB -->
+
+            </div>
+            <!-- END #pills-features -->
+
+
+            <!-- ============================= -->
+            <!--         TAB 2 : FAQ           -->
+            <!-- ============================= -->
+            <div class="tab-pane fade px-md-5 px-4" id="pills-faq" role="tabpanel" aria-labelledby="pills-faq-tab">
+
+                <div class="panel-group mt-5" id="accordion" role="tablist">
+                    <!-- FAQ 1 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #3b82f6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-refresh"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How does the ADMS sync work?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                It provides a persistent connection between your ZKTeco devices and Odoo, pushing attendance logs instantly as they occur in real-time without any manual interference.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 2 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #10b981; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #10b981; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Can I manage users remotely?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                Yes, absolutely! You can enroll new employees and transfer existing users between different biometric machines directly from the Odoo interface, making device management effortless.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 3 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #f59e0b; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #f59e0b; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-calculator"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Does it handle late arrivals?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                Yes, the module includes sophisticated calculation logic to automatically track and report late arrivals and early departures based on the synchronized biometric logs.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 4 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #3b82f6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-shield"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How secure is the data?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                All logs are stored as secure attachments within your Odoo database, ensuring end-to-end data integrity and protection.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 5 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #ef4444; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #ef4444; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-globe"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Is this app compatible with Odoo Online?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                No, this app will not work for Odoo Online.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 6 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #8b5cf6; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #8b5cf6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-envelope"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How to contact if there is need of any Customization?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                Please contact us on <strong>support@creyox.com</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 7 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #ec4899; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #ec4899; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-shopping-cart"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Do I need to buy all versions separately?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                Yes, you need to pay different prices of app version wise.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FAQ 8 -->
+                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #f97316; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
+                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #f97316; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                                <i class="fa fa-ticket"></i>
+                            </div>
+                            <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">The app i paid for is not working, What should i do?</h4>
+                        </div>
+                        <div class="panel-collapse">
+                            <div class="panel-body p-4" style="color: #475569; font-size: 16px; line-height: 1.8; background-color: #f8fafc;">
+                                You can raise a Ticket on <strong>support@creyox.com</strong> we'll get back to you with fixes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ SIMILAR PICKS + OUR SERVICES (bottom of FAQ tab) -->
+                <div class="mt-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                    <center>
+                        <h2 style="font-size:35px; color:#000099; margin-bottom:20px; font-weight:700;">Explore similar picks</h2>
+                        <div style="border: 1px solid black; width:30%;"></div>
+                    </center>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_restrict_mobile_attendance" target="_blank">
+                                        <img src="banner_images/cr_restrict_mobile_attendance.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Attendance Device Restriction Pro
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_loan_management" target="_blank">
+                                        <img src="banner_images/cr_loan_management.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Loan Managment System
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_employee_performance_evaluation" target="_blank">
+                                        <img src="banner_images/cr_employee_performance_evaluation.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Employee Performance Evaluation
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_fleet_fuel_monitoring" target="_blank">
+                                        <img src="banner_images/cr_fleet_fuel_monitoring.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Fleet Fuel Management Pro
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_okta_login" target="_blank">
+                                        <img src="banner_images/cr_okta_login.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Okta Single Sign-On (SSO) for Odoo
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_barcode_multi_user" target="_blank">
+                                        <img src="banner_images/cr_barcode_multi_user.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                                <div class="sh_name" style="padding: 10px; background-color: #f8fafc; font-size: 14px; font-weight: 700; color: #1e293b;">
+                                    Advanced Barcode Multi User Pro
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <center>
+                        <a class="btn btn-primary btn-lg mt8" target="_blank" style="color: #FFFFFF !important;"
+                           href="https://apps.odoo.com/apps/modules/browse?author=Creyox Technologies">
+                            <i class="fa fa-list"></i> Explore Our Other Apps
+                        </a>
+                    </center>
+                    <br/>
+                    <center><div style="border: 1px solid black; width:50%;"></div></center>
+                </div>
+
+                <!-- Our Services -->
+                <div class="mt-5 px-4">
+                    <div class="row mb-5">
+                        <div class="col-12 text-center" style="margin-top: 40px;">
+                            <h1 style="font-weight: 900; font-size: 42px; color: #0f172a; margin-bottom: 10px;">Enterprise <span style="color: #3b82f6;">Services</span></h1>
+                            <p style="color: #64748b; font-size: 18px;">Powering your business growth with world-class Odoo expertise.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4">
+                        <!-- Service 1 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #3b82f6; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #eff6ff; border-radius: 20px; color: #3b82f6; font-size: 32px;">
+                                    <i class="fa fa-cloud-upload"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo <br/> Implementation</h5>
+                            </div>
+                        </div>
+                        <!-- Service 2 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #10b981; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #ecfdf5; border-radius: 20px; color: #10b981; font-size: 32px;">
+                                    <i class="fa fa-gear"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo <br/> Customization</h5>
+                            </div>
+                        </div>
+                        <!-- Service 3 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #a855f7; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #faf5ff; border-radius: 20px; color: #a855f7; font-size: 32px;">
+                                    <i class="fa fa-magic"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">AI Powered <br/> Odoo Solutions</h5>
+                            </div>
+                        </div>
+                        <!-- Service 4 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #f97316; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fff7ed; border-radius: 20px; color: #f97316; font-size: 32px;">
+                                    <i class="fa fa-exchange"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Data & <br/> Module Migration</h5>
+                            </div>
+                        </div>
+                        <!-- Service 5 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #eab308; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #fefce8; border-radius: 20px; color: #eab308; font-size: 32px;">
+                                    <i class="fa fa-link"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Third Party <br/> App Integration</h5>
+                            </div>
+                        </div>
+                        <!-- Service 6 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #06b6d4; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #ecfeff; border-radius: 20px; color: #06b6d4; font-size: 32px;">
+                                    <i class="fa fa-lightbulb-o"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Artificial <br/> Intelligence Services</h5>
+                            </div>
+                        </div>
+                        <!-- Service 7 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #0f172a; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f1f5f9; border-radius: 20px; color: #0f172a; font-size: 32px;">
+                                    <i class="fa fa-mobile"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Mobile App <br/> Development</h5>
+                            </div>
+                        </div>
+                        <!-- Service 8 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #22c55e; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f0fdf4; border-radius: 20px; color: #22c55e; font-size: 32px;">
+                                    <i class="fa fa-users"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Support & <br/> Maintenance</h5>
+                            </div>
+                        </div>
+                        <!-- Service 9 -->
+                        <div class="col-md-4">
+                            <div class="p-4 shadow d-flex flex-column align-items-center text-center" style="background-color: #ffffff; border-radius: 30px; border-bottom: 8px solid #0284c7; height: 100%;">
+                                <div class="d-flex justify-content-center align-items-center mb-3" style="width: 70px; height: 70px; background-color: #f0f9ff; border-radius: 20px; color: #0284c7; font-size: 32px;">
+                                    <i class="fa fa-graduation-cap"></i>
+                                </div>
+                                <h5 style="font-weight: 800; color: #1e293b; margin-bottom: 0px;">Odoo Training <br/> & Guidance</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="height: 60px;"></div>
+                <!-- ✅ END OF FAQ TAB -->
+
+            </div>
+            <!-- END #pills-faq -->
+
+        </div>
+        <!-- END .tab-content -->
+
+    </div>
+    <!-- END .bg-white wrapper -->
+
+</main>
+
+<link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+</body>
+</html>

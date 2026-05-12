@@ -29,7 +29,7 @@
 
     <!-- ── Management under Attendances ────────────────────────── -->
     <menuitem id="menu_hr_attendance_management"
-              name="Manager"
+              name="Attendance reports"
               parent="hr_attendance.menu_hr_attendance_root"
               sequence="20"
               groups="hr_attendance.group_hr_attendance_manager"/>
