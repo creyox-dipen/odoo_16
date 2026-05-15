@@ -49,8 +49,8 @@
             <!-- Add Biometric Templates Tab -->
             <xpath expr="//notebook" position="inside">
                 <page string="Biometric Data" name="biometric_data" attrs="{'invisible': [('device_user_id', '=', False)]}">
-                    <field name="biometric_template_ids" readonly="1">
-                        <tree>
+                    <field name="biometric_template_ids">
+                        <tree create="false" edit="false" delete="true">
                             <field name="type"/>
                             <field name="finger_index" string="Index"/>
                             <field name="template_data" password="True"/>

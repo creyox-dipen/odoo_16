@@ -44,3 +44,25 @@ class BiometricUserTemplate(models.Model):
         string="UID",
         help="Internal UID on the device (optional).",
     )
+
+    def unlink(self):
+        """
+        When a template is deleted from Odoo, we should also send a command
+        to the biometric hardware to remove it from the device's memory.
+        """
+        Command = self.env["biometric.device.command"].sudo()
+        devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
+        
+        for rec in self:
+            if not rec.device_user_id:
+                continue
+                
+            # ADMS table names for deletion
+            table = "FingerTmp" if rec.type == "finger" else "Face"
+            for device in devices:
+                Command.create({
+                    "device_id": device.id,
+                    "command_text": f"DATA DELETE {table} PIN={rec.device_user_id}\tFID={rec.finger_index}",
+                })
+        
+        return super(BiometricUserTemplate, self).unlink()
