@@ -101,6 +101,6 @@
     "images": ["static/description/banner.png"],
     "installable": True,
     "application": True,
-    "price": 0.00,
+    "price": 175,
     "currency": "USD",
 }
