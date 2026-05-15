@@ -5,7 +5,7 @@
     "author": "Creyox Technologies",
     "website": "https://www.creyox.com",
     "support": "https://www.creyox.com/helpdesk",
-    "live_test_url": "https://www.creyox.com/helpdesk?module_tech_name=cr_zkteco_biometric_integration&version=18.0",
+    "live_test_url": "https://www.creyox.com/helpdesk?module_tech_name=cr_zkteco_biometric_integration&version=16.0",
     "category": "Extra Tools",
     "summary": """
     Experience seamless ZKTeco biometric integration with Odoo through our advanced ADMS live synchronization system.
