@@ -334,6 +334,23 @@ class BiometricDevice(models.Model):
             "context": {"default_device_id": self.id},
         }
 
+    def action_view_cleanup_cron(self):
+        """
+        Redirects to the Scheduled Action (Cron) for command cleanup.
+        """
+        cron = self.env.ref('cr_zkteco_biometric_integration.ir_cron_gc_biometric_commands', raise_if_not_found=False)
+        if not cron:
+            return False
+            
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Command Cleanup Task'),
+            'res_model': 'ir.cron',
+            'view_mode': 'form',
+            'res_id': cron.id,
+            'target': 'current',
+        }
+
     def action_push_heartbeat_delay(self):
         """
         Creates a SET OPTION command to manually override the heartbeat delay

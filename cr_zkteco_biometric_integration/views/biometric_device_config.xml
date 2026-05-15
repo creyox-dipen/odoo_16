@@ -110,6 +110,15 @@
                             <field name="auto_checkout"/>
                             <field name="auto_checkout_time" widget="float_time" attrs="{'invisible': [('auto_checkout', '=', False)]}"/>
                             <field name="heartbeat_delay" placeholder="Default: 30"/>
+                            <label for="action_view_cleanup_cron" string="Command Cleanup Settings"/>
+                            <div>
+                                <button name="action_view_cleanup_cron" 
+                                        type="object" 
+                                        string="Configure Cleanup" 
+                                        class="btn-link" 
+                                        icon="fa-arrow-right"/>
+                                <span class="text-muted">(Auto-delete old processed commands)</span>
+                            </div>
                             <field name="auto_clear_log" widget="boolean_toggle"/>
                         </group>
                     </group>

@@ -40,3 +40,16 @@ class BiometricDeviceCommand(models.Model):
 
     def name_get(self):
         return [(rec.id, f"{rec.device_id.name}: {rec.command_text}") for rec in self]
+
+    @api.model
+    def _gc_commands(self):
+        """
+        Garbage Collection for commands.
+        Removes ALL successful/failed commands to keep the history clean.
+        This runs according to the interval set in the Scheduled Action.
+        """
+        processed_commands = self.search([
+            ('status', 'in', ['success', 'failed'])
+        ])
+        if processed_commands:
+            processed_commands.unlink()
