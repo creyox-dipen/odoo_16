@@ -109,19 +109,29 @@ class BiometricDevice(models.Model):
         tracking=True,
         help="Timestamp of the last successful ADMS push received from this device.",
     )
-    connection_status = fields.Selection([
-        ('not_connected', 'Not Connected'),
-        ('connected', 'Connected'),
-    ], string="Connection Status", compute="_compute_connection_status", store=False)
+    connection_status = fields.Selection(
+        [
+            ("not_connected", "Not Connected"),
+            ("connected", "Connected"),
+        ],
+        string="Connection Status",
+        compute="_compute_connection_status",
+        store=False,
+    )
 
-    state = fields.Selection([
-        ('draft', 'Pending Approval'),
-        ('confirmed', 'Approved'),
-    ], string="Status", default='draft', tracking=True)
+    state = fields.Selection(
+        [
+            ("draft", "Pending Approval"),
+            ("confirmed", "Approved"),
+        ],
+        string="Status",
+        default="draft",
+        tracking=True,
+    )
 
     def action_approve(self):
         """Approves a discovered device."""
-        self.write({'state': 'confirmed'})
+        self.write({"state": "confirmed"})
         return True
 
     def _compute_connection_status(self):
@@ -130,12 +140,14 @@ class BiometricDevice(models.Model):
         If the device has pushed data in the last 2 minutes, it is 'Connected'.
         """
         from datetime import datetime, timedelta
+
         now = datetime.now()
         for record in self:
             if record.last_seen and (now - record.last_seen) < timedelta(minutes=2):
-                record.connection_status = 'connected'
+                record.connection_status = "connected"
             else:
-                record.connection_status = 'not_connected'
+                record.connection_status = "not_connected"
+
     attendance_log_ids = fields.One2many(
         comodel_name="biometric.attendance.log",
         inverse_name="device_id",
@@ -182,39 +194,66 @@ class BiometricDevice(models.Model):
         string="Heartbeat Interval (Seconds)",
         default=30,
         help="How often the device checks Odoo for new commands. Higher values save server resources but make commands slower to reach the device. "
-             "IMPORTANT: After changing this value, you MUST click the 'Push Heartbeat Interval' button to send the update to the device.",
+        "IMPORTANT: After changing this value, you MUST click the 'Push Heartbeat Interval' button to send the update to the device.",
     )
-    used_for = fields.Selection([
-        ('in', 'Check-in Only'),
-        ('out', 'Check-out Only'),
-        ('both', 'Both (Check-in and Check-out)'),
-    ], string="Used For", default='both', required=True, help="Define if this device is used only for check-ins, only for check-outs, or both.")
+    used_for = fields.Selection(
+        [
+            ("in", "Check-in Only"),
+            ("out", "Check-out Only"),
+            ("both", "Both (Check-in and Check-out)"),
+        ],
+        string="Used For",
+        default="both",
+        required=True,
+        help="Define if this device is used only for check-ins, only for check-outs, or both.",
+    )
     status_code_based = fields.Boolean(
         string="Status Code Based",
         default=True,
         help="If enabled, the system uses the device's status code (In/Out) to determine punch type. "
-             "If disabled (only for 'Both'), the first punch of the day is In and the second is Out."
+        "If disabled (only for 'Both'), the first punch of the day is In and the second is Out.",
     )
 
     # Smart Policies
-    attendance_policy = fields.Selection([
-        ('raw', 'Raw (Exact Time)'),
-        ('calendar', 'Calendar-Based (Smart Rounding)'),
-    ], string="Attendance Policy", default='raw', required=True,
-       help="Raw: Records the exact time from the machine.\n"
-            "Calendar-Based: Rounds the punch time to the employee's shift start/end if within the grace period.")
+    attendance_policy = fields.Selection(
+        [
+            ("raw", "Raw (Exact Time)"),
+            ("calendar", "Calendar-Based (Smart Rounding)"),
+        ],
+        string="Attendance Policy",
+        default="raw",
+        required=True,
+        help="Raw: Records the exact time from the machine.\n"
+        "Calendar-Based: Rounds the punch time to the employee's shift start/end if within the grace period.",
+    )
 
     flexible_period = fields.Boolean(
         string="Flexible Period (Overnight)",
         default=False,
         help="If enabled, the system will search for shifts across the midnight boundary (+/- 14 hours). "
-             "This is recommended for night shifts but can be disabled to improve performance."
+        "This is recommended for night shifts but can be disabled to improve performance.",
     )
 
-    grace_start_in = fields.Integer(string="Grace Start-In (Mins)", default=15, help="Round up to shift start if check-in is X mins early.")
-    grace_end_in = fields.Integer(string="Grace End-In (Mins)", default=15, help="Round down to shift start if check-in is X mins late.")
-    grace_start_out = fields.Integer(string="Grace Start-Out (Mins)", default=15, help="Round up to shift end if check-out is X mins early.")
-    grace_end_out = fields.Integer(string="Grace End-Out (Mins)", default=15, help="Round down to shift end if check-out is X mins late.")
+    grace_start_in = fields.Integer(
+        string="Grace Start-In (Mins)",
+        default=15,
+        help="Round up to shift start if check-in is X mins early.",
+    )
+    grace_end_in = fields.Integer(
+        string="Grace End-In (Mins)",
+        default=15,
+        help="Round down to shift start if check-in is X mins late.",
+    )
+    grace_start_out = fields.Integer(
+        string="Grace Start-Out (Mins)",
+        default=15,
+        help="Round up to shift end if check-out is X mins early.",
+    )
+    grace_end_out = fields.Integer(
+        string="Grace End-Out (Mins)",
+        default=15,
+        help="Round down to shift end if check-out is X mins late.",
+    )
 
     # -------------------------------------------------------------------------
     # SQL Constraints
@@ -245,19 +284,23 @@ class BiometricDevice(models.Model):
     def action_reboot(self):
         """Send a REBOOT command to the device."""
         self.ensure_one()
-        self.env["biometric.device.command"].create({
-            "device_id": self.id,
-            "command_text": "REBOOT",
-        })
+        self.env["biometric.device.command"].create(
+            {
+                "device_id": self.id,
+                "command_text": "REBOOT",
+            }
+        )
         return True
 
     def action_clear_log(self):
         """Send a CLEAR LOG command to the device."""
         self.ensure_one()
-        self.env["biometric.device.command"].create({
-            "device_id": self.id,
-            "command_text": "CLEAR LOG",
-        })
+        self.env["biometric.device.command"].create(
+            {
+                "device_id": self.id,
+                "command_text": "CLEAR LOG",
+            }
+        )
         return True
 
     def action_sync_all_biometrics(self):
@@ -268,21 +311,29 @@ class BiometricDevice(models.Model):
         self.ensure_one()
         Command = self.env["biometric.device.command"].sudo()
         # 1. Fetch all User Info
-        Command.create({"device_id": self.id, "command_text": "DATA QUERY UserInfo OpStamp=0"})
+        Command.create(
+            {"device_id": self.id, "command_text": "DATA QUERY UserInfo OpStamp=0"}
+        )
         # 2. Fetch all Fingerprints
-        Command.create({"device_id": self.id, "command_text": "DATA QUERY FingerTmp OpStamp=0"})
+        Command.create(
+            {"device_id": self.id, "command_text": "DATA QUERY FingerTmp OpStamp=0"}
+        )
         # 3. Fetch all Face Templates
-        Command.create({"device_id": self.id, "command_text": "DATA QUERY Face OpStamp=0"})
-        
+        Command.create(
+            {"device_id": self.id, "command_text": "DATA QUERY Face OpStamp=0"}
+        )
+
         return {
             "type": "ir.actions.client",
             "tag": "display_notification",
             "params": {
                 "title": _("Sync Started"),
-                "message": _("Commands sent to device. Data will arrive in a few moments."),
+                "message": _(
+                    "Commands sent to device. Data will arrive in a few moments."
+                ),
                 "sticky": False,
                 "type": "success",
-            }
+            },
         }
 
     def action_request_attlog(self):
@@ -290,10 +341,12 @@ class BiometricDevice(models.Model):
         Forces the device to push all attendance logs.
         """
         self.ensure_one()
-        self.env["biometric.device.command"].create({
-            "device_id": self.id,
-            "command_text": "DATA QUERY ATTLOG OpStamp=0",
-        })
+        self.env["biometric.device.command"].create(
+            {
+                "device_id": self.id,
+                "command_text": "DATA QUERY ATTLOG OpStamp=0",
+            }
+        )
         return True
 
     def action_export_all_users(self):
@@ -301,20 +354,23 @@ class BiometricDevice(models.Model):
         Push all employees with a Biometric User ID to this device.
         """
         self.ensure_one()
-        employees = self.env['hr.employee'].sudo().search([('device_user_id', '!=', False)])
-        
+        employees = (
+            self.env["hr.employee"].sudo().search([("device_user_id", "!=", False)])
+        )
+
         for emp in employees:
             emp._generate_sync_commands(self)
-            
+
         return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Export Started'),
-                'message': _('Queued %d users for export to "%s".') % (len(employees), self.name),
-                'sticky': False,
-                'type': 'success',
-            }
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Export Started"),
+                "message": _('Queued %d users for export to "%s".')
+                % (len(employees), self.name),
+                "sticky": False,
+                "type": "success",
+            },
         }
 
     def action_view_logs(self):
@@ -338,17 +394,20 @@ class BiometricDevice(models.Model):
         """
         Redirects to the Scheduled Action (Cron) for command cleanup.
         """
-        cron = self.env.ref('cr_zkteco_biometric_integration.ir_cron_gc_biometric_commands', raise_if_not_found=False)
+        cron = self.env.ref(
+            "cr_zkteco_biometric_integration.ir_cron_gc_biometric_commands",
+            raise_if_not_found=False,
+        )
         if not cron:
             return False
-            
+
         return {
-            'type': 'ir.actions.act_window',
-            'name': _('Command Cleanup Task'),
-            'res_model': 'ir.cron',
-            'view_mode': 'form',
-            'res_id': cron.id,
-            'target': 'current',
+            "type": "ir.actions.act_window",
+            "name": _("Command Cleanup Task"),
+            "res_model": "ir.cron",
+            "view_mode": "form",
+            "res_id": cron.id,
+            "target": "current",
         }
 
     def action_push_heartbeat_delay(self):
@@ -357,46 +416,61 @@ class BiometricDevice(models.Model):
         on the device firmware.
         """
         self.ensure_one()
-        self.env["biometric.device.command"].sudo().create({
-            "device_id": self.id,
-            "command_text": f"SET OPTION Delay={self.heartbeat_delay}",
-        })
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'display_notification',
-            'params': {
-                'title': _('Success'),
-                'message': _('Command queued: SET OPTION Delay=%d. It will be applied on the next heartbeat.') % self.heartbeat_delay,
-                'type': 'success',
-                'sticky': False,
+        self.env["biometric.device.command"].sudo().create(
+            {
+                "device_id": self.id,
+                "command_text": f"SET OPTION Delay={self.heartbeat_delay}",
             }
+        )
+        return {
+            "type": "ir.actions.client",
+            "tag": "display_notification",
+            "params": {
+                "title": _("Success"),
+                "message": _(
+                    "Command queued: SET OPTION Delay=%d. It will be applied on the next heartbeat."
+                )
+                % self.heartbeat_delay,
+                "type": "success",
+                "sticky": False,
+            },
         }
 
     def _notify_admin(self, notification_type="discovered"):
         """
-        Creates an activity for all Attendance Managers when a device 
+        Creates an activity for all Attendance Managers when a device
         event occurs (discovered or came back online).
         """
         self.ensure_one()
-        group = self.env.ref("hr_attendance.group_hr_attendance_manager", raise_if_not_found=False)
+        group = self.env.ref(
+            "hr_attendance.group_hr_attendance_manager", raise_if_not_found=False
+        )
         if not group:
             return
-            
+
         managers = group.users
         subject = _("Biometric Device Alert: %s") % self.name
         if notification_type == "discovered":
-            note = _("A new biometric device with SN: <b>%s</b> has been discovered and automatically registered.") % self.serial_number
+            note = (
+                _(
+                    "A new biometric device with SN: <b>%s</b> has been discovered and automatically registered."
+                )
+                % self.serial_number
+            )
         else:
-            note = _("Device <b>%s</b> (SN: %s) has just come back ONLINE.") % (self.name, self.serial_number)
+            note = _("Device <b>%s</b> (SN: %s) has just come back ONLINE.") % (
+                self.name,
+                self.serial_number,
+            )
 
         for manager in managers:
             self.activity_schedule(
-                'mail.mail_activity_data_todo',
+                "mail.mail_activity_data_todo",
                 user_id=manager.id,
                 summary=subject,
-                note=note
+                note=note,
             )
-        
+
         # Only post to chatter for 'online' status (Discovery already has a default Odoo log)
         if notification_type == "online":
             self.message_post(body=note, subtype_xmlid="mail.mt_note")

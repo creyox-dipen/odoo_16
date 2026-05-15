@@ -44,46 +44,66 @@ class AdmsController(http.Controller):
         # Try finding Key case-insensitively
         comm_key = ""
         for k, v in kwargs.items():
-            if k.lower() == 'key':
+            if k.lower() == "key":
                 comm_key = str(v).strip()
                 break
-        
+
         _logger.info("ADMS: Heartbeat (GET) from SN=%s. Params: %s", serial, kwargs)
 
-        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        device = (
+            request.env["biometric.device"]
+            .sudo()
+            .search([("serial_number", "=", serial)], limit=1)
+        )
         if not device:
             return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
         if device.password and device.communication_key != comm_key:
-            _logger.warning("ADMS: Key Mismatch for SN=%s. Expected: '%s', Received: '%s'", 
-                           serial, device.communication_key, comm_key)
-            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
+            _logger.warning(
+                "ADMS: Key Mismatch for SN=%s. Expected: '%s', Received: '%s'",
+                serial,
+                device.communication_key,
+                comm_key,
+            )
+            return request.make_response(
+                "ERROR: Invalid key",
+                headers=[("Content-Type", "text/plain")],
+                status=403,
+            )
 
         # Notify if device was offline (> 10 mins) and just came back
         if device.last_seen:
             from datetime import datetime, timedelta
+
             if (datetime.now() - device.last_seen) > timedelta(minutes=10):
                 device._notify_admin(notification_type="online")
         elif not device.last_seen:
-             # First time seeing a discovered device heartbeat
-             device._notify_admin(notification_type="online")
+            # First time seeing a discovered device heartbeat
+            device._notify_admin(notification_type="online")
 
         # Check for pending commands for this device
         # Fetch the oldest pending commands (Batch of 5 to speed up processing)
-        commands = request.env["biometric.device.command"].sudo().search([
-            ("device_id", "=", device.id),
-            ("status", "=", "pending")
-        ], order="id asc", limit=5)
+        commands = (
+            request.env["biometric.device.command"]
+            .sudo()
+            .search(
+                [("device_id", "=", device.id), ("status", "=", "pending")],
+                order="id asc",
+                limit=5,
+            )
+        )
 
         if commands:
             # Build multi-line response: C:ID:COMMAND
             resp_lines = []
             for cmd in commands:
                 resp_lines.append("C:%s:%s" % (cmd.id, cmd.command_text))
-            
+
             resp_body = "\n".join(resp_lines)
             _logger.info("ADMS: Sending command to device SN=%s: %s", serial, resp_body)
-            return request.make_response(resp_body, headers=[("Content-Type", "text/plain")])
+            return request.make_response(
+                resp_body, headers=[("Content-Type", "text/plain")]
+            )
 
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
@@ -103,22 +123,34 @@ class AdmsController(http.Controller):
         # Try finding Key case-insensitively
         comm_key = ""
         for k, v in kwargs.items():
-            if k.lower() == 'key':
+            if k.lower() == "key":
                 comm_key = str(v).strip()
                 break
-        
+
         raw_body = request.httprequest.get_data(as_text=True) or ""
         _logger.info("ADMS: Command result from SN=%s. Params: %s", serial, kwargs)
 
-        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        device = (
+            request.env["biometric.device"]
+            .sudo()
+            .search([("serial_number", "=", serial)], limit=1)
+        )
         if device and device.password and device.communication_key != comm_key:
-            _logger.warning("ADMS: Key Mismatch in devicecmd for SN=%s. Expected: '%s', Received: '%s'", 
-                           serial, device.communication_key, comm_key)
-            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
+            _logger.warning(
+                "ADMS: Key Mismatch in devicecmd for SN=%s. Expected: '%s', Received: '%s'",
+                serial,
+                device.communication_key,
+                comm_key,
+            )
+            return request.make_response(
+                "ERROR: Invalid key",
+                headers=[("Content-Type", "text/plain")],
+                status=403,
+            )
 
         # Split by newline in case the device returns results for multiple commands at once
         lines = [line.strip() for line in raw_body.split("\n") if line.strip()]
-        
+
         for line in lines:
             params = {}
             for part in line.split("&"):
@@ -131,16 +163,24 @@ class AdmsController(http.Controller):
 
             if cmd_id:
                 try:
-                    command = request.env["biometric.device.command"].sudo().browse(int(cmd_id))
+                    command = (
+                        request.env["biometric.device.command"]
+                        .sudo()
+                        .browse(int(cmd_id))
+                    )
                     if command.exists():
                         # Return code 0 usually means success in ADMS
                         status = "success" if return_code == "0" else "failed"
-                        command.write({
-                            "status": status,
-                            "response_text": line,
-                        })
+                        command.write(
+                            {
+                                "status": status,
+                                "response_text": line,
+                            }
+                        )
                 except Exception as e:
-                    _logger.error("ADMS: Error processing devicecmd for SN=%s: %s", serial, e)
+                    _logger.error(
+                        "ADMS: Error processing devicecmd for SN=%s: %s", serial, e
+                    )
 
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
 
@@ -159,16 +199,20 @@ class AdmsController(http.Controller):
         # Try finding Key case-insensitively
         comm_key = ""
         for k, v in kwargs.items():
-            if k.lower() == 'key':
+            if k.lower() == "key":
                 comm_key = str(v).strip()
                 break
-        
+
         table = (kwargs.get("table") or "").strip()
         options = (kwargs.get("options") or "").strip()
 
-        _logger.info("ADMS: Request from SN=%s method=%s table=%s. Params: %s", 
-                     serial, request.httprequest.method, table, kwargs)
-
+        _logger.info(
+            "ADMS: Request from SN=%s method=%s table=%s. Params: %s",
+            serial,
+            request.httprequest.method,
+            table,
+            kwargs,
+        )
 
         # ── GET: Handshake ────────────────────────────────────────────────────
         if request.httprequest.method == "GET":
@@ -187,21 +231,32 @@ class AdmsController(http.Controller):
 
             # Auto-discovery: Create device if it doesn't exist
             if not device:
-                _logger.info("ADMS: New device discovered SN=%s. Auto-creating...", serial)
-                device = request.env["biometric.device"].sudo().create({
-                    "name": f"Discovered Device: {serial}",
-                    "serial_number": serial,
-                    "state": 'draft',
-                    "active": True,
-                    "last_seen": fields.Datetime.now(),
-                })
+                _logger.info(
+                    "ADMS: New device discovered SN=%s. Auto-creating...", serial
+                )
+                device = (
+                    request.env["biometric.device"]
+                    .sudo()
+                    .create(
+                        {
+                            "name": f"Discovered Device: {serial}",
+                            "serial_number": serial,
+                            "state": "draft",
+                            "active": True,
+                            "last_seen": fields.Datetime.now(),
+                        }
+                    )
+                )
                 # Notify admin about new discovery
                 device._notify_admin(notification_type="discovered")
 
-            if not device or device.state != 'confirmed':
-                _logger.warning("ADMS: Device SN=%s is pending approval or unknown", serial)
+            if not device or device.state != "confirmed":
+                _logger.warning(
+                    "ADMS: Device SN=%s is pending approval or unknown", serial
+                )
                 return request.make_response(
-                    "ERROR: Device pending approval", headers=[("Content-Type", "text/plain")]
+                    "ERROR: Device pending approval",
+                    headers=[("Content-Type", "text/plain")],
                 )
 
             device.sudo().write({"last_seen": fields.Datetime.now()})
@@ -238,18 +293,26 @@ class AdmsController(http.Controller):
 
         # Auto-discovery also handles POST if handshake was skipped
         if not device:
-            _logger.info("ADMS: New device discovered via POST SN=%s. Auto-creating...", serial)
-            device = request.env["biometric.device"].sudo().create({
-                "name": f"Discovered Device: {serial}",
-                "serial_number": serial,
-                "state": 'draft',
-                "active": True,
-                "last_seen": fields.Datetime.now(),
-            })
+            _logger.info(
+                "ADMS: New device discovered via POST SN=%s. Auto-creating...", serial
+            )
+            device = (
+                request.env["biometric.device"]
+                .sudo()
+                .create(
+                    {
+                        "name": f"Discovered Device: {serial}",
+                        "serial_number": serial,
+                        "state": "draft",
+                        "active": True,
+                        "last_seen": fields.Datetime.now(),
+                    }
+                )
+            )
             # Notify admin about new discovery
             device._notify_admin(notification_type="discovered")
 
-        if not device or device.state != 'confirmed':
+        if not device or device.state != "confirmed":
             _logger.warning("ADMS: Device SN=%s is pending approval or unknown", serial)
             return request.make_response(
                 "ERROR: Device pending approval",
@@ -267,23 +330,36 @@ class AdmsController(http.Controller):
         table_upper = table.upper()
         raw_body = request.httprequest.data.decode("utf-8")
         lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
-        _logger.info("ADMS: Received table=%s with %d lines of data from SN=%s", table_upper, len(lines), serial)
+        _logger.info(
+            "ADMS: Received table=%s with %d lines of data from SN=%s",
+            table_upper,
+            len(lines),
+            serial,
+        )
         _logger.debug("ADMS: Raw Body: %s", raw_body)
 
         if table_upper == "ATTLOG":
-            _logger.info("ADMS: Processing %d ATTLOG line(s) from SN=%s", len(lines), serial)
+            _logger.info(
+                "ADMS: Processing %d ATTLOG line(s) from SN=%s", len(lines), serial
+            )
             for line in lines:
                 self._process_attlog_line(device, line)
-            
+
             # Automatic Post-Sync Cleanup
             if device.auto_clear_log:
-                _logger.info("ADMS: Auto-clearing logs for SN=%s after successful sync", serial)
-                request.env["biometric.device.command"].sudo().create({
-                    "device_id": device.id,
-                    "command_text": "CLEAR LOG",
-                })
+                _logger.info(
+                    "ADMS: Auto-clearing logs for SN=%s after successful sync", serial
+                )
+                request.env["biometric.device.command"].sudo().create(
+                    {
+                        "device_id": device.id,
+                        "command_text": "CLEAR LOG",
+                    }
+                )
         elif table_upper in ["USER", "USERINFO"]:
-            _logger.info("ADMS: Processing %d USER info line(s) from SN=%s", len(lines), serial)
+            _logger.info(
+                "ADMS: Processing %d USER info line(s) from SN=%s", len(lines), serial
+            )
             self._process_user_data(device, raw_body)
         elif table_upper == "OPERLOG":
             _logger.info("ADMS: Processing OPERLOG from SN=%s", serial)
@@ -298,17 +374,34 @@ class AdmsController(http.Controller):
                 elif line.startswith("USER "):
                     clean_line = line[5:]
                     self._process_user_data(device, clean_line)
-        elif table_upper in ["FINGERTMP", "FP", "TEMPLATEV10", "TEMPLATEV9", "FINGERPRINT"]:
-            _logger.info("ADMS: Processing %d Fingerprint template(s) from SN=%s", len(lines), serial)
+        elif table_upper in [
+            "FINGERTMP",
+            "FP",
+            "TEMPLATEV10",
+            "TEMPLATEV9",
+            "FINGERPRINT",
+        ]:
+            _logger.info(
+                "ADMS: Processing %d Fingerprint template(s) from SN=%s",
+                len(lines),
+                serial,
+            )
             self._process_template_data(device, raw_body, "finger")
         elif table_upper in ["FACETMP", "FACE", "FACETEMPLATE"]:
-            _logger.info("ADMS: Processing %d Face template(s) from SN=%s", len(lines), serial)
+            _logger.info(
+                "ADMS: Processing %d Face template(s) from SN=%s", len(lines), serial
+            )
             self._process_template_data(device, raw_body, "face")
         elif table_upper in ["ATTPHOTO", "PHOTO", "USERPIC", "USERPHOTO", "PERS_PIC"]:
             _logger.info("ADMS: Processing %d Photo(s) from SN=%s", len(lines), serial)
             self._process_photo_data(device, raw_body)
         else:
-            _logger.warning("ADMS: Received UNKNOWN table '%s' from SN=%s. Data: %s", table_upper, serial, raw_body[:100])
+            _logger.warning(
+                "ADMS: Received UNKNOWN table '%s' from SN=%s. Data: %s",
+                table_upper,
+                serial,
+                raw_body[:100],
+            )
 
         device.sudo().write({"last_seen": fields.Datetime.now()})
         return request.make_response("OK", headers=[("Content-Type", "text/plain")])
@@ -328,52 +421,91 @@ class AdmsController(http.Controller):
         # Try finding Key case-insensitively
         comm_key = ""
         for k, v in kwargs.items():
-            if k.lower() == 'key':
+            if k.lower() == "key":
                 comm_key = str(v).strip()
                 break
-        
+
         table = (kwargs.get("table") or "").strip()
         raw_data = request.httprequest.data
 
-        _logger.info("ADMS: File data request from SN=%s table=%s. Params: %s", serial, table, kwargs)
+        _logger.info(
+            "ADMS: File data request from SN=%s table=%s. Params: %s",
+            serial,
+            table,
+            kwargs,
+        )
 
-        device = request.env["biometric.device"].sudo().search([("serial_number", "=", serial)], limit=1)
+        device = (
+            request.env["biometric.device"]
+            .sudo()
+            .search([("serial_number", "=", serial)], limit=1)
+        )
         if device and device.password and device.communication_key != comm_key:
-            _logger.warning("ADMS: Key Mismatch in fdata for SN=%s. Expected: '%s', Received: '%s'", 
-                           serial, device.communication_key, comm_key)
-            return request.make_response("ERROR: Invalid key", headers=[("Content-Type", "text/plain")], status=403)
-        
+            _logger.warning(
+                "ADMS: Key Mismatch in fdata for SN=%s. Expected: '%s', Received: '%s'",
+                serial,
+                device.communication_key,
+                comm_key,
+            )
+            return request.make_response(
+                "ERROR: Invalid key",
+                headers=[("Content-Type", "text/plain")],
+                status=403,
+            )
+
         if table.upper() == "ATTPHOTO" and raw_data:
             try:
-                body_head = raw_data[:500].decode('utf-8', errors='ignore')
+                body_head = raw_data[:500].decode("utf-8", errors="ignore")
                 pin = ""
                 # SpeedFace format: PIN=20260504151344-1.jpg
-                pin_filename_match = re.search(r'PIN=[^-\n]+-(\d+)\.jpg', body_head)
+                pin_filename_match = re.search(r"PIN=[^-\n]+-(\d+)\.jpg", body_head)
                 if pin_filename_match:
                     pin = pin_filename_match.group(1)
-                
+
                 if pin:
-                    employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                    employee = (
+                        request.env["hr.employee"]
+                        .sudo()
+                        .search([("device_user_id", "=", pin)], limit=1)
+                    )
                     if employee:
                         marker = b"CMD=uploadphoto"
                         if marker in raw_data:
                             # Extract binary JPEG after marker, skipping potential metadata junk
                             search_start = raw_data.find(marker) + len(marker)
                             image_start = raw_data.find(b"\xff\xd8", search_start)
-                            if image_start == -1: image_start = search_start # Fallback
-                            
+                            if image_start == -1:
+                                image_start = search_start  # Fallback
+
                             # Find the most recent attendance log for this user to attach the photo
-                            log = request.env["biometric.attendance.log"].sudo().search([
-                                ("device_user_id", "=", pin),
-                                ("device_id.serial_number", "=", serial)
-                            ], order="timestamp desc", limit=1)
+                            log = (
+                                request.env["biometric.attendance.log"]
+                                .sudo()
+                                .search(
+                                    [
+                                        ("device_user_id", "=", pin),
+                                        ("device_id.serial_number", "=", serial),
+                                    ],
+                                    order="timestamp desc",
+                                    limit=1,
+                                )
+                            )
                             if log:
                                 import base64
-                                image_b64 = base64.b64encode(raw_data[image_start:]).decode('utf-8')
+
+                                image_b64 = base64.b64encode(
+                                    raw_data[image_start:]
+                                ).decode("utf-8")
                                 log.sudo().write({"image": image_b64})
-                                _logger.info("ADMS: Photo saved to Attendance Log for PIN=%s", pin)
+                                _logger.info(
+                                    "ADMS: Photo saved to Attendance Log for PIN=%s",
+                                    pin,
+                                )
                             else:
-                                _logger.warning("ADMS: Photo received for PIN=%s but no attendance log found to attach it to.", pin)
+                                _logger.warning(
+                                    "ADMS: Photo received for PIN=%s but no attendance log found to attach it to.",
+                                    pin,
+                                )
             except Exception as e:
                 _logger.error("ADMS: Failed to process fdata photo: %s", e)
 
@@ -389,43 +521,69 @@ class AdmsController(http.Controller):
         Format: PIN=1\tFileName=1.jpg\tSize=... \tContent=...
         """
         import base64
+
         lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
         for line in lines:
             params = self._parse_adms_line(line)
             pin = params.get("PIN") or params.get("UserPin")
             if pin:
-                pin = str(pin).split(' ')[0]
+                pin = str(pin).split(" ")[0]
             # The photo content can be in 'Content' or sometimes the entire body is the photo
             content = params.get("Content") or params.get("TMP")
 
             if pin and content:
-                employee = request.env["hr.employee"].sudo().search([("device_user_id", "=", pin)], limit=1)
+                employee = (
+                    request.env["hr.employee"]
+                    .sudo()
+                    .search([("device_user_id", "=", pin)], limit=1)
+                )
                 if employee:
                     try:
                         # Some devices send data with headers, some raw base64
                         # We try to clean it if it has common base64 issues
                         image_data = content.strip()
-                        
+
                         # Validate if it's base64
                         try:
                             base64.b64decode(image_data, validate=True)
                         except:
                             # If not valid base64, it might be raw binary (less common in ADMS text lines)
                             # but we'll try to encode it just in case
-                            image_data = base64.b64encode(image_data.encode('utf-8')).decode('utf-8')
+                            image_data = base64.b64encode(
+                                image_data.encode("utf-8")
+                            ).decode("utf-8")
 
                         # Find the most recent attendance log for this user to attach the photo
-                        log = request.env["biometric.attendance.log"].sudo().search([
-                            ("device_user_id", "=", pin),
-                            ("device_id.serial_number", "=", device.serial_number)
-                        ], order="timestamp desc", limit=1)
+                        log = (
+                            request.env["biometric.attendance.log"]
+                            .sudo()
+                            .search(
+                                [
+                                    ("device_user_id", "=", pin),
+                                    (
+                                        "device_id.serial_number",
+                                        "=",
+                                        device.serial_number,
+                                    ),
+                                ],
+                                order="timestamp desc",
+                                limit=1,
+                            )
+                        )
                         if log:
                             log.sudo().write({"image": image_data})
-                            _logger.info("ADMS: Photo saved to Attendance Log for PIN=%s", pin)
+                            _logger.info(
+                                "ADMS: Photo saved to Attendance Log for PIN=%s", pin
+                            )
                         else:
-                            _logger.warning("ADMS: Photo received for PIN=%s but no attendance log found to attach it to.", pin)
+                            _logger.warning(
+                                "ADMS: Photo received for PIN=%s but no attendance log found to attach it to.",
+                                pin,
+                            )
                     except Exception as e:
-                        _logger.error("ADMS: Failed to process photo for PIN=%s: %s", pin, e)
+                        _logger.error(
+                            "ADMS: Failed to process photo for PIN=%s: %s", pin, e
+                        )
 
     def _parse_attlog_timestamp(self, ts_str, device_tz_name):
         """
@@ -499,18 +657,24 @@ class AdmsController(http.Controller):
 
             # Automatically request full details (Name, Role, Templates) from device
             Command = request.env["biometric.device.command"].sudo()
-            Command.create({
-                "device_id": device.id,
-                "command_text": f"DATA QUERY UserInfo PIN={device_user_id}",
-            })
-            Command.create({
-                "device_id": device.id,
-                "command_text": f"DATA QUERY FingerTmp PIN={device_user_id}",
-            })
-            Command.create({
-                "device_id": device.id,
-                "command_text": f"DATA QUERY Face PIN={device_user_id}",
-            })
+            Command.create(
+                {
+                    "device_id": device.id,
+                    "command_text": f"DATA QUERY UserInfo PIN={device_user_id}",
+                }
+            )
+            Command.create(
+                {
+                    "device_id": device.id,
+                    "command_text": f"DATA QUERY FingerTmp PIN={device_user_id}",
+                }
+            )
+            Command.create(
+                {
+                    "device_id": device.id,
+                    "command_text": f"DATA QUERY Face PIN={device_user_id}",
+                }
+            )
         return employee
 
     # -------------------------------------------------------------------------
@@ -665,18 +829,25 @@ class AdmsController(http.Controller):
         employee = self._get_or_create_employee(device, device_user_id)
 
         # Override punch type based on device settings
-        if device.used_for == 'in':
-            punch_type = 'in'
-            verify_state = "0" # Force Check-in code in logs
-        elif device.used_for == 'out':
-            punch_type = 'out'
-            verify_state = "1" # Force Check-out code in logs
-        elif device.used_for == 'both' and not device.status_code_based:
+        if device.used_for == "in":
+            punch_type = "in"
+            verify_state = "0"  # Force Check-in code in logs
+        elif device.used_for == "out":
+            punch_type = "out"
+            verify_state = "1"  # Force Check-out code in logs
+        elif device.used_for == "both" and not device.status_code_based:
             # If not status code based, we guess: In if no open attendance, Out otherwise
-            open_attendance = request.env["hr.attendance"].sudo().search([
-                ("employee_id", "=", employee.id),
-                ("check_out", "=", False),
-            ], limit=1)
+            open_attendance = (
+                request.env["hr.attendance"]
+                .sudo()
+                .search(
+                    [
+                        ("employee_id", "=", employee.id),
+                        ("check_out", "=", False),
+                    ],
+                    limit=1,
+                )
+            )
             punch_type = "out" if open_attendance else "in"
             verify_state = "1" if open_attendance else "0"
 
@@ -757,35 +928,48 @@ class AdmsController(http.Controller):
         Parses USER table data from ADMS.
         """
         lines = [ln.strip() for ln in raw_body.splitlines() if ln.strip()]
-        _logger.info("🚀🚀🚀 lines : %s",lines)
+        _logger.info("🚀🚀🚀 lines : %s", lines)
         for line in lines:
             params = self._parse_adms_line(line)
             _logger.info("🚀🚀🚀 ADMS: Processing UserInfo line params: %s", params)
             pin = params.get("PIN") or params.get("UserPin")
             if pin:
-                pin = str(pin).split(' ')[0]
+                pin = str(pin).split(" ")[0]
             if pin:
                 # Ensure employee exists (Auto-create if missing)
                 employee = self._get_or_create_employee(device, pin)
-                
+
                 vals = {}
                 # Sync Name from device to Odoo (If name on device is different, update Odoo)
                 new_name = params.get("Name")
                 if new_name and employee.name != new_name:
-                    _logger.info("ADMS: Updating employee name from device: %s -> %s", employee.name, new_name)
-                    vals['name'] = new_name
-                
+                    _logger.info(
+                        "ADMS: Updating employee name from device: %s -> %s",
+                        employee.name,
+                        new_name,
+                    )
+                    vals["name"] = new_name
+
                 # Sync Privilege/Role from device to Odoo
-                pri = params.get("Pri") or params.get("Privilege") or params.get("UserRole")
+                pri = (
+                    params.get("Pri")
+                    or params.get("Privilege")
+                    or params.get("UserRole")
+                )
                 if pri is not None:
                     pri_str = str(pri)
-                    # If it's a standard role, sync it. 
+                    # If it's a standard role, sync it.
                     # If it's a CUSTOM role (1, 2, 3...), set Odoo field to EMPTY (False).
-                    target_pri = pri_str if pri_str in ['0', '14'] else False
-                    
+                    target_pri = pri_str if pri_str in ["0", "14"] else False
+
                     if employee.biometric_privilege != target_pri:
-                        _logger.info("ADMS: Privilege sync for user PIN=%s, setting Odoo to %s (Device has custom role %s)", pin, target_pri, pri)
-                        vals['biometric_privilege'] = target_pri
+                        _logger.info(
+                            "ADMS: Privilege sync for user PIN=%s, setting Odoo to %s (Device has custom role %s)",
+                            pin,
+                            target_pri,
+                            pri,
+                        )
+                        vals["biometric_privilege"] = target_pri
 
                 if vals:
                     employee.sudo().write(vals)
@@ -802,42 +986,65 @@ class AdmsController(http.Controller):
             params = self._parse_adms_line(line)
             pin = params.get("PIN") or params.get("UserPin")
             if pin:
-                pin = str(pin).split(' ')[0]
+                pin = str(pin).split(" ")[0]
             tmp = params.get("Tmp") or params.get("Template") or params.get("TMP")
-            idx = params.get("FingerID") or params.get("FaceID") or params.get("FID") or "0"
+            idx = (
+                params.get("FingerID")
+                or params.get("FaceID")
+                or params.get("FID")
+                or "0"
+            )
 
-            if not pin and 'TMP=' in line:
-                pin_match = re.search(r'PIN=(\d+)', line)
-                idx_match = re.search(r'FID=(\d+)', line)
-                tmp_match = re.search(r'TMP=([A-Za-z0-9+/=]+)', line)
+            if not pin and "TMP=" in line:
+                pin_match = re.search(r"PIN=(\d+)", line)
+                idx_match = re.search(r"FID=(\d+)", line)
+                tmp_match = re.search(r"TMP=([A-Za-z0-9+/=]+)", line)
                 if pin_match and idx_match and tmp_match:
                     pin = pin_match.group(1)
                     idx = idx_match.group(1)
                     tmp = tmp_match.group(1)
-                    template_type = 'face' if 'FACE' in line else 'finger'
+                    template_type = "face" if "FACE" in line else "finger"
 
             if pin and tmp:
                 employee = self._get_or_create_employee(device, pin)
                 if employee:
                     # Deduplicate
-                    existing = Template.search([
-                        ("employee_id", "=", employee.id),
-                        ("type", "=", template_type),
-                        ("finger_index", "=", int(idx))
-                    ], limit=1)
+                    existing = Template.search(
+                        [
+                            ("employee_id", "=", employee.id),
+                            ("type", "=", template_type),
+                            ("finger_index", "=", int(idx)),
+                        ],
+                        limit=1,
+                    )
 
                     if not existing:
-                        Template.create({
-                            "employee_id": employee.id,
-                            "type": template_type,
-                            "template_data": tmp,
-                            "finger_index": int(idx)
-                        })
-                        _logger.info("ADMS: Biometric %s fetched and SAVED for user PIN=%s index=%s", template_type, pin, idx)
+                        Template.create(
+                            {
+                                "employee_id": employee.id,
+                                "type": template_type,
+                                "template_data": tmp,
+                                "finger_index": int(idx),
+                            }
+                        )
+                        _logger.info(
+                            "ADMS: Biometric %s fetched and SAVED for user PIN=%s index=%s",
+                            template_type,
+                            pin,
+                            idx,
+                        )
                     else:
-                        _logger.info("ADMS: Biometric %s already exists for user PIN=%s index=%s", template_type, pin, idx)
+                        _logger.info(
+                            "ADMS: Biometric %s already exists for user PIN=%s index=%s",
+                            template_type,
+                            pin,
+                            idx,
+                        )
                 else:
-                    _logger.warning("ADMS: Received template for PIN=%s but no employee found in Odoo", pin)
+                    _logger.warning(
+                        "ADMS: Received template for PIN=%s but no employee found in Odoo",
+                        pin,
+                    )
 
     def _parse_adms_line(self, line):
         """Helper to parse tab-separated Key=Value pairs."""

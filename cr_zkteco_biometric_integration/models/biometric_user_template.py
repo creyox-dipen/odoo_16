@@ -3,11 +3,13 @@
 
 from odoo import models, fields
 
+
 class BiometricUserTemplate(models.Model):
     """
     Stores biometric templates (fingerprints, face data) for an employee.
     These are mathematical representations used by the ZKTeco devices.
     """
+
     _name = "biometric.user.template"
     _description = "Biometric User Template"
 
@@ -52,17 +54,19 @@ class BiometricUserTemplate(models.Model):
         """
         Command = self.env["biometric.device.command"].sudo()
         devices = self.env["biometric.device"].sudo().search([("active", "=", True)])
-        
+
         for rec in self:
             if not rec.device_user_id:
                 continue
-                
+
             # ADMS table names for deletion
             table = "FingerTmp" if rec.type == "finger" else "Face"
             for device in devices:
-                Command.create({
-                    "device_id": device.id,
-                    "command_text": f"DATA DELETE {table} PIN={rec.device_user_id}\tFID={rec.finger_index}",
-                })
-        
+                Command.create(
+                    {
+                        "device_id": device.id,
+                        "command_text": f"DATA DELETE {table} PIN={rec.device_user_id}\tFID={rec.finger_index}",
+                    }
+                )
+
         return super(BiometricUserTemplate, self).unlink()

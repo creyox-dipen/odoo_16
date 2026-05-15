@@ -133,7 +133,7 @@ class BiometricAttendanceLog(models.Model):
             uid = (record.device_user_id or "").strip()
             ts = fields.Datetime.to_string(record.timestamp) if record.timestamp else ""
             record.unique_key = f"{serial}_{uid}_{ts}"
-            
+
     def action_process_punch(self):
         """
         Manually trigger the processing logic for this specific log.
@@ -142,29 +142,40 @@ class BiometricAttendanceLog(models.Model):
         self.ensure_one()
         if not self.employee_id:
             return
-            
+
         PUNCH_TYPE_MAP = {
-            "0": "in", "4": "in",
-            "1": "out", "5": "out",
+            "0": "in",
+            "4": "in",
+            "1": "out",
+            "5": "out",
         }
-        
+
         device = self.device_id
         punch_type = PUNCH_TYPE_MAP.get(self.verify_state)
-        
+
         # Override punch type based on device settings if needed
-        if device.used_for == 'in':
-            punch_type = 'in'
-        elif device.used_for == 'out':
-            punch_type = 'out'
+        if device.used_for == "in":
+            punch_type = "in"
+        elif device.used_for == "out":
+            punch_type = "out"
         elif not punch_type:
             # Guessing logic
-            open_att = self.env["hr.attendance"].sudo().search([
-                ("employee_id", "=", self.employee_id.id),
-                ("check_out", "=", False)
-            ], limit=1)
+            open_att = (
+                self.env["hr.attendance"]
+                .sudo()
+                .search(
+                    [
+                        ("employee_id", "=", self.employee_id.id),
+                        ("check_out", "=", False),
+                    ],
+                    limit=1,
+                )
+            )
             punch_type = "out" if open_att else "in"
-        
-        success = self.employee_id._process_biometric_punch(device, self.timestamp, punch_type)
+
+        success = self.employee_id._process_biometric_punch(
+            device, self.timestamp, punch_type
+        )
         if success:
             self.status = "processed"
         else:
@@ -178,52 +189,65 @@ class BiometricAttendanceLog(models.Model):
         # To be safe and respect the user's choice, we only process 'new' logs from
         # devices where real-time is disabled.
         batch_devices = self.env["biometric.device"].search([("active", "=", True)])
-        
+
         # We filter logs that are 'new' and have an employee linked
-        new_logs = self.search([
-            ("status", "=", "new"),
-            ("device_id", "in", batch_devices.ids),
-            ("employee_id", "!=", False)
-        ], order="timestamp asc")
+        new_logs = self.search(
+            [
+                ("status", "=", "new"),
+                ("device_id", "in", batch_devices.ids),
+                ("employee_id", "!=", False),
+            ],
+            order="timestamp asc",
+        )
 
         # Mapping verify_state to punch type
         PUNCH_TYPE_MAP = {
-            "0": "in", "4": "in",
-            "1": "out", "5": "out",
+            "0": "in",
+            "4": "in",
+            "1": "out",
+            "5": "out",
         }
 
         for log in new_logs:
             device = log.device_id
             punch_type = False
-            
-            if device.used_for == 'in':
-                punch_type = 'in'
-            elif device.used_for == 'out':
-                punch_type = 'out'
-            elif device.used_for == 'both' and not device.status_code_based:
+
+            if device.used_for == "in":
+                punch_type = "in"
+            elif device.used_for == "out":
+                punch_type = "out"
+            elif device.used_for == "both" and not device.status_code_based:
                 # If not status code based, we guess: In if no open attendance, Out otherwise
-                open_att = self.env["hr.attendance"].search([
-                    ("employee_id", "=", log.employee_id.id),
-                    ("check_out", "=", False)
-                ], limit=1)
+                open_att = self.env["hr.attendance"].search(
+                    [
+                        ("employee_id", "=", log.employee_id.id),
+                        ("check_out", "=", False),
+                    ],
+                    limit=1,
+                )
                 punch_type = "out" if open_att else "in"
             else:
                 punch_type = PUNCH_TYPE_MAP.get(log.verify_state)
                 if not punch_type:
                     # Logic to guess: In if no open attendance, Out otherwise
-                    open_att = self.env["hr.attendance"].search([
-                        ("employee_id", "=", log.employee_id.id),
-                        ("check_out", "=", False)
-                    ], limit=1)
+                    open_att = self.env["hr.attendance"].search(
+                        [
+                            ("employee_id", "=", log.employee_id.id),
+                            ("check_out", "=", False),
+                        ],
+                        limit=1,
+                    )
                     punch_type = "out" if open_att else "in"
-            
+
             # Update log's verify_state to reflect what was actually considered
             # 0=In, 1=Out
             new_verify_state = "0" if punch_type == "in" else "1"
             if log.verify_state != new_verify_state:
                 log.verify_state = new_verify_state
 
-            success = log.employee_id._process_biometric_punch(log.device_id, log.timestamp, punch_type)
+            success = log.employee_id._process_biometric_punch(
+                log.device_id, log.timestamp, punch_type
+            )
             if success:
                 log.write({"status": "processed"})
             else:

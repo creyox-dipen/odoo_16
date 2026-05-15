@@ -3,11 +3,13 @@
 
 from odoo import models, fields, api
 
+
 class BiometricDeviceCommand(models.Model):
     """
     Stores commands to be sent to the biometric device via ADMS.
     The device pulls these commands during its heartbeat (getrequest).
     """
+
     _name = "biometric.device.command"
     _description = "Biometric Device Command"
     _order = "create_date desc"
@@ -48,8 +50,6 @@ class BiometricDeviceCommand(models.Model):
         Removes ALL successful/failed commands to keep the history clean.
         This runs according to the interval set in the Scheduled Action.
         """
-        processed_commands = self.search([
-            ('status', 'in', ['success', 'failed'])
-        ])
+        processed_commands = self.search([("status", "in", ["success", "failed"])])
         if processed_commands:
             processed_commands.unlink()

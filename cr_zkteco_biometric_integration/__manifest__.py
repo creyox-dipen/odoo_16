@@ -73,7 +73,7 @@
         Read our blog post, visit <a href="https://www.creyox.com/blog">Creyox Technologies Blogs</a>
     </p>
     """,
-    "depends": ["base",  "mail", "hr_attendance"],
+    "depends": ["base", "mail", "hr_attendance"],
     "data": [
         "security/ir.model.access.csv",
         "data/ir_cron.xml",

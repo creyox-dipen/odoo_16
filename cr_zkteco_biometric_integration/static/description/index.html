@@ -148,8 +148,8 @@
                                 <p style="color: #94a3b8; font-size: 18px; line-height: 1.8;">Our next-generation synchronization engine creates a persistent bi-directional link between your ZKTeco hardware and Odoo. Every fingerprint scan or face recognition is pushed instantly to your server, ensuring zero-latency attendance tracking.</p>
                             </div>
                             <div class="col-lg-5 d-flex justify-content-center mt-4 mt-lg-0">
-                                <div class="d-flex justify-content-center align-items-center shadow" style="width: 180px; height: 180px; background-color: rgba(59, 130, 246, 0.1); border: 4px solid #3b82f6; border-radius: 50%; overflow: hidden;">
-                                    <img src="https://pngimg.com/uploads/fingerprint/fingerprint_PNG15.png" style="width: 75%; height: 75%; object-fit: contain; filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%) drop-shadow(0 0 15px rgba(59, 130, 246, 0.8));" alt="Fingerprint Scan">
+                                <div class="d-flex justify-content-center align-items-center shadow rounded-circle overflow-hidden border border-4 border-primary bg-primary bg-opacity-10" style="width: 180px; height: 180px;">
+                                    <img src="https://pngimg.com/uploads/fingerprint/fingerprint_PNG15.png" class="w-75 h-75 object-fit-contain" style="filter: invert(48%) sepia(79%) saturate(2476%) hue-rotate(190deg) brightness(118%) contrast(119%) drop-shadow(0 0 15px rgba(59, 130, 246, 0.8));" alt="Fingerprint Scan">
                                 </div>
                             </div>
                         </div>
@@ -325,13 +325,13 @@
                         <div class="row g-0 align-items-center justify-content-center">
                             <!-- Step 1 -->
                             <div class="col-md-3">
-                                <div class="p-4 text-center shadow" style="background:#0f172a; border-radius:30px; position:relative;">
-                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3" style="width:80px;height:80px;background:linear-gradient(135deg,#ef4444,#f97316);border-radius:24px;font-size:36px;color:#fff;">
+                                <div class="p-4 text-center shadow rounded-5 position-relative" style="background-color: #0f172a;">
+                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3 rounded-4 text-white" style="width: 80px; height: 80px; background-color: #ef4444; font-size: 36px;">
                                         <i class="fa fa-hand-paper-o"></i>
                                     </div>
-                                    <div class="px-2 py-1 d-inline-block mb-2" style="background:#ef4444;border-radius:20px;font-size:10px;font-weight:900;color:#fff;letter-spacing:2px;">STEP 01</div>
-                                    <h5 style="font-weight:900;color:#fff;margin-bottom:5px;">Employee Punches</h5>
-                                    <p style="font-size:13px;color:#94a3b8;margin:0;">Fingerprint or face tap on ZKTeco hardware</p>
+                                    <div class="px-2 py-1 d-inline-block mb-2 rounded-pill fw-bolder text-white" style="background-color: #ef4444; font-size: 10px; letter-spacing: 2px;">STEP 01</div>
+                                    <h5 class="fw-bolder text-white mb-1">Employee Punches</h5>
+                                    <p class="m-0" style="font-size: 13px; color: #94a3b8;">Fingerprint or face tap on ZKTeco hardware</p>
                                 </div>
                             </div>
                             <!-- Arrow 1 -->
@@ -340,13 +340,13 @@
                             </div>
                             <!-- Step 2 -->
                             <div class="col-md-3">
-                                <div class="p-4 text-center shadow" style="background:linear-gradient(135deg,#1e3a5f,#0f172a); border-radius:30px; border:2px solid #3b82f6;">
-                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3" style="width:80px;height:80px;background:linear-gradient(135deg,#3b82f6,#8b5cf6);border-radius:24px;font-size:36px;color:#fff;">
+                                <div class="p-4 text-center shadow rounded-5 border border-2 border-primary" style="background-color: #0f172a;">
+                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3 rounded-4 text-white" style="width: 80px; height: 80px; background-color: #3b82f6; font-size: 36px;">
                                         <i class="fa fa-bolt"></i>
                                     </div>
-                                    <div class="px-2 py-1 d-inline-block mb-2" style="background:#3b82f6;border-radius:20px;font-size:10px;font-weight:900;color:#fff;letter-spacing:2px;">STEP 02</div>
-                                    <h5 style="font-weight:900;color:#fff;margin-bottom:5px;">ADMS Live Push</h5>
-                                    <p style="font-size:13px;color:#94a3b8;margin:0;">Device instantly sends log to Odoo via ADMS HTTP protocol</p>
+                                    <div class="px-2 py-1 d-inline-block mb-2 rounded-pill fw-bolder text-white" style="background-color: #3b82f6; font-size: 10px; letter-spacing: 2px;">STEP 02</div>
+                                    <h5 class="fw-bolder text-white mb-1">ADMS Live Push</h5>
+                                    <p class="m-0" style="font-size: 13px; color: #94a3b8;">Device instantly sends log to Odoo via ADMS HTTP protocol</p>
                                 </div>
                             </div>
                             <!-- Arrow 2 -->
@@ -355,13 +355,13 @@
                             </div>
                             <!-- Step 3 -->
                             <div class="col-md-3">
-                                <div class="p-4 text-center shadow" style="background:#0f172a; border-radius:30px;">
-                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3" style="width:80px;height:80px;background:linear-gradient(135deg,#10b981,#0d9488);border-radius:24px;font-size:36px;color:#fff;">
+                                <div class="p-4 text-center shadow rounded-5" style="background-color: #0f172a;">
+                                    <div class="d-flex justify-content-center align-items-center mx-auto mb-3 rounded-4 text-white" style="width: 80px; height: 80px; background-color: #10b981; font-size: 36px;">
                                         <i class="fa fa-check-circle"></i>
                                     </div>
-                                    <div class="px-2 py-1 d-inline-block mb-2" style="background:#10b981;border-radius:20px;font-size:10px;font-weight:900;color:#fff;letter-spacing:2px;">STEP 03</div>
-                                    <h5 style="font-weight:900;color:#fff;margin-bottom:5px;">Odoo Records Update</h5>
-                                    <p style="font-size:13px;color:#94a3b8;margin:0;">HR Attendance is created, late/early flags set automatically</p>
+                                    <div class="px-2 py-1 d-inline-block mb-2 rounded-pill fw-bolder text-white" style="background-color: #10b981; font-size: 10px; letter-spacing: 2px;">STEP 03</div>
+                                    <h5 class="fw-bolder text-white mb-1">Odoo Records Update</h5>
+                                    <p class="m-0" style="font-size: 13px; color: #94a3b8;">HR Attendance is created, late/early flags set automatically</p>
                                 </div>
                             </div>
                         </div>
@@ -386,18 +386,18 @@
                                         <p style="color: #475569; font-size: 16px; line-height: 1.7;">Our Biometric Dashboard provides a comprehensive live command center. Monitor device connectivity in real-time, track present and absent employees at a glance, and view live punch logs with precision-engineered status tiles built directly into Odoo.</p>
                                     </div>
                                     <div class="col-lg-8">
-                                        <div class="p-4 d-flex flex-wrap justify-content-center" style="background-color: #f8fafc; border-radius: 30px; gap: 20px;">
-                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #10b981;">
-                                                <span style="font-size: 24px; font-weight: 900; color: #10b981;">100%</span>
-                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">SYNC SUCCESS</span>
+                                        <div class="p-4 d-flex flex-wrap justify-content-center gap-3 rounded-5" style="background-color: #f8fafc;">
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center rounded-4" style="background-color: #ffffff; min-width: 150px; border-bottom: 5px solid #10b981;">
+                                                <span class="fw-bolder" style="font-size: 24px; color: #10b981;">100%</span>
+                                                <span class="fw-bold" style="font-size: 11px; color: #64748b;">SYNC SUCCESS</span>
                                             </div>
-                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #3b82f6;">
-                                                <span style="font-size: 24px; font-weight: 900; color: #3b82f6;">24/7</span>
-                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">ACTIVE MONITORING</span>
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center rounded-4" style="background-color: #ffffff; min-width: 150px; border-bottom: 5px solid #3b82f6;">
+                                                <span class="fw-bolder" style="font-size: 24px; color: #3b82f6;">24/7</span>
+                                                <span class="fw-bold" style="font-size: 11px; color: #64748b;">ACTIVE MONITORING</span>
                                             </div>
-                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center" style="background-color: #ffffff; border-radius: 20px; min-width: 150px; border-bottom: 5px solid #f59e0b;">
-                                                <span style="font-size: 24px; font-weight: 900; color: #f59e0b;">AUTO</span>
-                                                <span style="font-size: 11px; color: #64748b; font-weight: 800;">LOG FETCHING</span>
+                                            <div class="p-3 shadow-sm d-flex flex-column align-items-center rounded-4" style="background-color: #ffffff; min-width: 150px; border-bottom: 5px solid #f59e0b;">
+                                                <span class="fw-bolder" style="font-size: 24px; color: #f59e0b;">AUTO</span>
+                                                <span class="fw-bold" style="font-size: 11px; color: #64748b;">LOG FETCHING</span>
                                             </div>
                                         </div>
                                     </div>
@@ -437,52 +437,52 @@
                 <!-- ✨ REPORTS ARSENAL -->
                 <div class="px-md-5 px-4 mt-5 mb-5">
                     <div class="text-center mb-5">
-                        <span class="px-4 py-2 d-inline-block" style="background:linear-gradient(135deg,#10b981,#0284c7);border-radius:50px;color:#fff;font-size:12px;font-weight:900;letter-spacing:3px;">BUILT-IN REPORTS</span>
-                        <h2 class="mt-3" style="font-weight:900;color:#0f172a;font-size:34px;">4 Essential <span style="color:#3b82f6;">Business Reports</span></h2>
-                        <p style="color:#64748b;font-size:16px;max-width:550px;margin:0 auto;">Accurate workforce insights delivered in PDF and Excel formats.</p>
+                        <span class="px-4 py-2 d-inline-block rounded-pill text-white fw-bolder text-uppercase" style="background-color: #10b981; font-size: 12px; letter-spacing: 3px;">BUILT-IN REPORTS</span>
+                        <h2 class="mt-3 fw-bolder" style="color: #0f172a; font-size: 34px;">4 Essential <span class="text-primary">Business Reports</span></h2>
+                        <p class="mx-auto mb-0 text-muted" style="font-size: 16px; max-width: 550px;">Accurate workforce insights delivered in PDF and Excel formats.</p>
                     </div>
                     <div class="row g-4">
                         <div class="col-md-6">
-                            <div class="p-4 h-100 d-flex align-items-center shadow" style="background:#fff;border-radius:25px;border-left:6px solid #3b82f6;">
-                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width:52px;height:52px;background:#eff6ff;border-radius:14px;color:#3b82f6;font-size:22px;">
+                            <div class="p-4 h-100 d-flex align-items-center shadow bg-white rounded-5" style="border-left: 6px solid #3b82f6;">
+                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0 rounded-4 text-primary" style="width: 52px; height: 52px; background-color: #eff6ff; font-size: 22px;">
                                     <i class="fa fa-calendar-check-o"></i>
                                 </div>
                                 <div>
-                                    <h6 style="font-weight:900;color:#1e293b;margin-bottom:2px;">Daily Summary Report</h6>
-                                    <p style="font-size:12px;color:#64748b;margin:0;">Day-wise punch-in/out summary for all employees</p>
+                                    <h6 class="fw-bolder mb-1" style="color: #1e293b;">Daily Summary Report</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">Day-wise punch-in/out summary for all employees</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-4 h-100 d-flex align-items-center shadow" style="background:#fff;border-radius:25px;border-left:6px solid #ef4444;">
-                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width:52px;height:52px;background:#fef2f2;border-radius:14px;color:#ef4444;font-size:22px;">
+                            <div class="p-4 h-100 d-flex align-items-center shadow bg-white rounded-5" style="border-left: 6px solid #ef4444;">
+                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0 rounded-4 text-danger" style="width: 52px; height: 52px; background-color: #fef2f2; font-size: 22px;">
                                     <i class="fa fa-calendar-times-o"></i>
                                 </div>
                                 <div>
-                                    <h6 style="font-weight:900;color:#1e293b;margin-bottom:2px;">Absence Report</h6>
-                                    <p style="font-size:12px;color:#64748b;margin:0;">Identify missing attendance records by date range</p>
+                                    <h6 class="fw-bolder mb-1" style="color: #1e293b;">Absence Report</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">Identify missing attendance records by date range</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-4 h-100 d-flex align-items-center shadow" style="background:#fff;border-radius:25px;border-left:6px solid #10b981;">
-                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width:52px;height:52px;background:#ecfdf5;border-radius:14px;color:#10b981;font-size:22px;">
+                            <div class="p-4 h-100 d-flex align-items-center shadow bg-white rounded-5" style="border-left: 6px solid #10b981;">
+                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0 rounded-4 text-success" style="width: 52px; height: 52px; background-color: #ecfdf5; font-size: 22px;">
                                     <i class="fa fa-file-pdf-o"></i>
                                 </div>
                                 <div>
-                                    <h6 style="font-weight:900;color:#1e293b;margin-bottom:2px;">Daily Attendance Report</h6>
-                                    <p style="font-size:12px;color:#64748b;margin:0;">Detailed daily punch logs with biometric verification</p>
+                                    <h6 class="fw-bolder mb-1" style="color: #1e293b;">Daily Attendance Report</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">Detailed daily punch logs with biometric verification</p>
                                 </div>
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="p-4 h-100 d-flex align-items-center shadow" style="background:#fff;border-radius:25px;border-left:6px solid #f59e0b;">
-                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0" style="width:52px;height:52px;background:#fffbeb;border-radius:14px;color:#f59e0b;font-size:22px;">
+                            <div class="p-4 h-100 d-flex align-items-center shadow bg-white rounded-5" style="border-left: 6px solid #f59e0b;">
+                                <div class="d-flex justify-content-center align-items-center me-3 flex-shrink-0 rounded-4 text-warning" style="width: 52px; height: 52px; background-color: #fffbeb; font-size: 22px;">
                                     <i class="fa fa-file-excel-o"></i>
                                 </div>
                                 <div>
-                                    <h6 style="font-weight:900;color:#1e293b;margin-bottom:2px;">Attendance Report (Excel)</h6>
-                                    <p style="font-size:12px;color:#64748b;margin:0;">Complete attendance history in exportable spreadsheet format</p>
+                                    <h6 class="fw-bolder mb-1" style="color: #1e293b;">Attendance Report (Excel)</h6>
+                                    <p class="mb-0 text-muted" style="font-size: 12px;">Complete attendance history in exportable spreadsheet format</p>
                                 </div>
                             </div>
                         </div>
@@ -1111,9 +1111,9 @@
             <div class="tab-pane fade px-md-5 px-4" id="pills-faq" role="tabpanel" aria-labelledby="pills-faq-tab">
                 <div class="panel-group mt-5" id="accordion" role="tablist">
                     <!-- FAQ 1 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #3b82f6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #3b82f6; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-refresh"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How does the ADMS sync work?</h4>
@@ -1126,9 +1126,9 @@
                     </div>
 
                     <!-- FAQ 2 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #10b981; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #10b981; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #10b981; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #10b981; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-users"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Can I manage users remotely?</h4>
@@ -1141,9 +1141,9 @@
                     </div>
 
                     <!-- FAQ 3 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #f59e0b; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #f59e0b; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #f59e0b; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #f59e0b; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-calculator"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Does it handle late arrivals?</h4>
@@ -1156,9 +1156,9 @@
                     </div>
 
                     <!-- FAQ 4 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #3b82f6; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #3b82f6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #3b82f6; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-shield"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How secure is the data?</h4>
@@ -1171,9 +1171,9 @@
                     </div>
 
                     <!-- FAQ 5 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #ef4444; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #ef4444; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #ef4444; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #ef4444; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-globe"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Is this app compatible with Odoo Online?</h4>
@@ -1186,9 +1186,9 @@
                     </div>
 
                     <!-- FAQ 6 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #8b5cf6; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #8b5cf6; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #8b5cf6; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #8b5cf6; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-envelope"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">How to contact if there is need of any Customization?</h4>
@@ -1201,9 +1201,9 @@
                     </div>
 
                     <!-- FAQ 7 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #ec4899; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #ec4899; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #ec4899; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #ec4899; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-shopping-cart"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">Do I need to buy all versions separately?</h4>
@@ -1216,9 +1216,9 @@
                     </div>
 
                     <!-- FAQ 8 -->
-                    <div class="panel panel-default shadow mb-4" style="border-radius: 25px; border: 2px solid #f97316; overflow: hidden; background-color: #ffffff;">
+                    <div class="panel panel-default shadow mb-4 rounded-5" style="border: 2px solid #f97316; overflow: hidden; background-color: #ffffff;">
                         <div class="panel-heading d-flex align-items-center p-4" style="background-color: #0f172a;">
-                            <div class="d-flex justify-content-center align-items-center me-4" style="width: 45px; height: 45px; background-color: #f97316; border-radius: 12px; color: #ffffff; font-size: 20px;">
+                            <div class="d-flex justify-content-center align-items-center me-4 rounded-3" style="width: 45px; height: 45px; background-color: #f97316; color: #ffffff; font-size: 20px;">
                                 <i class="fa fa-ticket"></i>
                             </div>
                             <h4 class="panel-title mb-0" style="color: #ffffff; font-weight: 800; font-size: 18px;">The app i paid for is not working, What should i do?</h4>

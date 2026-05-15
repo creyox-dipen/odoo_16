@@ -1,3 +1,0 @@
-for attendance image we have to turn on below option
-System > Attendance > Camera Mode > Take photo and save/save on successful verification
-
