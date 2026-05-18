@@ -170,7 +170,9 @@ class AdmsController(http.Controller):
                     )
                     if command.exists():
                         # Return code 0 usually means success in ADMS
-                        status = "success" if return_code == "0" else "failed"
+                        # Return=0: command success (fingerprint enrolled)
+                        # Return=2: face enrolled successfully (ZKTeco sends 2 for face via ENROLL_FP FID=111)
+                        status = "success" if return_code in ("0", "2") else "failed"
                         command.write(
                             {
                                 "status": status,
