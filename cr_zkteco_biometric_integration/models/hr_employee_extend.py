@@ -52,6 +52,26 @@ class HrEmployeeExtend(models.Model):
         ),
     ]
 
+    def _ensure_device_user_id(self):
+        """
+        Ensures that every employee in this recordset has a unique, numeric device_user_id.
+        If an employee does not have one, it will auto-generate and write it.
+        """
+        all_pins = self.env["hr.employee"].sudo().search([("device_user_id", "!=", False)]).mapped("device_user_id")
+        numeric_pins = []
+        for pin in all_pins:
+            try:
+                numeric_pins.append(int(pin))
+            except ValueError:
+                continue
+
+        next_pin = max(numeric_pins) + 1 if numeric_pins else 1001
+
+        for employee in self:
+            if not employee.device_user_id:
+                employee.sudo().write({"device_user_id": str(next_pin)})
+                next_pin += 1
+
     def action_sync_to_devices(self, device_ids=None):
         self.ensure_one()
         if not self.device_user_id:
