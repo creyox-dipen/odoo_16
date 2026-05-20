@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# Part of Creyox Technologies.
 from odoo import models, fields, api, _
 from datetime import datetime, time
 import pytz
