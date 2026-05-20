@@ -75,6 +75,7 @@
     """,
     "depends": ["base", "mail", "hr_attendance"],
     "data": [
+        "security/security.xml",
         "security/ir.model.access.csv",
         "data/ir_cron.xml",
         "views/biometric_device_config.xml",
@@ -82,6 +83,7 @@
         "views/hr_employee.xml",
         "views/biometric_dashboard_view.xml",
         "views/menu.xml",
+        "views/res_users_view.xml",
         "wizard/biometric_enroll_wizard_view.xml",
         "wizard/biometric_user_transfer_wizard_view.xml",
         "wizard/biometric_attendance_report_wizard_view.xml",

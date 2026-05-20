@@ -34,7 +34,7 @@
         <field name="arch" type="xml">
             <form string="Attendance Log">
                 <header>
-                    <button name="action_process_punch" string="Process Punch" type="object" class="oe_highlight" attrs="{'invisible': [('status', '=', 'processed')]}"/>
+                    <button name="action_process_punch" string="Process Punch" type="object" class="oe_highlight" attrs="{'invisible': [('status', '=', 'processed')]}" groups="hr_attendance.group_hr_attendance_manager"/>
                     <field name="status" widget="statusbar" statusbar_visible="new,processed,failed"/>
                 </header>
                 <sheet>

@@ -8,3 +8,4 @@ from . import biometric_dashboard
 from . import biometric_device_command
 from . import biometric_user_template
 from . import hr_attendance_extend
+from . import res_users
