@@ -39,7 +39,7 @@
                         type="object"
                         class="btn-secondary"
                         attrs="{'invisible': [('device_user_id', '=', False)]}"
-                        groups="hr_attendance.group_hr_attendance_manager"
+                        groups="cr_zkteco_biometric_integration.group_biometric_editor"
                         help="Copy this employee's biometric templates from one machine to another."/>
                 <button name="action_delete_from_devices"
                         string="Delete from Device"
