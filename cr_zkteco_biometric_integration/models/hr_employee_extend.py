@@ -65,7 +65,8 @@ class HrEmployeeExtend(models.Model):
             except ValueError:
                 continue
 
-        next_pin = max(numeric_pins) + 1 if numeric_pins else 1001
+        max_pin = max(numeric_pins) if numeric_pins else 9999
+        next_pin = max(max_pin + 1, 10000)
 
         for employee in self:
             if not employee.device_user_id:
