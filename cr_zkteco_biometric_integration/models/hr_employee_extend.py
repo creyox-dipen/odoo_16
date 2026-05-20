@@ -497,28 +497,35 @@ class HrEmployeeExtend(models.Model):
                     local_dt - shift_start_local
                 ).total_seconds() / 60.0  # Positive if late
 
-                if 0 <= diff_early <= device.grace_start_in:
-                    # Early check-in within grace -> round UP to shift start (return as UTC)
-                    return shift_start_local.astimezone(pytz.utc).replace(tzinfo=None)
                 if 0 <= diff_late <= device.grace_end_in:
-                    # Late check-in within grace -> round DOWN to shift start (return as UTC)
-                    return shift_start_local.astimezone(pytz.utc).replace(tzinfo=None)
+                    # Rounding Goal: Shift Start (Only if LATE within grace)
+                    rounded_utc = shift_start_local.astimezone(pytz.utc).replace(tzinfo=None)
+                    
+                    # Check if the employee ALREADY has a record starting at this exact rounded time.
+                    existing_count = self.env['hr.attendance'].sudo().search_count([
+                        ('employee_id', '=', self.id),
+                        ('check_in', '=', rounded_utc)
+                    ])
+                    if not existing_count:
+                        return rounded_utc
 
             elif punch_type == "out":
                 # Check-Out Grace
                 diff_early = (
                     shift_end_local - local_dt
                 ).total_seconds() / 60.0  # Positive if early
-                diff_late = (
-                    local_dt - shift_end_local
-                ).total_seconds() / 60.0  # Positive if late
 
                 if 0 <= diff_early <= device.grace_start_out:
-                    # Early check-out within grace -> round UP to shift end (return as UTC)
-                    return shift_end_local.astimezone(pytz.utc).replace(tzinfo=None)
-                if 0 <= diff_late <= device.grace_end_out:
-                    # Late check-late within grace -> round DOWN to shift end (return as UTC)
-                    return shift_end_local.astimezone(pytz.utc).replace(tzinfo=None)
+                    # Rounding Goal: Shift End (Only if EARLY within grace)
+                    rounded_utc = shift_end_local.astimezone(pytz.utc).replace(tzinfo=None)
+                    
+                    # Check if the employee ALREADY has a record ending at this exact rounded time.
+                    existing_count = self.env['hr.attendance'].sudo().search_count([
+                        ('employee_id', '=', self.id),
+                        ('check_out', '=', rounded_utc)
+                    ])
+                    if not existing_count:
+                        return rounded_utc
 
         return utc_dt
 

@@ -234,11 +234,6 @@ class BiometricDevice(models.Model):
         "This is recommended for night shifts but can be disabled to improve performance.",
     )
 
-    grace_start_in = fields.Integer(
-        string="Grace Start-In (Mins)",
-        default=15,
-        help="Round up to shift start if check-in is X mins early.",
-    )
     grace_end_in = fields.Integer(
         string="Grace End-In (Mins)",
         default=15,
@@ -248,11 +243,6 @@ class BiometricDevice(models.Model):
         string="Grace Start-Out (Mins)",
         default=15,
         help="Round up to shift end if check-out is X mins early.",
-    )
-    grace_end_out = fields.Integer(
-        string="Grace End-Out (Mins)",
-        default=15,
-        help="Round down to shift end if check-out is X mins late.",
     )
 
     # -------------------------------------------------------------------------

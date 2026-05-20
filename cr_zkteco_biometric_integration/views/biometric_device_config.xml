@@ -125,15 +125,13 @@
                     <group string="Smart Policies" name="smart_policies">
                         <field name="attendance_policy"/>
                         <field name="flexible_period" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
-                        <label for="grace_start_in" string="Check-In Grace" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
+                        <label for="grace_end_in" string="Check-In Grace (After Shift Start)" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
                         <div class="o_row" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}">
-                            <span>Before:</span> <field name="grace_start_in"/> <span>mins</span>
-                            <span>After:</span> <field name="grace_end_in"/> <span>mins</span>
+                            <field name="grace_end_in"/> <span>mins late will be rounded back to shift start.</span>
                         </div>
-                        <label for="grace_start_out" string="Check-Out Grace" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
+                        <label for="grace_start_out" string="Check-Out Grace (Before Shift End)" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}"/>
                         <div class="o_row" attrs="{'invisible': [('attendance_policy', '!=', 'calendar')]}">
-                            <span>Before:</span> <field name="grace_start_out"/> <span>mins</span>
-                            <span>After:</span> <field name="grace_end_out"/> <span>mins</span>
+                            <field name="grace_start_out"/> <span>mins early will be rounded up to shift end.</span>
                         </div>
                     </group>
 
