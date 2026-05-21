@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="cr_zkteco_biometric_integration.BiometricDashboard" owl="1">
-        <div class="o_biometric_dashboard container-fluid p-4">
+        <div t-attf-class="o_biometric_dashboard container-fluid p-4 #{state.darkMode ? 'dark-mode' : 'light-mode'}">
+            <!-- Dashboard Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold dashboard-title">Biometric Insights</h2>
+                <button class="btn btn-sm theme-toggle-btn" t-on-click="toggleTheme">
+                    <i t-attf-class="fa #{state.darkMode ? 'fa-sun-o' : 'fa-moon-o'}"></i>
+                    <span class="ms-2"><t t-esc="state.darkMode ? 'Light Mode' : 'Dark Mode'"/></span>
+                </button>
+            </div>
             <!-- Header Stats -->
             <div class="row mb-4">
                 <div class="col-md-2">
@@ -108,7 +116,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-dark table-hover table-borderless align-middle mb-0">
+                                        <table class="table punch-table table-hover table-borderless align-middle mb-0">
                                             <thead>
                                                 <tr>
                                                     <th>Employee</th>
@@ -119,9 +127,9 @@
                                             </thead>
                                             <tbody>
                                                 <tr t-foreach="state.data.recent_punches" t-as="punch" t-key="punch.time" class="animate__animated animate__fadeInRight">
-                                                    <td><strong class="text-white"><t t-esc="punch.employee"/></strong></td>
+                                                    <td><strong class="punch-employee"><t t-esc="punch.employee"/></strong></td>
                                                     <td class="text-muted"><t t-esc="punch.device"/></td>
-                                                    <td><span class="badge bg-dark text-info border border-info border-opacity-25"><t t-esc="punch.time"/></span></td>
+                                                    <td><span class="badge punch-time-badge border border-info border-opacity-25"><t t-esc="punch.time"/></span></td>
                                                     <td class="text-end">
                                                         <span t-attf-class="badge rounded-pill #{punch.type == 'Check In' ? 'bg-success' : 'bg-warning'} bg-opacity-25 text-#{punch.type == 'Check In' ? 'success' : 'warning'}">
                                                             <i t-attf-class="fa #{punch.type == 'Check In' ? 'fa-sign-in' : 'fa-sign-out'} me-1"></i>

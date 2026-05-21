@@ -9,6 +9,7 @@ export class BiometricDashboard extends Component {
         this.rpc = useService("rpc");
         this.action = useService("action");
         this.state = useState({
+            darkMode: localStorage.getItem('biometric_dark_mode') !== 'false',
             data: {
                 total_employees: 0,
                 present_count: 0,
@@ -25,6 +26,11 @@ export class BiometricDashboard extends Component {
         onWillStart(async () => {
             await this.fetchData();
         });
+    }
+
+    toggleTheme() {
+        this.state.darkMode = !this.state.darkMode;
+        localStorage.setItem('biometric_dark_mode', this.state.darkMode);
     }
 
     async fetchData() {

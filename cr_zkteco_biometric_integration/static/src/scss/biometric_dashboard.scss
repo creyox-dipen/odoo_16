@@ -1,9 +1,128 @@
 .o_biometric_dashboard {
-    background: radial-gradient(circle at top left, #1a1a2e, #16213e, #0f3460);
     height: 100%;
     overflow-y: auto;
     font-family: 'Inter', sans-serif;
-    color: #ffffff;
+    transition: background 0.4s ease, color 0.4s ease;
+
+    /* ── Dark mode (default) ── */
+    &.dark-mode {
+        background: radial-gradient(circle at top left, #1a1a2e, #16213e, #0f3460);
+        color: #ffffff;
+        --toggle-bg: rgba(255, 255, 255, 0.08);
+        --toggle-border: rgba(255, 255, 255, 0.2);
+        --toggle-color: #ffffff;
+        --toggle-hover-bg: rgba(255, 255, 255, 0.15);
+    }
+
+    /* ── Light mode ── */
+    &.light-mode {
+        background: linear-gradient(135deg, #f0f4f8 0%, #d9e8f5 100%);
+        color: #2d3436;
+        --toggle-bg: rgba(255, 255, 255, 0.7);
+        --toggle-border: rgba(0, 0, 0, 0.15);
+        --toggle-color: #2d3436;
+        --toggle-hover-bg: rgba(255, 255, 255, 0.9);
+
+        /* Override Bootstrap 5's .text-muted CSS variable to be dark */
+        --bs-secondary-color: #1e293b;
+        --bs-secondary-color-rgb: 30, 41, 59;
+
+        .stat-card, .content-card {
+            background: rgba(255, 255, 255, 0.75) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #2d3436 !important;
+        }
+        .card-header {
+            background: rgba(0, 0, 0, 0.03) !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+        }
+        .employee-item {
+            background: rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.07);
+            color: #2d3436 !important;
+            .emp-name { color: #2d3436 !important; }
+            .text-muted { color: #1e293b !important; font-weight: 500; }
+        }
+        .device-item {
+            background: rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            .dev-name { color: #2d3436 !important; }
+            .text-muted { color: #1e293b !important; font-weight: 500; }
+            .dev-details span { color: #1e293b !important; }
+        }
+        .dashboard-title { color: #2d3436; }
+
+        /* Punch table in light mode */
+        .punch-table {
+            color: #2d3436;
+            thead th {
+                color: #1e293b !important;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            }
+            tbody tr {
+                border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+                .text-muted { color: #1e293b !important; }
+            }
+            .punch-employee { color: #2d3436 !important; }
+            .punch-time-badge {
+                background: rgba(0, 120, 120, 0.08) !important;
+                color: #007777 !important;
+                border-color: rgba(0, 120, 120, 0.3) !important;
+            }
+        }
+
+        /* Stat cards in light mode - brighter colors */
+        .stat-card {
+            .card-label { color: #2d3436 !important; opacity: 0.8; }
+            
+            &.total-emp { 
+                background: rgba(108, 92, 231, 0.08) !important;
+                .card-icon, .card-value { color: #6c5ce7 !important; }
+            }
+            &.present-today { 
+                background: rgba(0, 184, 148, 0.08) !important;
+                .card-icon, .card-value { color: #00b894 !important; }
+            }
+            &.absent-today { 
+                background: rgba(214, 48, 49, 0.08) !important;
+                .card-icon, .card-value { color: #d63031 !important; }
+            }
+            &.late-arrivals { 
+                background: rgba(225, 112, 85, 0.08) !important;
+                .card-icon, .card-value { color: #e17055 !important; }
+            }
+            &.early-leavings { 
+                background: rgba(9, 132, 227, 0.08) !important;
+                .card-icon, .card-value { color: #0984e3 !important; }
+            }
+        }
+    }
+
+    /* ── Theme toggle button ── */
+    .theme-toggle-btn {
+        background: var(--toggle-bg, rgba(255, 255, 255, 0.08));
+        border: 1px solid var(--toggle-border, rgba(255, 255, 255, 0.2));
+        color: var(--toggle-color, #ffffff);
+        border-radius: 50px;
+        padding: 8px 20px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+
+        &:hover {
+            background: var(--toggle-hover-bg, rgba(255, 255, 255, 0.15));
+            transform: scale(1.04);
+            color: var(--toggle-color, #ffffff);
+        }
+
+        .fa { font-size: 1rem; }
+    }
+
+    .dashboard-title {
+        color: #ffffff;
+        font-size: 1.4rem;
+    }
 
     /* Glassmorphism base */
     .stat-card, .content-card {
@@ -215,35 +334,39 @@
         }
     }
 
-    /* Table Styling */
-    .table-dark {
+    /* Table Styling - Dark Mode (default) */
+    .punch-table {
         background: transparent;
+        color: #ffffff;
+
         thead th {
-            color: #ffffff !important;
+            color: rgba(255, 255, 255, 0.9) !important;
             text-transform: uppercase;
             font-size: 0.85rem;
             font-weight: 800;
             letter-spacing: 1.5px;
             border: none;
             padding-bottom: 20px;
-            opacity: 0.9;
+            background: transparent;
         }
         tbody tr {
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
             &:last-child { border: none; }
-            
+
             td {
                 padding: 15px 10px;
                 vertical-align: middle;
             }
-
             .text-muted {
                 color: rgba(255, 255, 255, 0.7) !important;
             }
         }
 
+        /* Employee name */
+        .punch-employee { color: #ffffff; }
+
         /* Time Badge */
-        .badge.bg-dark {
+        .punch-time-badge {
             background: rgba(0, 206, 201, 0.1) !important;
             color: #00cec9 !important;
             border: 1px solid rgba(0, 206, 201, 0.3) !important;
@@ -260,7 +383,7 @@
             text-transform: uppercase;
             font-size: 0.75rem;
             border: 1px solid transparent;
-            
+
             &.bg-success {
                 background: rgba(85, 239, 196, 0.15) !important;
                 color: #55efc4 !important;
