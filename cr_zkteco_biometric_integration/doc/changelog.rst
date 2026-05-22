@@ -1,4 +1,4 @@
-16.0.0.0(Date: 15th May, 2026)
+16.0.0.0(Date: 22nd May, 2026)
 -------------------------------
 - Developed real-time ADMS biometric synchronization with live dashboard and performance analytics (Late Arrival/Early Leaving).
 - Integrated comprehensive PDF reporting (Daily Summary/Absence) and remote device management for commands and template sync.
