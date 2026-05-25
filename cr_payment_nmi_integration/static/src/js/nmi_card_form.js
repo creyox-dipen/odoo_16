@@ -151,7 +151,7 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
 
             try {
                 const checkedRadio = this.$('input[name="o_payment_radio"]:checked')[0];
-                const providerId   = parseInt($(checkedRadio).data('provider'));
+                const providerId   = parseInt($(checkedRadio).data('payment-option-id'));
                 const result = await this._rpc({
                     route: '/payment/nmi/bin_lookup',
                     params: {
