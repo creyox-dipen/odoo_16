@@ -41,8 +41,9 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
             if (!checkedRadio || $(checkedRadio).data('payment-option-type') === 'token') {
                 return this._super(...arguments);
             }
-            // Check if this is the card form (avoid intercepting if ACH form is loaded)
-            if (this.$('.o_payment_nmi_card_form').length > 0) {
+            const paymentOptionId = $(checkedRadio).data('payment-option-id');
+            const inlineForm = this.$(`#o_payment_provider_inline_form_${paymentOptionId}`);
+            if (inlineForm.find('.o_payment_nmi_card_form').length > 0) {
                 return this._submitNmiCardForm(processingValues);
             }
             return this._super(...arguments);
@@ -59,7 +60,9 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
             if (!checkedRadio || $(checkedRadio).data('payment-option-type') === 'token') {
                 return this._super(...arguments);
             }
-            if (this.$('.o_payment_nmi_card_form').length > 0) {
+            const paymentOptionId = $(checkedRadio).data('payment-option-id');
+            const inlineForm = this.$(`#o_payment_provider_inline_form_${paymentOptionId}`);
+            if (inlineForm.find('.o_payment_nmi_card_form').length > 0) {
                 return this._submitNmiCardForm(processingValues);
             }
             return this._super(...arguments);
