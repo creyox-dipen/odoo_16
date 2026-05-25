@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo noupdate="0">
+    <!-- NMI Card Provider (Handles all credit/debit card types) -->
     <record id="payment_provider_nmi" model="payment.provider">
-        <field name="name">NMI</field>
+        <field name="name">NMI Card</field>
         <field name="image_128" type="base64" file="cr_payment_nmi_integration/static/description/icon.png"/>
         <field name="code">nmi</field>
+        <field name="nmi_payment_method">card</field>
         <field name="redirect_form_view_id" eval="False"/>
         <field name="inline_form_view_id" ref="inline_form"/>
         <field name="allow_tokenization">True</field>
@@ -16,6 +18,19 @@
                           ref('payment.payment_icon_cc_discover'),
                       ])]"
         />
+        <field name="company_id" ref="base.main_company"/>
+    </record>
+
+    <!-- NMI ACH Provider (Handles bank account direct debits) -->
+    <record id="payment_provider_nmi_ach" model="payment.provider">
+        <field name="name">NMI ACH</field>
+        <field name="image_128" type="base64" file="cr_payment_nmi_integration/static/description/icon.png"/>
+        <field name="code">nmi</field>
+        <field name="nmi_payment_method">ach</field>
+        <field name="redirect_form_view_id" eval="False"/>
+        <field name="inline_form_view_id" ref="inline_form"/>
+        <field name="allow_tokenization">True</field>
+        <field name="module_id" ref="base.module_cr_payment_nmi_integration"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
 </odoo>

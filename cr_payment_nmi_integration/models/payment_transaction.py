@@ -28,7 +28,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'nmi':
             return res
 
-        if self.payment_method_code == 'ach_direct_debit':
+        if self.provider_id.nmi_payment_method == 'ach':
             res.update({
                 'reference': self.reference,
                 'amount': self.amount,
@@ -133,7 +133,6 @@ class PaymentTransaction(models.Model):
 
         token_values.update({
             'provider_id': self.provider_id.id,
-            'payment_method_id': self.payment_method_id.id,
             'partner_id': self.partner_id.id,
         })
         token = self.env['payment.token'].create(token_values)

@@ -23,6 +23,12 @@ class PaymentProvider(models.Model):
     code = fields.Selection(
         selection_add=[('nmi', "Nmi")], ondelete={'nmi': 'set default'}
     )
+    nmi_payment_method = fields.Selection(
+        selection=[('card', 'Credit/Debit Card'), ('ach', 'Bank Account (ACH)')],
+        string="NMI Payment Flow",
+        default='card',
+        help="Choose whether this provider record is used for Cards or ACH."
+    )
     nmi_security_key = fields.Char(
         string="NMI Security Key (API Key)",
         help=(

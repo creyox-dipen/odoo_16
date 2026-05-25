@@ -7,17 +7,18 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='provider_credentials']" position="inside">
                 <group attrs="{'invisible': [('code', '!=', 'nmi')]}">
+                    <field name="nmi_payment_method" attrs="{'required': [('code', '=', 'nmi')]}"/>
                     <field name="nmi_security_key"
                            attrs="{'required': [('code', '=', 'nmi'), ('state', '!=', 'disabled')]}"
                            password="True"/>
                     <field name="nmi_v4_api_key"
-                           attrs="{'required': [('code', '=', 'nmi'), ('state', '!=', 'disabled')]}"
+                           attrs="{'invisible': [('nmi_payment_method', '=', 'ach')], 'required': [('code', '=', 'nmi'), ('state', '!=', 'disabled'), ('nmi_payment_method', '=', 'card')]}"
                            password="True"/>
                 </group>
             </xpath>
 
             <xpath expr="//page[@name='configuration']//group[@name='payment_followup']" position="after">
-                <group string="NMI Card Surcharges" attrs="{'invisible': [('code', '!=', 'nmi')]}">
+                <group string="NMI Card Surcharges" attrs="{'invisible': ['|', ('code', '!=', 'nmi'), ('nmi_payment_method', '=', 'ach')]}">
                     <field name="is_nmi_card_fee"/>
                     <field name="nmi_credit_card_fee"
                            attrs="{'invisible': [('is_nmi_card_fee', '=', False)], 'required': [('is_nmi_card_fee', '=', True)]}"/>
