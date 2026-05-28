@@ -18,16 +18,16 @@ class PaymentProvider(models.Model):
     and business logic for card (Ekashu redirect) and ACH (NMI Direct Post) flows.
     """
 
-    _inherit = 'payment.provider'
+    _inherit = "payment.provider"
 
     code = fields.Selection(
-        selection_add=[('nmi', "Nmi")], ondelete={'nmi': 'set default'}
+        selection_add=[("nmi", "Nmi")], ondelete={"nmi": "set default"}
     )
     nmi_payment_method = fields.Selection(
-        selection=[('card', 'Credit/Debit Card'), ('ach', 'Bank Account (ACH)')],
+        selection=[("card", "Credit/Debit Card"), ("ach", "Bank Account (ACH)")],
         string="NMI Payment Flow",
-        default='card',
-        help="Choose whether this provider record is used for Cards or ACH."
+        default="card",
+        help="Choose whether this provider record is used for Cards or ACH.",
     )
     nmi_security_key = fields.Char(
         string="NMI Security Key (API Key)",
@@ -60,34 +60,36 @@ class PaymentProvider(models.Model):
 
     def _nmi_get_direct_post_url(self):
         """Return the NMI Direct Post API endpoint URL based on the provider state.
-        
+
         :return: The NMI Direct Post API URL (sandbox or live).
         :rtype: str
         """
-        if self.state == 'enabled':
-            return 'https://secure.nmi.com/api/transact.php'
-        return 'https://sandbox.nmi.com/api/transact.php'
+        if self.state == "enabled":
+            return "https://secure.nmi.com/api/transact.php"
+        return "https://sandbox.nmi.com/api/transact.php"
 
     def _compute_feature_support_fields(self):
-        """ Override of `payment` to enable tokenization for NMI. """
+        """Override of `payment` to enable tokenization for NMI."""
         super()._compute_feature_support_fields()
-        self.filtered(lambda p: p.code == 'nmi').update({
-            'support_tokenization': True,
-        })
+        self.filtered(lambda p: p.code == "nmi").update(
+            {
+                "support_tokenization": True,
+            }
+        )
 
     def _get_ach_rendering_values(self, data):
         """Build the dict of values needed to render the ACH payment form."""
         return {
-            'reference': data['reference'],
-            'amount': "{:.2f}".format(data['amount']),
-            'partner_name': data.get('partner_name', ''),
-            'ach_process_url': NmiController._ach_process_url,
+            "reference": data["reference"],
+            "amount": "{:.2f}".format(data["amount"]),
+            "partner_name": data.get("partner_name", ""),
+            "ach_process_url": NmiController._ach_process_url,
         }
 
     def _get_default_payment_method_codes(self):
         """Override to return NMI-specific default payment method codes."""
         default_codes = super()._get_default_payment_method_codes()
-        if self.code != 'nmi':
+        if self.code != "nmi":
             return default_codes
         return const.DEFAULT_PAYMENT_METHODS_CODES + const.ACH_PAYMENT_METHODS_CODES
 
@@ -98,29 +100,32 @@ class PaymentProvider(models.Model):
         :return: String 'credit', 'debit', or 'unknown'.
         """
         if not self.nmi_v4_api_key or not bin_number or len(bin_number) < 6:
-            return 'unknown'
+            return "unknown"
 
-        endpoint = 'https://secure.nmi.com/api/v4/card_type'
-        if self.state != 'enabled':
-            endpoint = 'https://sandbox.nmi.com/api/v4/card_type'
+        endpoint = "https://secure.nmi.com/api/v4/card_type"
+        if self.state != "enabled":
+            endpoint = "https://sandbox.nmi.com/api/v4/card_type"
 
         headers = {
-            'Authorization': self.nmi_v4_api_key,
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
+            "Authorization": self.nmi_v4_api_key,
+            "Content-Type": "application/json",
+            "Accept": "application/json",
         }
-        payload = {'ccnumber': bin_number}
+        payload = {"ccnumber": bin_number}
 
         try:
             import requests as http_requests
+
             # Use JSON payload and multiple header variations
-            response = http_requests.post(endpoint, json=payload, headers=headers, timeout=5)
+            response = http_requests.post(
+                endpoint, json=payload, headers=headers, timeout=5
+            )
             _logger.info("NMI API Response Status: %s", response.status_code)
             _logger.info("NMI API Response Content: %s", response.text)
             response.raise_for_status()
             data = response.json()
             # NMI returns "type": "credit", "debit", etc.
-            return data.get('result', 'unknown')
+            return data.get("result", "unknown")
         except Exception as e:
             _logger.error("NMI Card Type Lookup failed: %s", str(e))
-            return 'unknown'
+            return "unknown"
