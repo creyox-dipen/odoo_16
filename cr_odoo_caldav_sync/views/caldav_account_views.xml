@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Form view: caldav.account
+    ============================================================ -->
+    <record id="view_caldav_account_form" model="ir.ui.view">
+        <field name="name">caldav.account.form</field>
+        <field name="model">caldav.account</field>
+        <field name="arch" type="xml">
+            <form string="CalDAV Account">
+                <header>
+                    <button name="action_test_connection"
+                            string="Test Connection"
+                            type="object"
+                            class="btn-secondary"
+                            attrs="{'invisible': [('server_type', '=', 'google'), ('google_refresh_token', '=', False)]}"
+                            help="Verify that Odoo can connect to the CalDAV server with the given credentials."/>
+                    <button name="action_sync_now"
+                            string="Sync Now"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('server_type', '=', 'google'), ('google_refresh_token', '=', False)]}"
+                            help="Run a manual sync for this account immediately."/>
+                    <button name="action_google_authorize"
+                            string="Authorize with Google"
+                            type="object"
+                            class="btn-primary"
+                            attrs="{'invisible': [('server_type', '!=', 'google')]}"
+                            help="Click to sign in with your Google Account and authorize calendar sync."/>
+                </header>
+                <sheet>
+                    <field name="google_refresh_token" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_scheduled_action"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-arrow-right"
+                                string="Sync Schedule"
+                                help="Configure the interval for background synchronisation."/>
+                        <button name="action_view_sync_logs"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list">
+                            <field name="log_count" widget="statinfo" string="Sync Logs"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="My CalDAV Account"/>
+                        </h1>
+                    </div>
+
+                    <!-- Google OAuth Status Banner -->
+                    <div class="alert alert-success d-flex align-items-center mb-3"
+                         attrs="{'invisible': ['|', ('server_type', '!=', 'google'), ('google_refresh_token', '=', False)]}">
+                        <i class="fa fa-check-circle me-2"/>
+                        <span>Google Calendar is authorized. </span>
+                        <field name="google_auth_status" readonly="1" class="ms-1 fw-bold"/>
+                    </div>
+                    <div class="alert alert-warning d-flex align-items-center mb-3"
+                         attrs="{'invisible': ['|', ('server_type', '!=', 'google'), ('google_refresh_token', '!=', False)]}">
+                        <i class="fa fa-exclamation-triangle me-2"/>
+                        <span>Google Calendar is <b>not yet authorized</b>. Click <b>Authorize with Google</b> to connect.</span>
+                    </div>
+
+                    <!-- Live Sync Progress Banner -->
+                    <div class="alert alert-info d-flex align-items-center mb-3"
+                         attrs="{'invisible': [('sync_status', '!=', 'syncing')]}">
+                        <i class="fa fa-refresh fa-spin me-2"/>
+                        <span>Calendar synchronization in progress: </span>
+                        <field name="sync_progress" readonly="1" class="ms-1 fw-bold"/>
+                    </div>
+
+                    <group>
+                        <group string="Connection">
+                            <field name="server_type"
+                                   widget="selection"
+                                   options="{'horizontal': true}"/>
+                            <!-- Basic Auth fields — shown for all non-Google types -->
+                            <field name="url"
+                                   placeholder="https://nextcloud.example.com/remote.php/dav/calendars/user/personal/"
+                                   widget="url"
+                                   attrs="{'invisible': [('server_type', '=', 'google')]}"/>
+                            <field name="username"
+                                   attrs="{'invisible': [('server_type', '=', 'google')]}"/>
+                            <field name="password"
+                                   password="True"
+                                   attrs="{'invisible': [('server_type', '=', 'google')]}"/>
+                            <!-- Google fields — shown only for Google type -->
+                            <field name="url"
+                                   placeholder="https://apidata.googleusercontent.com/caldav/v2/you@gmail.com/events/"
+                                   widget="url"
+                                   attrs="{'invisible': [('server_type', '!=', 'google')]}"/>
+                            <field name="google_client_id"
+                                   attrs="{'invisible': [('server_type', '!=', 'google')]}"/>
+                            <field name="google_client_secret"
+                                   password="True"
+                                   attrs="{'invisible': [('server_type', '!=', 'google')]}"/>
+                            <div class="text-muted mt8" attrs="{'invisible': [('server_type', '!=', 'google')]}">
+                                Authorized Redirect URI: <code class="bg-light">/caldav/google/callback</code>
+                            </div>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="Sync Options">
+                            <field name="sync_direction"/>
+                            <field name="send_invitation_emails"/>
+                            <field name="auto_create_contacts"/>
+                        </group>
+                    </group>
+                    <group string="Sync Status" name="sync_status">
+                        <field name="sync_status"/>
+                        <field name="sync_progress" attrs="{'invisible': [('sync_status', '!=', 'syncing')]}"/>
+                        <field name="last_sync" readonly="1"/>
+                        <field name="last_ctag" readonly="1" string="Last CTag (internal)" invisible="1"/>
+                        <field name="active"/>
+                    </group>
+                    <notebook>
+                        <page string="Event Mappings" name="event_mappings">
+                            <field name="event_map_ids" readonly="1">
+                                <tree>
+                                    <field name="event_id" string="Event Name"/>
+                                    <field name="last_odoo_write"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+    <!-- ============================================================
+         List view: caldav.account
+    ============================================================ -->
+    <record id="view_caldav_account_list" model="ir.ui.view">
+        <field name="name">caldav.account.list</field>
+        <field name="model">caldav.account</field>
+        <field name="arch" type="xml">
+            <tree string="CalDAV Accounts">
+                <field name="name"/>
+                <field name="server_type"/>
+                <field name="user_id"/>
+                <field name="url"/>
+                <field name="sync_direction"/>
+                <field name="last_sync"/>
+                <field name="active" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Search view: caldav.account
+    ============================================================ -->
+    <record id="view_caldav_account_search" model="ir.ui.view">
+        <field name="name">caldav.account.search</field>
+        <field name="model">caldav.account</field>
+        <field name="arch" type="xml">
+            <search string="CalDAV Accounts">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="url"/>
+                <filter string="Active" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Owner" name="group_user" context="{'group_by': 'user_id'}"/>
+                    <filter string="Sync Direction" name="group_direction" context="{'group_by': 'sync_direction'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================
+         Window action: caldav.account
+    ============================================================ -->
+    <record id="action_caldav_account" model="ir.actions.act_window">
+        <field name="name">CalDAV Accounts</field>
+        <field name="res_model">caldav.account</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Add your first CalDAV account!
+            </p>
+            <p>
+                Connect Odoo to Google Calendar, Nextcloud, Synology, Radicale and more.
+                Events sync automatically — no manual effort needed.
+            </p>
+        </field>
+    </record>
+
+</odoo>

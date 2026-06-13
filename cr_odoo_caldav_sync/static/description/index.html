@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Odoo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+</head>
+
+<body>
+<main class="container" style="border-radius:20px;">
+    <header class="py-2">
+        <div class="row align-items-center" style="margin-top: 20px;">
+            <div class="col-12 col-md-12 text-right">
+                <span style="font-size: 19px; font-weight: 500;margin-right: 20px;color: black;"><i
+                        class="fa fa-check-circle mr-1" style="color: #00D100;"></i> Community</span>
+                <span style="font-size: 19px; font-weight: 500;color: black;"><i class="fa fa-check-circle mr-1"
+                                                                                 style="color: #00D100;"></i> Enterprise</span>
+                <span style="font-size: 19px; font-weight: 500;color: black;padding: 15px;"><i
+                        class="fa fa-check-circle mr-1" style="color: #00D100;"></i> Odoo.sh</span>
+            </div>
+        </div>
+        <hr/>
+    </header>
+
+    <div class="px-md-5 py-md-4 p-2 mb-4 bg-white shadow" style="border-radius:20px; font-family:'system-ui'">
+        <center>
+            <div class="oe_container" style="margin-left:calc(-42vw + 50%); width:84vw">
+                <div class="row o_equal_col_sm"></div>
+            </div>
+        </center>
+        <div class="position-relative mb-4" style="border-radius:10px">
+            <img alt="" class="w-100 h-100 position-absolute img-fluid left_0" loading="lazy"
+                 src="static_img/main_bg.jpg" style="border-radius: 25px;">
+            <div class="p-lg-5 p-3 position-relative">
+                <div class="row py-4 py-lg-0">
+                    <div class="col-md-12">
+                        <h1 style="font-family:'system-ui'; font-style:normal; font-weight:bold; font-size:calc(2.06rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize">
+                            <span style="font-family:system-ui; color:#10488A; font-size:calc(2.06rem + 1vw)">GET PERSONALIZED DEMO</span>
+                        </h1>
+                    </div>
+                    <div class="col-md-12 py-2">
+                        <p style="font-family:system-ui; font-weight:500; font-size:18px; line-height:150% !important; text-align:center; letter-spacing:-0.02em; color:#4F4F4F">
+                            Please send your inquiry on email or Submit your ticket on helpdesk to know more
+                                    about
+                                    this application.
+                        </p>
+                    </div>
+                    <div class="col-md-12 py-2 text-center ">
+                        <a href="mailto:support@creyox.com" target="_blank"
+                                    style="background-color:#091E42; border-radius:12px; display:inline-block; padding:7px 33px; border:1px solid #091E42; height: 45px;"
+                                    class="mx-1 mb-2 deep-1 deep_hover">
+                                    <img class="img" style="width:30px" src="static_img/email.png" alt="Email">
+                                    <span class="pl-2" style="color:#fff; font-size:16px; vertical-align:middle">
+                                        Email Us
+                                    </span>
+                                </a>
+                                <a href="https://creyox.com/helpdesk" target="_blank"
+                                    style="background-color:#091E42; border-radius:12px; display:inline-block; padding:7px 33px; border:1px solid #091E42; height: 45px; text-decoration:none;"
+                                    class="mx-1 mb-2 deep-1 deep_hover">
+                                    <img class="img" style="width:30px" src="static_img/helpdesk.png" alt="Helpdesk">
+                                    <span class="pl-2" style="color:#fff; font-size:16px; vertical-align:middle">
+                                        https://creyox.com/helpdesk
+                                    </span>
+                                </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="px-md-5 py-md-4 p-2 mb-4 bg-white shadow " style="border-radius:20px; font-family:'system-ui'">
+        <div class="position-relative mb-4" style="border-radius:10px">
+            <img alt="" class="w-100 h-100 position-absolute img-fluid left_0" loading="lazy"
+                 src="static_img/main_bg.jpg" style="border-radius: 25px;">
+            <div class="p-lg-5 p-3 position-relative">
+                <div class="row py-4 py-lg-0">
+                    <div class="col-md-12">
+                        <h1 style="font-family:'system-ui'; font-style:normal; font-weight:bold; font-size:calc(2.06rem + 1vw); line-height:120%; text-align:center; text-transform:capitalize">
+                            <!-------------CHANGES TO DO--------------->
+                            <span style="font-family:system-ui; color:#10488A; font-size:calc(2.06rem + 1vw)">Odoo CalDAV Connector</span>
+                        </h1>
+                    </div>
+                    <div class="col-md-12 py-2 text-center">
+                        <a class="btn btn-primary btn-lg mt8" target="_blank" style="color: #FFFFFF !important;"
+                           href="https://www.youtube.com/playlist?list=PLyj8q3CcVly3CClKFDw-QptbCgzKbEhMl">
+                            <i class="fa fa-check-square"></i> Watch Video </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Elite Connectivity Hub -->
+    <div class="p-5 mb-5 text-center shadow-lg rounded-5 border position-relative overflow-hidden" style="background-color: #f8fafc; font-family: 'Outfit', sans-serif;">
+
+        <div class="mb-4">
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-4 py-2 text-uppercase fw-bolder" style="letter-spacing: 2px;">
+                <i class="fa fa-plug mr-2"></i> High-Speed Connector
+            </span>
+        </div>
+        <h1 class="mb-5" style="font-size: 48px; font-weight: 900; color: #0f172a; letter-spacing: -1px;">
+            Connect <span style="color: #2563eb;">Every Calendar</span> Instantly
+        </h1>
+        <div class="row justify-content-center mb-5" style="gap: 15px;">
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
+                    <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-3" style="width: 50px; height: 50px; background-color: #f1f5f9;"><i class="fa fa-apple" style="color: #1e293b; font-size: 28px;"></i></div>
+                    <div class="fw-bold" style="color: #1e293b; font-size: 14px;">iCloud</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
+                    <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-3" style="width: 50px; height: 50px; background-color: #fee2e2;"><i class="fa fa-google" style="color: #ef4444; font-size: 28px;"></i></div>
+                    <div class="fw-bold" style="color: #1e293b; font-size: 14px;">Google</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
+                    <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-3" style="width: 50px; height: 50px; background-color: #e0f2fe;"><i class="fa fa-cloud" style="color: #0ea5e9; font-size: 28px;"></i></div>
+                    <div class="fw-bold" style="color: #1e293b; font-size: 14px;">Nextcloud</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
+                    <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-3" style="width: 50px; height: 50px; background-color: #ecfdf5;"><i class="fa fa-envelope" style="color: #10b981; font-size: 28px;"></i></div>
+                    <div class="fw-bold" style="color: #1e293b; font-size: 14px;">Zoho</div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px);">
+                    <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-3" style="width: 50px; height: 50px; background-color: #f5f3ff;"><i class="fa fa-server" style="color: #8b5cf6; font-size: 28px;"></i></div>
+                    <div class="fw-bold" style="color: #1e293b; font-size: 14px;">Radicale</div>
+                </div>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap justify-content-center gap-3">
+            <div class="fw-bold px-4 py-2 rounded-pill shadow-sm border" style="color: #475569; font-size: 13px; background-color: #ffffff;"><i class="fa fa-refresh mr-2" style="color: #2563eb;"></i> 2-WAY SYNC</div>
+            <div class="fw-bold px-4 py-2 rounded-pill shadow-sm border" style="color: #475569; font-size: 13px; background-color: #ffffff;"><i class="fa fa-shield mr-2" style="color: #10b981;"></i> SECURE TOKEN</div>
+            <div class="fw-bold px-4 py-2 rounded-pill shadow-sm border" style="color: #475569; font-size: 13px; background-color: #ffffff;"><i class="fa fa-bolt mr-2" style="color: #f59e0b;"></i> ZERO MIDDLEWARE</div>
+        </div>
+    </div>
+
+    <style>
+        .sync-ring {
+            width: 100px; height: 100px;
+            border: 4px solid rgba(59, 130, 246, 0.2);
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 3s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .ticker-content { animation: scroll-up 10s linear infinite; }
+        @keyframes scroll-up { 0% { transform: translateY(0); } 100% { transform: translateY(-50%); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+
+    <div class="bg-white" style="border-radius: 30px; font-family: 'Outfit', 'Inter', sans-serif; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.05);">
+
+        <!-- Tab Navigation -->
+        <div class="px-md-5 px-4 mt-5">
+            <ul class="nav nav-pills justify-content-center mb-5 gap-5" id="pills-tab" role="tablist" style="border: none;background-color: none;">
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link active" id="pills-features-tab" data-bs-toggle="pill" data-bs-target="#pills-features" type="button" role="tab" aria-controls="pills-features" aria-selected="true" style="padding: 14px 40px; border-radius: 50px; font-weight: 800; font-size: 16px; border: 1px solid #e2e8f0; transition: all 0.3s; background-color: #f8fafc; color: #475569;">Detailed Features</a>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <a class="nav-link" id="pills-faq-tab" data-bs-toggle="pill" data-bs-target="#pills-faq" type="button" role="tab" aria-controls="pills-faq" aria-selected="false" style="padding: 14px 40px; border-radius: 50px; font-weight: 800; font-size: 16px; border: 1px solid #e2e8f0; transition: all 0.3s; background-color: #f8fafc; color: #475569;">FAQ</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="tab-content" id="pills-tabContent">
+
+            <!-- ============================= -->
+            <!--   TAB 1 : DETAILED FEATURES   -->
+            <!-- ============================= -->
+            <div class="tab-pane fade show active" id="pills-features" role="tabpanel" aria-labelledby="pills-features-tab">
+
+                <!-- Elite Performance Features -->
+                <div class="px-md-5 px-4 pb-5" style="background-color: #ffffff;">
+                    <div class="text-center mb-5 mt-4">
+                        <h2 style="font-size: 34px; color: #1e293b; font-weight: 800;">Elite <span style="color: #10488A;">Performance</span> Features</h2>
+                        <div class="mx-auto rounded-pill" style="width: 60px; height: 4px; background-color: #10488A; margin-top: 15px;"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #3b82f6;">
+                                    <i class="fa fa-refresh" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Bidirectional Flow</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Effortless synchronization that pushes and pulls data in real-time, keeping Odoo and CalDAV in perfect lockstep.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #10b981;">
+                                    <i class="fa fa-globe" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Universal Cloud</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Natively supports iCloud, Zoho, Nextcloud, and Google Calendar without requiring third-party API gateways.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #f59e0b;">
+                                    <i class="fa fa-calendar-check-o" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">RRULE Intelligence</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Advanced logic to parse and sync recurring series.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #ec4899;">
+                                    <i class="fa fa-bolt" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Background Engine</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Efficient background tasks ensure your data is processed silently and quickly without affecting UI performance.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #8b5cf6;">
+                                    <i class="fa fa-shield" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Enterprise Privacy</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Respects private event flags and secures every connection with modern token-based encryption.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #06b6d4;">
+                                    <i class="fa fa-link" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Zero Middleware</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Native direct connection between Odoo and your CalDAV server—no third-party subscriptions or external APIs required.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #ef4444;">
+                                    <i class="fa fa-lock" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Token-Based Encryption</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Securely authenticate with major providers using modern token protocols, ensuring your sensitive credentials never leave your control.</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="p-4 h-100 shadow-sm rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex align-items-center justify-content-center rounded-3 shadow-sm mb-4" style="width: 60px; height: 60px; background-color: #6366f1;">
+                                    <i class="fa fa-users" style="color: white; font-size: 24px;"></i>
+                                </div>
+                                <h3 style="font-weight: 800; color: #1e293b; font-size: 21px; margin-bottom: 12px;">Multi-Account Mapping</h3>
+                                <p style="color: #64748b; font-size: 16px; line-height: 1.7;">Effortlessly link and synchronize multiple Odoo user accounts with different external calendar providers simultaneously.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RRULE Intelligence Engine -->
+                <div class="mt-5 p-5 mx-md-5 mx-4 rounded-5" style="background-color: #0f172a; color: white;">
+                    <div class="row align-items-center">
+                        <div class="col-lg-6">
+                            <h2 style="font-weight: 800; font-size: 32px; margin-bottom: 20px;">The <span style="color: #3b82f6;">RRULE</span> Intelligence Engine</h2>
+                            <p style="color: #94a3b8; font-size: 17px; line-height: 1.8; margin-bottom: 30px;">
+                                Most connectors struggle with complex recurring events. Our module features a proprietary Recurrence Transformer that perfectly maps Odoo's scheduling logic to CalDAV RRULE standards.
+                            </p>
+                            <div class="d-flex flex-wrap gap-3">
+                                <div class="px-3 py-2 rounded-3 border" style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1) !important;"><i class="fa fa-check-circle text-primary me-2"></i> Monthly Exceptions</div>
+                                <div class="px-3 py-2 rounded-3 border" style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1) !important;"><i class="fa fa-check-circle text-primary me-2"></i> Custom Intervals</div>
+                                <div class="px-3 py-2 rounded-3 border" style="background-color: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1) !important;"><i class="fa fa-check-circle text-primary me-2"></i> Floating Events</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mt-4 mt-lg-0">
+                            <div class="p-5 text-center rounded-4 border border-primary" style="background-color: rgba(59, 130, 246, 0.1); border-style: dashed !important;">
+                                <div class="mb-3 fs-1 text-primary"><i class="fa fa-gears"></i></div>
+                                <h4 style="font-weight: 700; margin-bottom: 10px;">Deep Logic Mapping</h4>
+                                <p style="color: #94a3b8; font-size: 14px;">Our algorithm automatically translates "Every 2nd Tuesday of the month" into universal iCalendar strings instantly.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="mt-5 pt-4 px-md-5 px-4">
+                    <div class="text-center mb-5">
+                        <h2 style="font-weight: 800; color: #1e293b; font-size: 30px;">How It <span style="color: #10488A;">Works</span></h2>
+                        <p style="color: #64748b; font-size: 16px; margin-top: 10px;">Get up and running in three simple steps.</p>
+                    </div>
+                    <div class="row text-center">
+                        <div class="col-md-4 mb-4">
+                            <div style="font-size: 48px; font-weight: 900; color: #6c6d6f; margin-bottom: -30px; position: relative; z-index: 0;">01</div>
+                            <div class="p-4 position-relative" style="z-index: 1;">
+                                <h4 style="font-weight: 800; color: #1e293b; margin-bottom: 10px;">Connect Account</h4>
+                                <p style="color: #64748b; font-size: 15px;">Input your CalDAV server URL and secure credentials in your Odoo user profile.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div style="font-size: 48px; font-weight: 900; color: #6c6d6f; margin-bottom: -30px; position: relative; z-index: 0;">02</div>
+                            <div class="p-4 position-relative" style="z-index: 1;">
+                                <h4 style="font-weight: 800; color: #1e293b; margin-bottom: 10px;">Map Calendars</h4>
+                                <p style="color: #64748b; font-size: 15px;">Select which Odoo calendars you want to synchronize with your external devices.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div style="font-size: 48px; font-weight: 900; color: #6c6d6f; margin-bottom: -30px; position: relative; z-index: 0;">03</div>
+                            <div class="p-4 position-relative" style="z-index: 1;">
+                                <h4 style="font-weight: 800; color: #1e293b; margin-bottom: 10px;">Auto-Sync</h4>
+                                <p style="color: #64748b; font-size: 15px;">Sit back as Odoo's background engine keeps everything in perfect bidirectional harmony.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Capabilities Matrix -->
+                <div class="mt-5 mb-5 px-md-5 px-4">
+                    <div class="text-center mb-5">
+                        <h2 style="font-weight: 800; color: #1e293b; font-size: 30px;">Sync <span style="color: #10488A;">Capabilities</span> Matrix</h2>
+                        <p style="color: #64748b; font-size: 16px; margin-top: 10px;">Comprehensive data point coverage for every account type.</p>
+                    </div>
+                    <div class="shadow-sm overflow-hidden" style="border-radius: 30px; border: 1px solid #f1f5f9; background-color: white;">
+                        <table class="table mb-0" style="width: 100%; border-collapse: collapse;">
+                            <thead style="background-color: #10488A; color: white;">
+                                <tr>
+                                    <th style="padding: 22px 30px; text-align: left; font-size: 17px; font-weight: 700; border: none;">Data Point</th>
+                                    <th style="padding: 22px 30px; text-align: center; font-size: 17px; font-weight: 700; border: none;">Integration Status</th>
+                                </tr>
+                            </thead>
+                            <tbody style="color: #475569; font-size: 16px;">
+                                <tr><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Standard & Recurring Events</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr style="background-color: #fbfcfe;"><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">All-Day & Multi-Day Scheduling</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Title, Rich Description & Location</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr style="background-color: #fbfcfe;"><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Attendees & Response Status</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Advanced VALARM & Reminder Logic</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr style="background-color: #fbfcfe;"><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Privacy Controls (Private/Public)</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                                <tr><td style="padding: 18px 30px; border-top: 1px solid #f1f5f9; font-weight: 500;">Automatic Contact Creation</td><td style="padding: 18px 30px; text-align: center; border-top: 1px solid #f1f5f9;"><i class="fa fa-check-circle" style="color: #10b981; font-size: 22px;"></i></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Precision Control Center -->
+                <div class="mt-5 mb-5 px-md-5 px-4">
+                    <div class="text-center mb-5">
+                        <h2 style="font-weight: 800; color: #1e293b; font-size: 30px;">Precision <span style="color: #10488A;">Control</span> Center</h2>
+                        <p style="color: #64748b; font-size: 16px; margin-top: 10px;">Tailor the synchronization behavior to match your unique workflow.</p>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-4 mb-4">
+                            <div class="p-4 h-100 rounded-4 border" style="background-color: #f8fafc;">
+                                <div class="fs-4 mb-3" style="color: #3b82f6;"><i class="fa fa-arrows-h"></i></div>
+                                <h4 style="font-weight: 800; color: #1e293b; font-size: 18px; margin-bottom: 10px;">Flexible Direction</h4>
+                                <p style="color: #64748b; font-size: 14px;">Choose between full Bidirectional, Pull-only, or Push-only synchronization per account.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="p-4 h-100 rounded-4 border" style="background-color: #f8fafc;">
+                                <div class="fs-4 mb-3" style="color: #10b981;"><i class="fa fa-user-plus"></i></div>
+                                <h4 style="font-weight: 800; color: #1e293b; font-size: 18px; margin-bottom: 10px;">Auto-Contact Creation</h4>
+                                <p style="color: #64748b; font-size: 14px;">Automatically generate Odoo contacts from external calendar attendees during the sync.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="p-4 h-100 rounded-4 border" style="background-color: #f8fafc;">
+                                <div class="fs-4 mb-3" style="color: #f59e0b;"><i class="fa fa-envelope-o"></i></div>
+                                <h4 style="font-weight: 800; color: #1e293b; font-size: 18px; margin-bottom: 10px;">Invitation Control</h4>
+                                <p style="color: #64748b; font-size: 14px;">Decide whether to send invitation emails for events imported from external sources.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sync Health & Google OAuth -->
+                <div class="row align-items-stretch px-md-5 px-4">
+                    <div class="col-lg-6 mb-4">
+                        <div class="p-5 h-100 rounded-5 shadow-sm border" style="background-color: #ffffff;">
+                            <h3 style="font-weight: 800; color: #1e293b; font-size: 24px; margin-bottom: 20px;"><i class="fa fa-history text-primary mr-2"></i> Sync Activity Tracker</h3>
+                            <p style="color: #64748b; font-size: 16px; line-height: 1.7; margin-bottom: 25px;">Stay informed with absolute transparency. Our module tracks every sync attempt, providing detailed logs of successes, warnings, and error resolutions.</p>
+                            <div class="p-3 rounded-4 border" style="background-color: #ffffff;">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="fw-bold" style="font-size: 13px; color: #94a3b8;">LAST SYNC STATUS</span>
+                                    <span class="fw-bolder" style="font-size: 13px; color: #10b981;">100% SUCCESSFUL</span>
+                                </div>
+                                <div class="progress rounded-pill" style="height: 8px;">
+                                    <div class="progress-bar rounded-pill" role="progressbar" style="width: 100%; background-color: #10b981;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 mb-4">
+                        <div class="p-5 h-100 rounded-5 position-relative overflow-hidden border" style="background-color: #ffffff; border-color: #eff6ff !important;">
+                            <h3 style="font-weight: 800; color: #1e293b; font-size: 24px; margin-bottom: 20px;">Seamless Google OAuth</h3>
+                            <p style="color: #64748b; font-size: 16px; line-height: 1.7; margin-bottom: 25px;">Connecting Google Calendar is effortless. Our built-in OAuth2 flow allows you to authorize synchronization with a single click—no password sharing required.</p>
+                            <div class="d-inline-block px-4 py-2 rounded-pill fw-bold" style="background-color: #4285F4; color: white; font-size: 14px;">
+                                <i class="fa fa-google mr-2"></i> Enterprise Authorized
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ SIMILAR PICKS + OUR SERVICES (bottom of Detailed Features tab) -->
+                <div class="px-md-5 px-4 mt-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                    <center>
+                        <h2 style="font-size:35px; color:#000099; margin-bottom:20px; font-weight:700;">Explore similar picks</h2>
+                        <div style="border: 1px solid black; width:30%;"></div>
+                    </center>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_3cx_crm_connector" target="_blank">
+                                        <img src="banner_images/cr_3cx_crm_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_odoo_brevo_integration" target="_blank">
+                                        <img src="banner_images/cr_odoo_brevo_integration.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_basecamp_integration" target="_blank">
+                                        <img src="banner_images/cr_basecamp_integration.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_remove_powered_by" target="_blank">
+                                        <img src="banner_images/cr_remove_powered_by.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_power_bi_desktop_connector" target="_blank">
+                                        <img src="banner_images/cr_power_bi_desktop_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_tiktok_shop_connector" target="_blank">
+                                        <img src="banner_images/cr_tiktok_shop_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <center>
+                        <a class="btn btn-primary btn-lg mt8" target="_blank" style="color: #FFFFFF !important;"
+                           href="https://apps.odoo.com/apps/modules/browse?author=Creyox Technologies">
+                            <i class="fa fa-list"></i> Explore Our Other Apps
+                        </a>
+                    </center>
+                    <br/>
+                    <center><div style="border: 1px solid black; width:50%;"></div></center>
+                </div>
+
+                <!-- Our Services -->
+                <div class="px-md-5 px-4 mt-5">
+                    <div class="row mb-5">
+                        <div class="col-12 col-md-12 text-center" style="margin-top: 40px;">
+                            <h2 style="color: #000099;">
+                                <i class="fa fa-handshake-o" style="color: #B87333;"></i> Our Services
+                                <i class="fa fa-handshake-o" style="color: #B87333;"></i>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="container" style="width:100%; height:100%;">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99b3ff; border:2px solid #000099; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-cloud-upload" style="color:#000099;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#000099; font-weight:bold;">Odoo <br/> Implementation</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99ff99; border:2px solid #006600; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-gear" style="color:#006600;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#006600; font-weight:bold;">Odoo <br/> Customization</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ffccff; border:2px solid #b300b3; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-magic" style="color:#b300b3;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b300b3; font-weight:bold;">AI Powered <br/> Odoo Solutions</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ff9980; border:2px solid #b32400; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-exchange" style="color:#b32400;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b32400; font-weight:bold;">Odoo Data & <br/> Module Migration</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ffeb99; border:2px solid #b38f00; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-link" style="color:#b38f00;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b38f00; font-weight:bold;">Third Party <br/> App Integration</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#c2d6ff; border:2px solid #0047b3; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-lightbulb-o" style="color:#0047b3;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#0047b3; font-weight:bold;">Odoo Artificial <br/> Intelligence Services</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#b3e6ff; border:2px solid #006699; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-mobile" style="color:#006699;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#006699; font-weight:bold;">Mobile App <br/> Development</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99ffcf; border:2px solid #00796b; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-users" style="color:#00796b;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#00796b; font-weight:bold;">Support & <br/> Maintenance</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#d9ffb3; border:2px solid #4d9900; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-graduation-cap" style="color:#4d9900;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#4d9900; font-weight:bold;">Odoo Training <br/> & Guidance</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ✅ END OF DETAILED FEATURES TAB -->
+
+            </div>
+            <!-- END #pills-features -->
+
+
+            <!-- ============================= -->
+            <!--         TAB 2 : FAQ           -->
+            <!-- ============================= -->
+            <div class="tab-pane fade px-md-5 px-4" id="pills-faq" role="tabpanel" aria-labelledby="pills-faq-tab">
+
+                <!-- FAQ Accordions -->
+                <div class="panel-group mt-2" id="accordion" role="tablist">
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    Which CalDAV providers are supported?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq1" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                Our module is universally compatible with all major providers including <strong>iCloud</strong>, <strong>Google Calendar</strong>, <strong>Zoho</strong>, and <strong>Nextcloud</strong>, as well as custom servers like <strong>Radicale</strong>.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    Does it handle recurring series exceptions?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq2" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                Yes. The module features an advanced recurrence engine that correctly synchronizes Recurring Events.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    Is the data flow bidirectional?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq3" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                The synchronization flow depends on the direction chosen in your account settings (Bidirectional, Pull-only, or Push-only) to perfectly suit your requirements.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    Is this app compatible with Odoo Online?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq4" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                No, this app will not work for Odoo Online.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    How to contact if there is need of any Customization?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq5" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                Please contact us on <b>support@creyox.com</b>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    Do I need to buy all versions separately paying for each version?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq7" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                Yes, you need to pay different prices of app version wise.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default shadow-sm mb-4" style="border-radius: 20px; border: 1px solid #f1f5f9; overflow: hidden; background-color: #ffffff;">
+                        <div class="panel-heading" role="tab" style="padding: 25px; background-color: #ffffff;">
+                            <h4 class="panel-title" style="margin: 0;">
+                                <a role="button" class="d-flex align-items-center text-decoration-none fw-bold" style="font-size: 17px; color: #1e293b; cursor: default;">
+                                    <span class="d-flex align-items-center justify-content-center rounded-3 me-3" style="width: 32px; height: 32px; background-color: #eff6ff; color: #10488A; flex-shrink: 0;"><i class="fa fa-question"></i></span>
+                                    The app i paid for is not working, What should i do?
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="faq8" class="panel-collapse collapse show" role="tabpanel">
+                            <div class="panel-body" style="padding: 0 25px 25px 72px; color: #64748b; font-size: 16px; line-height: 1.6;">
+                                You can raise a Ticket on <b>support@creyox.com</b> we'll get back to
+                                                you with fixes.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ✅ SIMILAR PICKS + OUR SERVICES (bottom of FAQ tab) -->
+                <div class="mt-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">
+                    <center>
+                        <h2 style="font-size:35px; color:#000099; margin-bottom:20px; font-weight:700;">Explore similar picks</h2>
+                        <div style="border: 1px solid black; width:30%;"></div>
+                    </center>
+                    <br/>
+                    <div class="row">
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_3cx_crm_connector" target="_blank">
+                                        <img src="banner_images/cr_3cx_crm_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_odoo_brevo_integration" target="_blank">
+                                        <img src="banner_images/cr_odoo_brevo_integration.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_basecamp_integration" target="_blank">
+                                        <img src="banner_images/cr_basecamp_integration.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_remove_powered_by" target="_blank">
+                                        <img src="banner_images/cr_remove_powered_by.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_power_bi_desktop_connector" target="_blank">
+                                        <img src="banner_images/cr_power_bi_desktop_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" style="margin-top:1rem">
+                            <div class="sh_content" style="text-align:center; border:1px solid #aaa">
+                                <div class="sh_img" style="padding:10px; border-bottom:1px solid #aaa">
+                                    <a href="https://apps.odoo.com/apps/modules/18.0/cr_tiktok_shop_connector" target="_blank">
+                                        <img src="banner_images/cr_tiktok_shop_connector.png" style="width:100%; height:200px; object-fit:contain">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br/>
+                    <center>
+                        <a class="btn btn-primary btn-lg mt8" target="_blank" style="color: #FFFFFF !important;"
+                           href="https://apps.odoo.com/apps/modules/browse?author=Creyox Technologies">
+                            <i class="fa fa-list"></i> Explore Our Other Apps
+                        </a>
+                    </center>
+                    <br/>
+                    <center><div style="border: 1px solid black; width:50%;"></div></center>
+                </div>
+
+                <!-- Our Services -->
+                <div class="mt-5">
+                    <div class="row mb-5">
+                        <div class="col-12 col-md-12 text-center" style="margin-top: 40px;">
+                            <h2 style="color: #000099;">
+                                <i class="fa fa-handshake-o" style="color: #B87333;"></i> Our Services
+                                <i class="fa fa-handshake-o" style="color: #B87333;"></i>
+                            </h2>
+                        </div>
+                    </div>
+                    <div class="container" style="width:100%; height:100%;">
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99b3ff; border:2px solid #000099; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-cloud-upload" style="color:#000099;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#000099; font-weight:bold;">Odoo <br/> Implementation</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99ff99; border:2px solid #006600; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-gear" style="color:#006600;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#006600; font-weight:bold;">Odoo <br/> Customization</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ffccff; border:2px solid #b300b3; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-magic" style="color:#b300b3;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b300b3; font-weight:bold;">AI Powered <br/> Odoo Solutions</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ff9980; border:2px solid #b32400; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-exchange" style="color:#b32400;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b32400; font-weight:bold;">Odoo Data & <br/> Module Migration</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#ffeb99; border:2px solid #b38f00; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-link" style="color:#b38f00;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#b38f00; font-weight:bold;">Third Party <br/> App Integration</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#c2d6ff; border:2px solid #0047b3; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-lightbulb-o" style="color:#0047b3;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#0047b3; font-weight:bold;">Odoo Artificial <br/> Intelligence Services</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#b3e6ff; border:2px solid #006699; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-mobile" style="color:#006699;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#006699; font-weight:bold;">Mobile App <br/> Development</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#99ffcf; border:2px solid #00796b; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-users" style="color:#00796b;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#00796b; font-weight:bold;">Support & <br/> Maintenance</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="box p-4 shadow rounded mb-3" style="background-color:#d9ffb3; border:2px solid #4d9900; border-radius:0.25rem!important;">
+                                    <a href="mailto:support@creyox.com" style="text-decoration:none;">
+                                        <div class="icon_img mb-2"><h3><i class="fa fa-graduation-cap" style="color:#4d9900;"></i></h3></div>
+                                        <p class="mb-0" style="font-size:18px; color:#4d9900; font-weight:bold;">Odoo Training <br/> & Guidance</p>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ✅ END OF FAQ TAB -->
+
+            </div>
+            <!-- END #pills-faq -->
+
+        </div>
+        <!-- END .tab-content -->
+
+    </div>
+    <!-- END .bg-white wrapper -->
+
+</main>
+
+<link href="https://apps.odoocdn.com/web/content/7247337-184ae0e/1/web.assets_frontend.css" rel="stylesheet">
+<link rel="stylesheet" type="text/css" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+</body>
+</html>

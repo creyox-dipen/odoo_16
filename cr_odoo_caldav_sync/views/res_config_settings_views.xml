@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Inherit res.config.settings — add CalDAV section
+         Uses Odoo 16's app_settings_block structure
+    ============================================================ -->
+    <record id="res_config_settings_view_form_caldav" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.caldav</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block"
+                     string="CalDAV Sync"
+                     data-string="CalDAV Sync"
+                     data-key="cr_odoo_caldav_sync">
+                    <h2>CalDAV Calendar Synchronisation</h2>
+                    <div class="row mt16 o_settings_container" name="caldav_sync_container">
+                        <div class="col-12 col-lg-6 o_setting_box" id="caldav_sync_enabled_setting" help="Automatically sync calendar events with your CalDAV server every 15 minutes.">
+                            <div class="o_setting_left_pane">
+                                <field name="caldav_sync_enabled"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="caldav_sync_enabled" string="Enable CalDAV Sync"/>
+                                <div class="text-muted">
+                                    Automatically sync calendar events with your CalDAV server every 15 minutes.
+                                </div>
+                                <div class="content-group" attrs="{'invisible': [('caldav_sync_enabled', '=', False)]}">
+                                    <div class="mt8">
+                                        <button name="action_open_caldav_accounts"
+                                                string="Manage CalDAV Accounts"
+                                                type="object"
+                                                icon="fa-arrow-right"
+                                                class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
