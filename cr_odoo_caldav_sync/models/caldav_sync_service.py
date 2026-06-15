@@ -425,6 +425,68 @@ class CalDAVSyncService(models.AbstractModel):
                     else:
                         server_base.add("description").value = plain
 
+            # Sync master privacy (class), url, attendees, and reminders with Odoo base event
+            _privacy_to_class = {
+                "public": "PUBLIC",
+                "private": "PRIVATE",
+                "confidential": "CONFIDENTIAL",
+            }
+            class_val = _privacy_to_class.get(base_event.privacy or "public", "PUBLIC")
+            server_base.contents.pop("class", None)
+            server_base.add("class").value = class_val
+
+            server_base.contents.pop("url", None)
+            if base_event.videocall_location:
+                server_base.add("url").value = base_event.videocall_location
+
+            # Attendees for Zoho base event
+            server_base.contents.pop("attendee", None)
+            owner = account.user_id.partner_id
+            org_email = account.username or owner.email
+
+            _state_to_partstat = {
+                "accepted": "ACCEPTED",
+                "declined": "DECLINED",
+                "tentative": "TENTATIVE",
+                "needsAction": "NEEDS-ACTION",
+            }
+            for attendee in base_event.attendee_ids:
+                if not attendee.partner_id.email:
+                    continue
+                att = server_base.add("attendee")
+                att_email = attendee.partner_id.email
+                if attendee.partner_id == owner:
+                    att_email = org_email
+                att.value = f"mailto:{att_email}"
+                att.params["CN"] = [
+                    attendee.partner_id.name or att_email
+                ]
+                att.params["PARTSTAT"] = [
+                    _state_to_partstat.get(attendee.state, "NEEDS-ACTION")
+                ]
+
+            # Reminders (Alarms) for Zoho base event
+            server_base.contents.pop("valarm", None)
+            for alarm in base_event.alarm_ids:
+                valarm = server_base.add("valarm")
+                if alarm.alarm_type == "notification":
+                    valarm.add("action").value = "DISPLAY"
+                    from vobject.base import ContentLine
+                    valarm.contents.setdefault("x-action", []).append(
+                        ContentLine("X-ACTION", [], "NOTIFICATION")
+                    )
+                elif alarm.alarm_type == "email":
+                    valarm.add("action").value = "EMAIL"
+                    valarm.add("attendee").value = (
+                        f"mailto:{account.user_id.email or account.username}"
+                    )
+                else:
+                    valarm.add("action").value = "DISPLAY"
+                valarm.add("description").value = alarm.name or "Reminder"
+
+                minutes = alarm.duration_minutes or 0
+                valarm.add("trigger").value = timedelta(minutes=-minutes)
+
             # Capture original server DTSTART BEFORE overwriting it.
             # This is used later to decide whether the base occurrence
             # has been displaced and needs an explicit RECURRENCE-ID override.
@@ -711,15 +773,21 @@ class CalDAVSyncService(models.AbstractModel):
 
             ovr.add("status").value = "CONFIRMED"
             ovr.add("transp").value = "OPAQUE"
+            if base_event.allday:
+                occ_orig_start = occ.caldav_original_start or occ.start
+                occ_orig_date = occ_orig_start.date() if hasattr(occ_orig_start, "date") else occ_orig_start
+                ovr.add("recurrence-id").value = occ_orig_date
+            else:
+                base_start_time = _to_utc_naive(base_event.start).time()
+                occ_orig_start = occ.caldav_original_start or occ.start
+                occ_orig_date = occ_orig_start.date() if hasattr(occ_orig_start, "date") else occ_orig_start
+                occ_start_orig = datetime.combine(occ_orig_date, base_start_time)
+                ovr.add("recurrence-id").value = occ_start_orig.replace(tzinfo=pytz.utc)
+
             if occ.allday:
-                ovr.add("recurrence-id").value = (
-                        occ.caldav_original_start or occ.start
-                ).date()
                 ovr.add("dtstart").value = occ.start.date()
                 ovr.add("dtend").value = occ.stop.date() + timedelta(days=1)
             else:
-                orig_start = _to_utc_naive(occ.caldav_original_start or occ.start)
-                ovr.add("recurrence-id").value = orig_start.replace(tzinfo=pytz.utc)
                 ovr.add("dtstart").value = _to_utc_naive(occ.start).replace(
                     tzinfo=pytz.utc
                 )
@@ -3109,8 +3177,25 @@ class CalDAVSyncService(models.AbstractModel):
                     "caldav.event.map"]
 
                 is_deletion = occ_map and occ_map.last_odoo_write is False
-                differs = occ.active and self._occurrence_differs_from_base(
-                    occ, base_event
+                
+                # Check Zoho-specific occurrence field differences from the base event
+                time_diff = False
+                if occ.start and base_event.start:
+                    time_diff = (
+                        occ.start.hour != base_event.start.hour
+                        or occ.start.minute != base_event.start.minute
+                        or occ.allday != base_event.allday
+                    )
+                privacy_diff = (occ.privacy or "public") != (base_event.privacy or "public")
+                alarms_diff = sorted(occ.alarm_ids.ids) != sorted(base_event.alarm_ids.ids)
+                attendees_diff = sorted(occ.partner_ids.ids) != sorted(base_event.partner_ids.ids)
+
+                differs = occ.active and (
+                    self._occurrence_differs_from_base(occ, base_event)
+                    or time_diff
+                    or privacy_diff
+                    or alarms_diff
+                    or attendees_diff
                 )
 
                 last_sync = (
@@ -4833,7 +4918,7 @@ class CalDAVSyncService(models.AbstractModel):
 
             for occ in all_occs:
                 # Determine if this occurrence meaningfully differs from the base.
-                # We compare: name, location, description, start/stop time.
+                # We compare: name, location, description, start/stop time, privacy, alarms, and attendees.
                 name_differs = (occ.name or "") != (event.name or "")
                 loc_differs = (occ.location or "") != (event.location or "")
                 desc_differs = (occ.description or "") != (event.description or "")
@@ -4850,8 +4935,11 @@ class CalDAVSyncService(models.AbstractModel):
                     if occ.start and event.start
                     else False
                 )
+                privacy_differs = (occ.privacy or "public") != (event.privacy or "public")
+                alarms_differ = sorted(occ.alarm_ids.ids) != sorted(event.alarm_ids.ids)
+                attendees_differ = sorted(occ.partner_ids.ids) != sorted(event.partner_ids.ids)
 
-                if not (name_differs or loc_differs or desc_differs or time_differs):
+                if not (name_differs or loc_differs or desc_differs or time_differs or privacy_differs or alarms_differ or attendees_differ):
                     continue  # occurrence matches base template — no override needed
 
                 # Build RECURRENCE-ID VEVENT
@@ -4913,6 +5001,86 @@ class CalDAVSyncService(models.AbstractModel):
 
                 if is_nextcloud:
                     ovr.add("transp").value = "TRANSPARENT" if occ.show_as == "free" else "OPAQUE"
+
+                _privacy_to_class = {
+                    "public": "PUBLIC",
+                    "private": "PRIVATE",
+                    "confidential": "CONFIDENTIAL",
+                }
+                class_val = _privacy_to_class.get(occ.privacy or "public", "PUBLIC")
+                ovr.add("class").value = class_val
+
+                occ_other_partners = occ.partner_ids.filtered(
+                    lambda p: p != account.user_id.partner_id
+                )
+                occ_should_write_attendees = occ_other_partners or account.server_type == "zoho"
+
+                if occ_should_write_attendees:
+                    owner = account.user_id.partner_id
+                    org = ovr.add("organizer")
+
+                    if account.server_type == "google":
+                        from urllib.parse import urlparse
+                        google_email = None
+                        try:
+                            path_parts = urlparse(account.url).path.strip("/").split("/")
+                            if len(path_parts) >= 3:
+                                google_email = path_parts[2]
+                        except Exception:
+                            pass
+                        org_email = google_email or owner.email or account.username
+                    elif account.server_type in ("zoho", "icloud", "nextcloud"):
+                        org_email = account.username or owner.email
+                    else:
+                        org_email = owner.email or account.username
+
+                    org.value = f"mailto:{org_email}"
+                    org.params["CN"] = [owner.name or org_email]
+
+                    _state_to_partstat = {
+                        "accepted": "ACCEPTED",
+                        "declined": "DECLINED",
+                        "tentative": "TENTATIVE",
+                        "needsAction": "NEEDS-ACTION",
+                    }
+                    for attendee in occ.attendee_ids:
+                        if not attendee.partner_id.email:
+                            continue
+                        att = ovr.add("attendee")
+                        att_email = attendee.partner_id.email
+                        if account.server_type == "zoho" and attendee.partner_id == owner:
+                            att_email = org_email
+                        att.value = f"mailto:{att_email}"
+                        att.params["CN"] = [
+                            attendee.partner_id.name or att_email
+                        ]
+                        att.params["PARTSTAT"] = [
+                            _state_to_partstat.get(attendee.state, "NEEDS-ACTION")
+                        ]
+
+                for alarm in occ.alarm_ids:
+                    valarm = ovr.add("valarm")
+                    if account.server_type == "zoho":
+                        if alarm.alarm_type == "notification":
+                            valarm.add("action").value = "DISPLAY"
+                            from vobject.base import ContentLine
+                            valarm.contents.setdefault("x-action", []).append(
+                                ContentLine("X-ACTION", [], "NOTIFICATION")
+                            )
+                        elif alarm.alarm_type == "email":
+                            valarm.add("action").value = "EMAIL"
+                            valarm.add("attendee").value = (
+                                f"mailto:{account.user_id.email or account.username}"
+                            )
+                        else:
+                            valarm.add("action").value = "DISPLAY"
+                    else:
+                        action = "EMAIL" if alarm.alarm_type == "email" else "DISPLAY"
+                        valarm.add("action").value = action
+                    valarm.add("description").value = alarm.name or "Reminder"
+
+                    minutes = alarm.duration_minutes or 0
+                    valarm.add("trigger").value = timedelta(minutes=-minutes)
 
                 _logger.info(
                     "[RADICALE][PUSH] Added RECURRENCE-ID override for occurrence "

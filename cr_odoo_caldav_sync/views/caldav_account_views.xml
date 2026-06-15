@@ -56,8 +56,10 @@
                     <div class="alert alert-success d-flex align-items-center mb-3"
                          attrs="{'invisible': ['|', ('server_type', '!=', 'google'), ('google_refresh_token', '=', False)]}">
                         <i class="fa fa-check-circle me-2"/>
-                        <span>Google Calendar is authorized. </span>
-                        <field name="google_auth_status" readonly="1" class="ms-1 fw-bold"/>
+                        <span>
+                            Google Calendar is authorized.
+                            <field name="google_auth_status" readonly="1" class="ms-1 fw-bold mb-0" style="margin-bottom: 0px !important; display: inline; vertical-align: baseline;"/>
+                        </span>
                     </div>
                     <div class="alert alert-warning d-flex align-items-center mb-3"
                          attrs="{'invisible': ['|', ('server_type', '!=', 'google'), ('google_refresh_token', '!=', False)]}">
@@ -69,8 +71,10 @@
                     <div class="alert alert-info d-flex align-items-center mb-3"
                          attrs="{'invisible': [('sync_status', '!=', 'syncing')]}">
                         <i class="fa fa-refresh fa-spin me-2"/>
-                        <span>Calendar synchronization in progress: </span>
-                        <field name="sync_progress" readonly="1" class="ms-1 fw-bold"/>
+                        <span>
+                            Calendar synchronization in progress:
+                            <field name="sync_progress" readonly="1" class="ms-1 fw-bold mb-0" style="margin-bottom: 0px !important; display: inline; vertical-align: baseline;"/>
+                        </span>
                     </div>
 
                     <group>
