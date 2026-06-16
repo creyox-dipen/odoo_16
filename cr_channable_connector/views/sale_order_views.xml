@@ -70,7 +70,7 @@
                         <separator string="Sync Errors"/>
                         <field name="channable_error_ids"
                                readonly="1"
-                               attrs="{'invisible': [('channable_error_ids', '=', [])]}">
+                               attrs="{'invisible': [('channable_error_ids', '=', False)]}">
                             <tree>
                                 <field name="reference"/>
                                 <field name="name"/>

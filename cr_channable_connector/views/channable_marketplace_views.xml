@@ -19,6 +19,7 @@
                                 type="object"/>
                     </header>
                     <sheet>
+                        <field name="sync_in_progress" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
                             <button class="oe_stat_button"
                                     icon="fa-list"
@@ -26,6 +27,15 @@
                                     type="object">
                                 <div class="o_field_widget o_stat_info">
                                     <span class="o_stat_text">Orders</span>
+                                </div>
+                            </button>
+                            <button class="oe_stat_button"
+                                    icon="fa-history"
+                                    name="action_view_sync_logs"
+                                    type="object">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="sync_log_count"/></span>
+                                    <span class="o_stat_text">Sync Logs</span>
                                 </div>
                             </button>
                             <button class="oe_stat_button"
@@ -62,6 +72,197 @@
                             </h1>
                         </div>
 
+                        <!-- Progress Bar for sync -->
+                        <style>
+                            .channable_progress_alert {
+                                border-radius: 12px !important;
+                                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                                background: linear-gradient(135deg, #71639e 0%, #5c4f82 100%) !important;
+                                padding: 18px 24px !important;
+                                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+                                margin-bottom: 24px !important;
+                                transition: all 0.3s ease !important;
+                            }
+                            .channable_progress_alert .fa-spin {
+                                font-size: 1.7rem !important;
+                                color: #ffffff !important;
+                            }
+                            .channable_progress_alert strong {
+                                color: #ffffff !important;
+                                font-size: 1.2rem !important;
+                                font-weight: 700 !important;
+                                letter-spacing: 0.3px !important;
+                            }
+                            .channable_progress_alert .channable_progress_text {
+                                color: #ffffff !important;
+                                font-size: 0.98rem !important;
+                                font-weight: 600 !important;
+                            }
+                            .channable_progress_alert .channable_progress_text * {
+                                color: #ffffff !important;
+                            }
+                            .channable-progress-container {
+                                display: flex !important;
+                                align-items: center !important;
+                                gap: 12px !important;
+                                width: 100% !important;
+                            }
+                            .channable-progress-track {
+                                flex-grow: 1 !important;
+                                height: 10px !important;
+                                background-color: rgba(255, 255, 255, 0.2) !important;
+                                border-radius: 8px !important;
+                                overflow: hidden !important;
+                            }
+                            .channable-progress-bar-fill {
+                                height: 100% !important;
+                                background: linear-gradient(90deg, #bfaeff, #ffffff) !important;
+                                border-radius: 8px !important;
+                                width: 0%;
+                                transition: width 0.4s ease !important;
+                            }
+                            .channable-progress-percent-label {
+                                color: #ffffff !important;
+                                font-size: 0.98rem !important;
+                                font-weight: 700 !important;
+                                min-width: 48px !important;
+                                text-align: right !important;
+                            }
+                            .channable-progress-percent-label * {
+                                color: #ffffff !important;
+                            }
+                            .channable_sync_stats_card {
+                                border-radius: 12px !important;
+                                border: 1px solid rgba(0, 0, 0, 0.08) !important;
+                                background: #fdfdfd !important;
+                                padding: 18px 24px !important;
+                                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05) !important;
+                                margin-bottom: 24px !important;
+                                transition: all 0.3s ease !important;
+                            }
+                            [data-theme='dark'] .channable_sync_stats_card {
+                                border: 1px solid rgba(255, 255, 255, 0.08) !important;
+                                background: #23222a !important;
+                                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+                            }
+                            .channable_sync_stats_card strong {
+                                color: #333333 !important;
+                                font-size: 1.15rem !important;
+                                font-weight: 700 !important;
+                                letter-spacing: 0.3px !important;
+                            }
+                            [data-theme='dark'] .channable_sync_stats_card strong {
+                                color: #ffffff !important;
+                            }
+                            .channable_stats_grid {
+                                border-top: 1px solid rgba(0, 0, 0, 0.05) !important;
+                                padding-top: 12px !important;
+                            }
+                            [data-theme='dark'] .channable_stats_grid {
+                                border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
+                            }
+                            .channable_stat_item {
+                                display: flex !important;
+                                align-items: center !important;
+                                font-size: 0.95rem !important;
+                            }
+                            .channable_stat_label {
+                                color: #666666 !important;
+                                font-weight: 500 !important;
+                                margin-right: 6px !important;
+                                display: inline-flex !important;
+                                align-items: center !important;
+                                vertical-align: middle !important;
+                                line-height: 1.2 !important;
+                            }
+                            [data-theme='dark'] .channable_stat_label {
+                                color: #b1b1b1 !important;
+                            }
+                            .channable_stat_value {
+                                color: #111111 !important;
+                                font-weight: 700 !important;
+                                display: inline-flex !important;
+                                align-items: center !important;
+                                vertical-align: middle !important;
+                                line-height: 1.2 !important;
+                            }
+                            [data-theme='dark'] .channable_stat_value {
+                                color: #ffffff !important;
+                            }
+                            .channable_stat_value * {
+                                display: inline-flex !important;
+                                align-items: center !important;
+                                vertical-align: middle !important;
+                                margin: 0 !important;
+                                padding: 0 !important;
+                                line-height: 1.2 !important;
+                            }
+                            .channable_icon_purple {
+                                color: #71639e !important;
+                                font-size: 1.1rem !important;
+                                display: inline-flex !important;
+                                align-items: center !important;
+                                vertical-align: middle !important;
+                            }
+                            [data-theme='dark'] .channable_icon_purple {
+                                color: #a394db !important;
+                            }
+                        </style>
+
+                        <div class="channable_progress_alert d-flex align-items-center mb-3" 
+                             attrs="{'invisible': [('sync_in_progress', '=', False)]}">
+                            <div class="d-flex align-items-center gap-3 w-100">
+                                <span class="fa fa-refresh fa-spin"></span>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                        <strong>Importing Orders...</strong>
+                                        <span class="channable_progress_text">
+                                            <field name="sync_processed_orders" class="fw-bold" readonly="1"/> / <field name="sync_total_orders" class="fw-bold" readonly="1"/> orders processed.
+                                        </span>
+                                    </div>
+                                    <div class="channable-progress-container">
+                                        <div class="channable-progress-track">
+                                            <div class="channable-progress-bar-fill" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="channable-progress-percent-label">
+                                            <field name="sync_progress_percentage" readonly="1"/>%
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Last Sync Statistics Card -->
+                        <div class="channable_sync_stats_card d-flex align-items-center mb-3" 
+                             attrs="{'invisible': ['|', ('sync_in_progress', '=', True), ('last_sync_date', '=', False)]}">
+                            <div class="w-100">
+                                <div class="d-flex align-items-center justify-content-between mb-2">
+                                    <strong>Last Synchronization Statistics</strong>
+                                    <field name="last_sync_status" readonly="1" widget="badge" 
+                                           decoration-success="last_sync_status == 'success'" 
+                                           decoration-warning="last_sync_status == 'partial'" 
+                                           decoration-danger="last_sync_status == 'failed'"/>
+                                </div>
+                                <div class="channable_stats_grid d-flex flex-wrap gap-4 mt-2">
+                                    <div class="channable_stat_item">
+                                        <span class="fa fa-calendar me-2 channable_icon_purple"></span>
+                                        <span class="channable_stat_label">Sync Time: </span>
+                                        <span class="channable_stat_value"><field name="last_sync_date" readonly="1"/></span>
+                                    </div>
+                                    <div class="channable_stat_item">
+                                        <span class="fa fa-clock-o me-2 channable_icon_purple"></span>
+                                        <span class="channable_stat_label">Duration: </span>
+                                        <span class="channable_stat_value"><field name="last_sync_duration" readonly="1"/></span>
+                                    </div>
+                                    <div class="channable_stat_item">
+                                        <span class="fa fa-shopping-cart me-2 channable_icon_purple"></span>
+                                        <span class="channable_stat_label">Orders Synced: </span>
+                                        <span class="channable_stat_value"><field name="last_sync_orders_count" readonly="1"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <group>
                             <group string="Basic Configuration">
                                 <field name="active" invisible="1"/>
@@ -73,7 +274,7 @@
                             <group string="Logistics">
                                 <field name="warehouse_id"/>
                                 <field name="carrier_id"/>
-                                <field name="notify_shipped_auto"/>
+                                <!-- <field name="notify_shipped_auto"/> -->
                             </group>
                             <group string="Accounting &amp; Sales">
                                 <field name="pricelist_id"/>
@@ -92,7 +293,7 @@
                             </group>
                             <group string="Synchronisation Rules">
                                 <field name="sync_product_field"/>
-                                <field name="valid_states"/>
+                                <field name="valid_states" invisible="1"/>
                                 <field name="saving_attachments"/>
                                 <field name="auto_validate_quotations"/>
                                 <field name="auto_validate_orders"/>
@@ -100,6 +301,18 @@
                                        attrs="{'invisible': [('auto_validate_orders', '=', False)]}"/>
                                 <field name="difference_threshold"/>
                                 <field name="feed_url" widget="CopyClipboardChar" readonly="1"/>
+                            </group>
+                            <group string="Import Orders Status" colspan="2">
+                                <group>
+                                    <field name="status_not_shipped"/>
+                                    <field name="status_shipped"/>
+                                    <field name="status_waiting"/>
+                                </group>
+                                <group>
+                                    <field name="status_pending_shipment"/>
+                                    <field name="status_pending_cancellation"/>
+                                    <field name="status_cancelled"/>
+                                </group>
                             </group>
                         </group>
                         <notebook>
@@ -149,10 +362,9 @@
             <field name="model">channable.marketplace</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_dashboard" create="1" can_open="0">
-                    <field name="id"/>
                     <field name="name"/>
                     <field name="order_configuration_id"/>
-                    <field name="currency_id"/> 
+                    <field name="currency_id"/>
                     <field name="orders_pending_validation_count"/>
                     <field name="orders_pending_validation_amount"/>
                     <field name="orders_pending_shipment_count"/>
@@ -160,8 +372,39 @@
                     <field name="kanban_dashboard_graph"/>
                     <field name="color"/>
                     <field name="dark_mode"/>
+                    <field name="id"/>
                     <templates>
-
+                        <t t-name="kanban-menu">
+                            <div class="container-fluid my-channable-menu-container" style="min-width: 180px; padding: 12px;">
+                                <!-- View Section -->
+                                <div class="mb-2 text-start">
+                                    <div class="my_menu_header mb-1" style="color: #ced4da !important; font-weight: bold !important; font-size: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.8px !important;">View</div>
+                                    <a type="object" name="action_view_orders" class="dropdown-item py-1 px-2 rounded small" style="cursor: pointer; transition: background-color 0.2s; display: block; color: #ffffff !important; font-size: 0.88rem !important; font-weight: 500 !important;">
+                                        Orders
+                                    </a>
+                                    <a type="object" name="action_view_errors" class="dropdown-item py-1 px-2 rounded small" style="cursor: pointer; transition: background-color 0.2s; display: block; color: #ffffff !important; font-size: 0.88rem !important; font-weight: 500 !important;">
+                                        Errors
+                                    </a>
+                                </div>
+                                
+                                <hr class="my-2" style="border-top: 1px solid #495057 !important; opacity: 1 !important;"/>
+                                
+                                <!-- Color Picker Grid -->
+                                <div class="mb-2 text-start">
+                                    <div class="my_menu_header mb-2" style="color: #ced4da !important; font-weight: bold !important; font-size: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.8px !important;">Color</div>
+                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color"/>
+                                </div>
+                                
+                                <hr class="my-2" style="border-top: 1px solid #495057 !important; opacity: 1 !important;"/>
+                                
+                                <!-- Configuration Section -->
+                                <div class="text-center pt-1">
+                                    <a type="open" class="my_menu_config dropdown-item py-1 px-2 rounded text-center" style="cursor: pointer; display: block; color: #bfaeff !important; font-weight: bold !important; font-size: 0.95rem !important;">
+                                        Configuration
+                                    </a>
+                                </div>
+                            </div>
+                        </t>
 
                         <t t-name="kanban-box">
                             <!-- Injected styled CSS for exact dashboard grid matching & brand colors -->
@@ -298,6 +541,11 @@
                                     margin: -10px -20px !important;
                                     transition: color 0.2s;
                                 }
+                                .o_kanban_dashboard .o_dropdown_kanban > a {
+                                    background: transparent !important;
+                                    border: none !important;
+                                    box-shadow: none !important;
+                                }
                                 .o_kanban_dashboard .o_dropdown_kanban:hover,
                                 .o_kanban_dashboard .o_kanban_manage_toggle_button:hover {
                                     color: #71639e !important;
@@ -342,13 +590,28 @@
                                     border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
                                 }
                                 .o_kanban_dashboard .my-kanban-dark-mode .o_dropdown_kanban,
-                                .o_kanban_dashboard .my-kanban-dark-mode .o_kanban_manage_toggle_button {
-                                    color: #e9ecef !important;
+                                .o_kanban_dashboard .my-kanban-dark-mode .o_kanban_manage_toggle_button,
+                                .o_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban,
+                                .o_kanban_record:has(.my-kanban-dark-mode) .o_kanban_manage_toggle_button,
+                                .oe_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban,
+                                .oe_kanban_record:has(.my-kanban-dark-mode) .o_kanban_manage_toggle_button {
+                                    color: #ffffff !important;
                                 }
-                                .o_kanban_dashboard .my-kanban-dark-mode .o_dropdown_kanban:hover,
-                                .o_kanban_dashboard .my-kanban-dark-mode .o_kanban_manage_toggle_button:hover {
-                                    color: #bfaeff !important;
+                                .o_kanban_dashboard .my-kanban-dark-mode .o_dropdown_kanban > a,
+                                .o_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban > a,
+                                .oe_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban > a {
+                                    background: transparent !important;
+                                    border: none !important;
+                                    box-shadow: none !important;
                                 }
+                                 .o_kanban_dashboard .my-kanban-dark-mode .o_dropdown_kanban:hover,
+                                 .o_kanban_dashboard .my-kanban-dark-mode .o_kanban_manage_toggle_button:hover,
+                                 .o_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban:hover,
+                                 .o_kanban_record:has(.my-kanban-dark-mode) .o_kanban_manage_toggle_button:hover,
+                                 .oe_kanban_record:has(.my-kanban-dark-mode) .o_dropdown_kanban:hover,
+                                 .oe_kanban_record:has(.my-kanban-dark-mode) .o_kanban_manage_toggle_button:hover {
+                                     color: #bfaeff !important;
+                                 }
                                 .o_kanban_dashboard .my-kanban-dark-mode .o_dashboard_graph {
                                     filter: invert(0.88) hue-rotate(180deg) brightness(1.2) contrast(0.9) !important;
                                     opacity: 0.9;
@@ -412,60 +675,32 @@
                                 <t t-if="record.name.raw_value.toLowerCase().includes('manomano')" t-set="border_color" t-value="'#3CB4C4'"/>
                                 <t t-if="record.name.raw_value.toLowerCase().includes('aliexpress')" t-set="border_color" t-value="'#E60012'"/>
                             </t>
-
-                            <div t-attf-class="h-100 d-flex flex-column p-0 position-relative my-kanban-card #{record.dark_mode.raw_value ? 'my-kanban-dark-mode' : ''}" 
-                                 t-attf-style="border-left: 4px solid #{border_color} !important; background-color: #ffffff; width: 100% !important;">
+                             <div t-attf-class="h-100 d-flex flex-column p-0 overflow-hidden position-relative my-kanban-card #{record.dark_mode.raw_value ? 'my-kanban-dark-mode' : ''}" 
+                                  t-attf-style="border-left: 4px solid #{border_color} !important; background-color: #ffffff; width: 100% !important;">
                                 
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a class="dropdown-toggle o-no-caret" role="button" data-bs-toggle="dropdown" data-bs-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
+                                        <span class="fa fa-ellipsis-v"/>
+                                    </a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <t t-call="kanban-menu"/>
+                                    </div>
+                                </div>
+
                                 <!-- Card Header -->
-                                <div class="d-flex align-items-center justify-content-between p-3 pb-2" style="position: relative;">
+                                <div class="d-flex align-items-center justify-content-between p-3 pb-2">
                                     <div class="o_primary fs-4 fw-normal">
                                         <span class="my_marketplace_name">
                                             <field name="name"/>
                                         </span>
                                     </div>
                                     <div class="d-flex align-items-center gap-2" style="margin-right: 48px;">
-                                        <span class="my_dark_mode_label small" style="font-size: 0.72rem; font-weight: 500; letter-spacing: 0.3px;"><i class="fa fa-moon-o"></i> Dark Mode</span>
-                                        <div t-attf-class="my-dark-mode-toggle my-switch #{record.dark_mode.raw_value ? 'my-switch-active' : ''}"
-                                             t-att-data-record-id="record.id.raw_value"
-                                             style="cursor: pointer; flex-shrink: 0; position: relative; z-index: 105 !important;">
-                                            <span class="my-switch-dot"/>
-                                        </div>
-                                    </div>
-                                    <div class="o_dropdown_kanban dropdown" style="position: absolute !important; top: 50% !important; transform: translateY(-50%) !important; right: 15px !important; margin: 0 !important; padding: 0 !important; z-index: 110 !important;">
-                                        <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu" style="padding: 4px 8px !important; margin: 0 !important; font-size: 1.1rem !important; color: inherit !important; line-height: 1 !important; display: inline-flex !important; align-items: center !important;">
-                                            <span class="fa fa-ellipsis-v"/>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right" role="menu" style="z-index: 1000;">
-                                            <div class="container-fluid my-channable-menu-container" style="min-width: 180px; padding: 12px;">
-                                                <!-- View Section -->
-                                                <div class="mb-2 text-start">
-                                                    <div class="my_menu_header mb-1" style="color: #ced4da !important; font-weight: bold !important; font-size: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.8px !important;">View</div>
-                                                    <a type="object" name="action_view_orders" class="dropdown-item py-1 px-2 rounded small" style="cursor: pointer; transition: background-color 0.2s; display: block; color: #ffffff !important; font-size: 0.88rem !important; font-weight: 500 !important;">
-                                                        Orders
-                                                    </a>
-                                                    <a type="object" name="action_view_errors" class="dropdown-item py-1 px-2 rounded small" style="cursor: pointer; transition: background-color 0.2s; display: block; color: #ffffff !important; font-size: 0.88rem !important; font-weight: 500 !important;">
-                                                        Errors
-                                                    </a>
-                                                </div>
-                                                
-                                                <hr class="my-2" style="border-top: 1px solid #495057 !important; opacity: 1 !important;"/>
-                                                
-                                                <!-- Color Picker Grid -->
-                                                <div class="mb-2 text-start">
-                                                    <div class="my_menu_header mb-2" style="color: #ced4da !important; font-weight: bold !important; font-size: 0.75rem !important; text-transform: uppercase !important; letter-spacing: 0.8px !important;">Color</div>
-                                                    <ul t-if="widget.editable" class="oe_kanban_colorpicker" data-field="color"/>
-                                                </div>
-                                                
-                                                <hr class="my-2" style="border-top: 1px solid #495057 !important; opacity: 1 !important;"/>
-                                                
-                                                <!-- Configuration Section -->
-                                                <div class="text-center pt-1">
-                                                    <a type="open" class="my_menu_config dropdown-item py-1 px-2 rounded text-center" style="cursor: pointer; display: block; color: #bfaeff !important; font-weight: bold !important; font-size: 0.95rem !important;">
-                                                        Configuration
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <span class="my_dark_mode_label" style="font-size: 0.85rem; font-weight: 500; letter-spacing: 0.3px;"><i class="fa fa-moon-o"></i> Dark Mode</span>
+                                         <div t-attf-class="my-dark-mode-toggle my-switch #{record.dark_mode.raw_value ? 'my-switch-active' : ''}"
+                                              t-att-data-record-id="record.id.raw_value"
+                                              style="cursor: pointer; flex-shrink: 0; position: relative; z-index: 105 !important;">
+                                             <span class="my-switch-dot"/>
+                                         </div>
                                     </div>
                                 </div>
 

@@ -17,6 +17,7 @@ class StockPicking(models.Model):
     ], string='Channable Sync Status', default='pending', copy=False)
 
     channable_marketplace_id = fields.Many2one(
+        'channable.marketplace',
         related='sale_id.channable_marketplace_id',
         string='Channable Marketplace',
         readonly=True,

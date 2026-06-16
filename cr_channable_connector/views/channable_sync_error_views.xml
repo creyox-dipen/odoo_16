@@ -20,23 +20,19 @@
                                 <field name="user_id" readonly="1"/>
                             </group>
                             <group string="Related Records">
-                                 <field name="order_id"
-                                        readonly="1"
-                                        attrs="{'invisible': [('order_id', '=', False)]}"/>
-                                 <field name="marketplace_id"
-                                        readonly="1"
-                                        attrs="{'invisible': [('marketplace_id', '=', False)]}"/>
+                                <field name="order_id"
+                                       readonly="1"
+                                       attrs="{'invisible': [('order_id', '=', False)]}"/>
+                                <field name="marketplace_id"
+                                       readonly="1"
+                                       attrs="{'invisible': [('marketplace_id', '=', False)]}"/>
                             </group>
                         </group>
                         <group string="Detailed Description" groups="base.group_no_one">
                             <field name="detailed_description" nolabel="1" readonly="1"/>
                         </group>
                     </sheet>
-                    <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
-                        <field name="activity_ids"/>
-                        <field name="message_ids"/>
-                    </div>
+                    <chatter/>
                 </form>
             </field>
         </record>
