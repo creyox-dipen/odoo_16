@@ -491,6 +491,8 @@ class ChannableSyncOrdersWizard(models.TransientModel):
                     self.env.cr.commit()
                 except Exception as batch_err:
                     self.env.cr.rollback()
+                    partner_cache.clear()
+                    shipping_partner_cache.clear()
                     _logger.exception("Error processing order batch starting at index %d: %s", i, str(batch_err))
                     # Update processed count anyway to move forward
                     try:
@@ -668,21 +670,22 @@ class ChannableSyncOrdersWizard(models.TransientModel):
 
             # ── Partners ─────────────────────────────────────────────────────
             try:
-                invoice_partner = self._get_or_create_partner(
-                    billing_data,
-                    marketplace,
-                    country_cache=country_cache,
-                    state_cache=state_cache,
-                    partner_cache=partner_cache
-                )
-                shipping_partner = self._get_or_create_shipping_partner(
-                    shipping_data,
-                    invoice_partner,
-                    marketplace,
-                    country_cache=country_cache,
-                    state_cache=state_cache,
-                    shipping_partner_cache=shipping_partner_cache
-                )
+                with self.env.cr.savepoint():
+                    invoice_partner = self._get_or_create_partner(
+                        billing_data,
+                        marketplace,
+                        country_cache=country_cache,
+                        state_cache=state_cache,
+                        partner_cache=partner_cache
+                    )
+                    shipping_partner = self._get_or_create_shipping_partner(
+                        shipping_data,
+                        invoice_partner,
+                        marketplace,
+                        country_cache=country_cache,
+                        state_cache=state_cache,
+                        shipping_partner_cache=shipping_partner_cache
+                    )
             except Exception as e:
                 self._log_error(
                     f'Partner creation failed for order {channable_id}',
@@ -736,34 +739,35 @@ class ChannableSyncOrdersWizard(models.TransientModel):
                     _logger.debug("Product %s not found. Attempting to auto-create...", product_ref)
                     # ── Auto-create product ───────────────────────────────────
                     try:
-                        tmpl_vals = {
-                            'name': title,
-                            'list_price': price,
-                            'type': 'consu',   # storable/consumable – adjust as needed
-                            'sale_ok': True,
-                            'purchase_ok': True,
-                            'taxes_id': [(5, 0, 0)],
-                            'supplier_taxes_id': [(5, 0, 0)],
-                        }
-                        if marketplace.sync_product_field == 'default_code':
-                            tmpl_vals['default_code'] = product_ref
-                        elif marketplace.sync_product_field == 'barcode':
-                            tmpl_vals['barcode'] = product_ref
+                        with self.env.cr.savepoint():
+                            tmpl_vals = {
+                                'name': title,
+                                'list_price': price,
+                                'type': 'consu',   # storable/consumable – adjust as needed
+                                'sale_ok': True,
+                                'purchase_ok': True,
+                                'taxes_id': [(5, 0, 0)],
+                                'supplier_taxes_id': [(5, 0, 0)],
+                            }
+                            if marketplace.sync_product_field == 'default_code':
+                                tmpl_vals['default_code'] = product_ref
+                            elif marketplace.sync_product_field == 'barcode':
+                                tmpl_vals['barcode'] = product_ref
 
-                        product_tmpl = self.env['product.template'].with_context(
-                            mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
-                        ).create(tmpl_vals)
-                        product = product_tmpl.product_variant_ids[:1] if product_tmpl.product_variant_ids else False
-                        _logger.debug("Created product_tmpl: %s, product_variant: %s", product_tmpl, product)
-                        if not product:
-                            raise Exception("Product template was created but no variant is available.")
+                            product_tmpl = self.env['product.template'].with_context(
+                                mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
+                            ).create(tmpl_vals)
+                            product = product_tmpl.product_variant_ids[:1] if product_tmpl.product_variant_ids else False
+                            _logger.debug("Created product_tmpl: %s, product_variant: %s", product_tmpl, product)
+                            if not product:
+                                raise Exception("Product template was created but no variant is available.")
 
-                        product_dict[product_ref] = product
-                        # Informational – not an error; use _logger so it stays out of error records
-                        _logger.info(
-                            "Product auto-created: '%s' (ref: %s) for Channable order %s.",
-                            title, product_ref, channable_id
-                        )
+                            product_dict[product_ref] = product
+                            # Informational – not an error; use _logger so it stays out of error records
+                            _logger.info(
+                                "Product auto-created: '%s' (ref: %s) for Channable order %s.",
+                                title, product_ref, channable_id
+                            )
                     except Exception as e:
                         err_trace = traceback.format_exc()
                         self._log_error(
@@ -875,25 +879,27 @@ class ChannableSyncOrdersWizard(models.TransientModel):
         if orders_vals_list:
             try:
                 _logger.info("Attempting optimistic batch creation of %d orders", len(orders_vals_list))
-                created_orders = SaleOrder.with_context(
-                    mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
-                ).create(orders_vals_list)
-                new_orders |= created_orders
-                
-                # Map created orders back to their totals
-                for order, (_, ch_total) in zip(created_orders, orders_mapping):
-                    channable_totals[order.id] = ch_total
+                with self.env.cr.savepoint():
+                    created_orders = SaleOrder.with_context(
+                        mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
+                    ).create(orders_vals_list)
+                    new_orders |= created_orders
+                    
+                    # Map created orders back to their totals
+                    for order, (_, ch_total) in zip(created_orders, orders_mapping):
+                        channable_totals[order.id] = ch_total
                     
             except Exception as batch_err:
                 _logger.warning("Batch creation failed: %s. Falling back to single order creation.", str(batch_err))
                 # Fallback to creating each order individually to isolate any errors
                 for order_vals, (channable_id, ch_total) in zip(orders_vals_list, orders_mapping):
                     try:
-                        order = SaleOrder.with_context(
-                            mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
-                        ).create(order_vals)
-                        new_orders |= order
-                        channable_totals[order.id] = ch_total
+                        with self.env.cr.savepoint():
+                            order = SaleOrder.with_context(
+                                mail_create_nosubscribe=True, mail_create_nolog=True, tracking_disable=True
+                            ).create(order_vals)
+                            new_orders |= order
+                            channable_totals[order.id] = ch_total
                     except Exception as single_err:
                         err_trace = traceback.format_exc()
                         self._log_error(
@@ -1007,7 +1013,7 @@ class ChannableSyncOrdersWizard(models.TransientModel):
                     delivery.with_context(**_bypass_ctx).action_assign()
                     for move in delivery.move_ids:
                         if move.state not in ('done', 'cancel'):
-                            move.quantity = move.product_uom_qty
+                            move.quantity_done = move.product_uom_qty
                     # Set sync status to done and bypass api trigger since
                     # it is already shipped on Channable
                     delivery.channable_sync_status = 'done'

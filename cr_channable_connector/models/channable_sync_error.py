@@ -26,6 +26,9 @@ class ChannableSyncError(models.Model):
         ('confirm_order', 'Confirm Order'),
         ('cancel_order', 'Cancel Order'),
         ('push_stock', 'Push Product Stock'),
+        ('validate_picking', 'Validate Delivery'),
+        ('create_invoice', 'Create Invoice'),
+        ('post_invoice', 'Post Invoice'),
     ], string='Action Attempted', required=True)
 
     detailed_description = fields.Text(string='Detailed Description')
