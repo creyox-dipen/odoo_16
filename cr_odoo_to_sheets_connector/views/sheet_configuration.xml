@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_google_sheet_connector_form" model="ir.ui.view">
+        <field name="name">Google Sheet Connector Configuration</field>
+        <field name="model">cr.google.sheet.connector.config</field>
+        <field name="arch" type="xml">
+            <form string=" ">
+                <sheet>
+                    <group>
+                        <field name="cr_connector_url"/>
+                        <field name="cr_access_token" />
+                        <button string="Generate Token" type="object" name="generate_token" class="oe_highlight"/>
+                        <button string="Generate App Script" type="object" name="generate_app_script" class="oe_highlight"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_google_sheet_connector_list" model="ir.ui.view">
+        <field name="name">Google Sheet Connector Configuration list</field>
+        <field name="model">cr.google.sheet.connector.config</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="cr_connector_url"/>
+                <field name="cr_access_token"/>
+            </tree>
+        </field>
+    </record>
+     <record id="action_google_sheet_connector_config" model="ir.actions.act_window">
+        <field name="name">Google Sheet Connector</field>
+        <field name="res_model">cr.google.sheet.connector.config</field>
+        <field name="view_id" ref="view_google_sheet_connector_list"/>
+        <field name="view_mode">tree,form</field>
+    </record>
+     <menuitem id="odoo_to_sheet_connector_menu"
+                  name="Google Sheet Connector"
+                  sequence="999"
+                  web_icon="cr_odoo_to_sheets_connector,static/description/icon.png"/>
+    <menuitem id="menu_google_sheet_connector" name="Configuration" sequence="1" parent="odoo_to_sheet_connector_menu"  action="action_google_sheet_connector_config"/>
+
+</odoo>
