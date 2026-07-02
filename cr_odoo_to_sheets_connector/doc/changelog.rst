@@ -7,3 +7,8 @@
 -------------------------------
 
 - [Fix] Multi language export text field
+
+16.2(Date: 1st July,2026)
+-------------------------------
+- [UPD] Auto selected columns which are already in sheet while fetching data from the odoo.
+- [UPD] Added company wise sync

@@ -20,11 +20,16 @@ class GoogleSheetConnectorConfig(models.Model):
         required=True,
     )
     cr_access_token = fields.Char("Access Token", readonly=False)
+    company_id = fields.Many2one(
+        "res.company",
+        string="Company",
+        required=True,
+        default=lambda self: self.env.company,
+    )
 
     def generate_token(self):
         """Generate a new API token."""
         token = secrets.token_hex(16)
-        self.env["ir.config_parameter"].sudo().set_param("access.token", token)
         self.cr_access_token = token
         return token
 
@@ -41,7 +46,7 @@ function onOpen() {
     const ui = SpreadsheetApp.getUi();
     ui.createMenu('Odoo Connector')
       .addItem('Set URL and Token', 'setUrl')
-      .addItem('Select Tables and Fetch Data', 'showTableSelectionDialog')
+      .addItem('Select Tables and Fetch Data', 'launchTableSelection')
       .addSeparator()
       .addItem('Setup Automatic Import Refresh', 'setupAutoRefresh')
       .addItem('Setup Automatic Export Refresh', 'setupAutoExport')
@@ -54,11 +59,50 @@ function onOpen() {
   }
 }
 
+function launchTableSelection() {
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const sheets = spreadsheet.getSheets();
+  
+  const preSelectedTables = [];
+  const preSelectedFields = {};
+  
+  sheets.forEach(sheet => {
+    const sheetName = sheet.getName();
+    
+    const lastCol = sheet.getLastColumn();
+    if (lastCol > 0) {
+      const headers = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+      const validHeaders = headers.map(h => h && h.toString().trim()).filter(Boolean);
+      if (validHeaders.length > 0) {
+        preSelectedFields[sheetName] = validHeaders;
+      }
+    }
+  });
+  
+  showTableSelectionDialog(preSelectedTables, preSelectedFields);
+}
+
 function setUrl() {
   const url = Browser.inputBox('Enter Odoo API URL');
+  if (url === 'cancel' || !url.trim()) {
+    Browser.msgBox('URL configuration cancelled or is empty. API URL must be provided.');
+    return;
+  }
+  
+  const trimmedUrl = url.trim();
+  if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
+    Browser.msgBox('Invalid URL. The URL must start with http:// or https://');
+    return;
+  }
+
   const token = Browser.inputBox('Enter Odoo API Token');
-  PropertiesService.getScriptProperties().setProperty('odooUrl', url);
-  PropertiesService.getScriptProperties().setProperty('odootoken', token);
+  if (token === 'cancel' || !token.trim()) {
+    Browser.msgBox('Token configuration cancelled or is empty. API Token must be provided.');
+    return;
+  }
+
+  PropertiesService.getScriptProperties().setProperty('odooUrl', trimmedUrl.replace(/\/$/, ''));
+  PropertiesService.getScriptProperties().setProperty('odootoken', token.trim());
   Browser.msgBox('API Url and Token Set successfully.');
 }
 
@@ -355,7 +399,7 @@ function setupAutoExport() {
     <br>
     <input type="button" value="Create Export Schedulers" onclick="submitForm()">
   </form>
-
+ 
   <script>
     function submitForm() {
       const result = {};
@@ -478,10 +522,14 @@ function buildSheetColumnMap(sheetNames) {
 
 function fetchAvailableTables(url) {
   const urli = PropertiesService.getScriptProperties().getProperty('odooUrl');
+  const token = PropertiesService.getScriptProperties().getProperty('odootoken');
   const dbListUrl = urli + '/ht';
 
   const response = UrlFetchApp.fetch(dbListUrl, {
       method: 'get',
+      headers: {
+        'X-Odoo-Access-Token': token
+      },
       muteHttpExceptions: true
   });
 
@@ -491,10 +539,14 @@ function fetchAvailableTables(url) {
 
 function fetchModelFields(model) {
   const url = PropertiesService.getScriptProperties().getProperty('odooUrl');
+  const token = PropertiesService.getScriptProperties().getProperty('odootoken');
   const payload = { model: model };
   const options = {
       method: 'post',
-      contentType: 'application/json',
+      contentType: 'text/plain',
+      headers: {
+        'X-Odoo-Access-Token': token
+      },
       payload: JSON.stringify(payload),
       muteHttpExceptions: true
   };
@@ -508,6 +560,13 @@ function fetchModelFields(model) {
 }
 
 function showTableSelectionDialog(preSelectedTables = [], preSelectedFields = {}) {
+  if (typeof preSelectedFields === 'string') {
+    try {
+      preSelectedFields = JSON.parse(preSelectedFields);
+    } catch (e) {
+      preSelectedFields = {};
+    }
+  }
   const url = PropertiesService.getScriptProperties().getProperty('odooUrl');
 
   if (!url) {
@@ -596,7 +655,7 @@ function showTableSelectionDialog(preSelectedTables = [], preSelectedFields = {}
         google.script.run
           .withSuccessHandler(() => {
           })
-          .showColumnSelectionDialog(selectedTables, PRE_SELECTED_FIELDS);
+          .showColumnSelectionDialog(selectedTables, JSON.stringify(PRE_SELECTED_FIELDS));
       }
     </script>
   `;
@@ -609,6 +668,13 @@ function showTableSelectionDialog(preSelectedTables = [], preSelectedFields = {}
 }
 
 function showColumnSelectionDialog(selectedTables, preSelectedFields = {}) {
+    if (typeof preSelectedFields === 'string') {
+        try {
+            preSelectedFields = JSON.parse(preSelectedFields);
+        } catch (e) {
+            preSelectedFields = {};
+        }
+    }
     let htmlContent = '';
     htmlContent += '<input type="text" id="columnSearch" placeholder="Search fields..." style="width: 100%; box-sizing: border-box; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">';
     htmlContent += '<form id="columnSelectionForm">';
@@ -764,7 +830,7 @@ function showColumnSelectionDialog(selectedTables, preSelectedFields = {}) {
 
           google.script.run
             .withSuccessHandler(() => google.script.host.close())
-            .showTableSelectionDialog(tables, fields);
+            .showTableSelectionDialog(tables, JSON.stringify(fields));
         }
 
         function getSelectedFields() {
@@ -856,6 +922,7 @@ function fetchTableDataFromOdoo(url, table, fields, limit, offset) {
        return {error: 'No URL configured'};
    }
 
+   const token = PropertiesService.getScriptProperties().getProperty('odootoken');
    const payload = {};
    if (fields && fields.length > 0) {
        payload['fields'] = fields;
@@ -869,7 +936,10 @@ function fetchTableDataFromOdoo(url, table, fields, limit, offset) {
 
        const response = UrlFetchApp.fetch(url + '/get_table/' + table, {
          method: 'post',
-         contentType: 'application/json',
+         contentType: 'text/plain',
+         headers: {
+           'X-Odoo-Access-Token': token
+         },
          payload: JSON.stringify(payload),
          muteHttpExceptions: true
        });
@@ -1048,9 +1118,13 @@ function exportDataWithColumns(sheetsAndColumns) {
           table: sheetName,
           data: filteredData
         };
+        const token = PropertiesService.getScriptProperties().getProperty('odootoken');
         const options = {
           method: 'post',
-          contentType: 'application/json',
+          contentType: 'text/plain',
+          headers: {
+            'X-Odoo-Access-Token': token
+          },
           muteHttpExceptions: true,
           payload: JSON.stringify(payload)
         };

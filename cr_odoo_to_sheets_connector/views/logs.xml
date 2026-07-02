@@ -31,6 +31,9 @@
                     <field name="status" widget="statusbar" statusbar_visible="success,partial,failure"/>
                 </header>
                 <sheet> 
+                    <field name="message" invisible="1"/>
+                    <field name="error_message" invisible="1"/>
+                    <field name="detailed_errors" invisible="1"/>
                     
                     <div class="oe_title">
                         <h1>
@@ -56,17 +59,17 @@
                     </group>
 
                     <notebook>
-                        <page string="Summary" invisible="not message">
+                        <page string="Summary" attrs="{'invisible': [('message', '=', False)]}">
                             <group>
                                 <field name="message" readonly="1" nolabel="1" widget="text"/>
                             </group>
                         </page>
-                        <page string="Error Summary" invisible="not error_message">
+                        <page string="Error Summary" attrs="{'invisible': [('error_message', '=', False)]}">
                             <group>
                                 <field name="error_message" readonly="1" nolabel="1" widget="text"/>
                             </group>
                         </page>
-                        <page string="Detailed Errors" invisible="not detailed_errors">
+                        <page string="Detailed Errors" attrs="{'invisible': [('detailed_errors', '=', False)]}">
                             <group>
                                 <field name="detailed_errors" readonly="1" nolabel="1" widget="text"/>
                             </group>
