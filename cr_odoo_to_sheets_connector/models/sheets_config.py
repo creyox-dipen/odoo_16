@@ -971,6 +971,7 @@ function writeDataToSheet(table, data, append) {
 
   if (!append) {
       sheet.clear();
+      sheet.getRange(1, 1, sheet.getMaxRows(), sheet.getMaxColumns()).clearFormat().setNumberFormat("General");
   }
 
   if (data && data.error) {
