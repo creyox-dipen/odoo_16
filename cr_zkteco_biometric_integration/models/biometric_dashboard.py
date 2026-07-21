@@ -26,24 +26,52 @@ class BiometricDashboard(models.AbstractModel):
         )
         today_end_utc = tz.localize(today_end).astimezone(pytz.utc).replace(tzinfo=None)
 
-        # 1. Total Employees
-        total_employees = self.env["hr.employee"].search_count(
+        # 1. Total Active Employees
+        all_employees = self.env["hr.employee"].search(
             [("active", "=", True), ("company_id", "=", company.id)]
         )
+        total_employees = len(all_employees)
 
-        # 2. Present Today (Employees who have at least one biometric log today)
-        present_employee_ids = self.env["biometric.attendance.log"].read_group(
-            [("timestamp", ">=", today_start_utc), ("timestamp", "<=", today_end_utc)],
-            ["employee_id"],
-            ["employee_id"],
-        )
-        present_count = len(present_employee_ids)
-        present_ids = [
-            res["employee_id"][0] for res in present_employee_ids if res["employee_id"]
-        ]
+        # 2. Batch check statuses for today
+        status_map = all_employees.get_attendance_statuses_for_date_batch(today, tz)
 
-        # 3. Absent Today
-        absent_count = total_employees - present_count
+        present_count = 0
+        absent_count = 0
+        leave_count = 0
+
+        presented_employees = []
+        absented_employees = []
+        leaved_employees = []
+
+        for e in all_employees:
+            status, reason = status_map.get(e.id, ("absent", False))
+            img = False
+            if e.image_128:
+                try:
+                    img = e.image_128.decode("utf-8")
+                except:
+                    img = e.image_128
+
+            emp_data = {
+                "id": e.id,
+                "name": e.name,
+                "job": e.job_id.name or "",
+                "image": img,
+                "details": reason or "",
+            }
+
+            if status == "present":
+                present_count += 1
+                if len(presented_employees) < 50:
+                    presented_employees.append(emp_data)
+            elif status in ("leave", "holiday"):
+                leave_count += 1
+                if len(leaved_employees) < 50:
+                    leaved_employees.append(emp_data)
+            elif status == "absent":
+                absent_count += 1
+                if len(absented_employees) < 50:
+                    absented_employees.append(emp_data)
 
         # 4. Device Status
         devices = self.env["biometric.device"].search([])
@@ -88,47 +116,6 @@ class BiometricDashboard(models.AbstractModel):
                 }
             )
 
-        # 6. Employee Lists
-        presented_employees = []
-        if present_ids:
-            # Limit to 50 for performance
-            emps = self.env["hr.employee"].search([("id", "in", present_ids)], limit=50)
-            for e in emps:
-                img = False
-                if e.image_128:
-                    try:
-                        img = e.image_128.decode("utf-8")
-                    except:
-                        img = e.image_128  # already string?
-                presented_employees.append(
-                    {
-                        "id": e.id,
-                        "name": e.name,
-                        "job": e.job_id.name or "",
-                        "image": img,
-                    }
-                )
-
-        absented_employees = []
-        absent_emps = self.env["hr.employee"].search(
-            [
-                ("id", "not in", present_ids),
-                ("active", "=", True),
-                ("company_id", "=", company.id),
-            ],
-            limit=50,
-        )
-        for e in absent_emps:
-            img = False
-            if e.image_128:
-                try:
-                    img = e.image_128.decode("utf-8")
-                except:
-                    img = e.image_128
-            absented_employees.append(
-                {"id": e.id, "name": e.name, "job": e.job_id.name or "", "image": img}
-            )
-
         # 7. Late/Early Counts
         late_arrival_count = self.env["hr.attendance"].search_count(
             [
@@ -149,10 +136,12 @@ class BiometricDashboard(models.AbstractModel):
             "total_employees": total_employees,
             "present_count": present_count,
             "absent_count": absent_count,
+            "leave_count": leave_count,
             "late_count": late_arrival_count,
             "early_count": early_leaving_count,
             "device_stats": device_stats,
             "recent_punches": recent_punches,
             "presented_employees": presented_employees,
             "absented_employees": absented_employees,
+            "leaved_employees": leaved_employees,
         }

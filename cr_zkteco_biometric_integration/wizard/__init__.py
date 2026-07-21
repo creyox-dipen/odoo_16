@@ -8,3 +8,4 @@ from . import calculate_attendance_wizard
 from . import daily_summary_report_wizard
 from . import absence_report_wizard
 from . import daily_attendance_report_wizard
+from . import biometric_download_log_wizard
