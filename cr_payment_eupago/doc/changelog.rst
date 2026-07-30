@@ -1,0 +1,11 @@
+16.0.0.0(Date: 30th July, 2026)
+-------------------------------
+- Migrated module from version 17
+- Supports Multibanco (ATM Reference) payments directly in Odoo.
+- Enables MB WAY transactions for instant mobile payments.
+- Supports 3D Secure Credit Card payments for enhanced security.
+- Automated synchronization of payment statuses with Odoo.
+- Added API based refund for Credit Card and MB WAY payments.
+- Added dynamic payment fees calculation (Fixed/Percentage) for Domestic and International transactions.
+- Enabled fees configuration for all payment methods of euPago
+- Added Fees badge in payment form to the checkout page.

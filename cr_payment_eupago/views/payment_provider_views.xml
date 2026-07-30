@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--
+        euPago Payment Provider Form
+        Extends the core payment provider form to add the euPago API Key field.
+        The field is only visible when the selected code is one of the euPago variants.
+    -->
+    <record id="payment_provider_form_cr_eupago" model="ir.ui.view">
+        <field name="name">euPago Provider Form</field>
+        <field name="model">payment.provider</field>
+        <field name="inherit_id" ref="payment.payment_provider_form"/>
+        <field name="arch" type="xml">
+            <group name="provider_credentials" position="inside">
+                <group attrs="{'invisible': [('code', 'not in', ('eupago_mbref', 'eupago_mbway', 'eupago_cc'))]}">
+                    <field
+                        name="cr_eupago_api_key"
+                        string="euPago API Key"
+                        password="True"
+                        attrs="{'required': [('code', 'in', ('eupago_mbref', 'eupago_mbway', 'eupago_cc')), ('state', '!=', 'disabled')]}"
+                    />
+                    <field
+                        name="cr_eupago_client_id"
+                        string="euPago Client ID (OAuth)"
+                        attrs="{'invisible': [('code', 'not in', ('eupago_cc', 'eupago_mbway'))]}"
+                        help="Client ID for OAuth 2.0 (Required for Refunds on Credit Card and MB WAY)"
+                    />
+                    <field
+                        name="cr_eupago_client_secret"
+                        string="euPago Client Secret (OAuth)"
+                        password="True"
+                        attrs="{'invisible': [('code', 'not in', ('eupago_cc', 'eupago_mbway'))]}"
+                        help="Client Secret for OAuth 2.0 (Required for Refunds on Credit Card and MB WAY)"
+                    />
+                    <field
+                        name="cr_eupago_mb_deadline_days"
+                        string="Multibanco Deadline (days)"
+                        attrs="{'invisible': [('code', '!=', 'eupago_mbref')]}"
+                        help="Number of days a Multibanco ATM reference remains valid. Default: 30 days."
+                    />
+                    <field
+                        name="cr_eupago_min_amount"
+                        string="Minimum Amount"
+                        help="Minimum order amount required to use this payment method."
+                    />
+                    <field
+                        name="cr_eupago_max_amount"
+                        string="Maximum Amount"
+                        help="Maximum order amount allowed to use this payment method."
+                    />
+                </group>
+            </group>
+            
+            <xpath expr="//notebook" position="inside">
+                <page string="Extra Fees" name="eupago_extra_fees" attrs="{'invisible': [('code', 'not in', ('eupago_mbref', 'eupago_mbway', 'eupago_cc'))]}">
+                    <group string="Fees Configuration">
+                        <field name="cr_eupago_is_extra_fees"/>
+                        <field name="cr_eupago_fees_product" attrs="{'invisible': [('cr_eupago_is_extra_fees', '=', False)], 'required': [('cr_eupago_is_extra_fees', '=', True)]}" readonly="1"/>
+                    </group>
+                    <group>
+                        <group string="Domestic Fees" attrs="{'invisible': [('cr_eupago_is_extra_fees', '=', False)]}">
+                            <field name="cr_eupago_fix_domestic_fees" attrs="{'required': [('cr_eupago_is_extra_fees', '=', True)]}"/>
+                            <field name="cr_eupago_var_domestic_fees" attrs="{'required': [('cr_eupago_is_extra_fees', '=', True)]}"/>
+                            <field name="cr_eupago_is_free_domestic"/>
+                            <field name="cr_eupago_free_domestic_amount" attrs="{'invisible': [('cr_eupago_is_free_domestic', '=', False)], 'required': [('cr_eupago_is_free_domestic', '=', True)]}"/>
+                        </group>
+                        <group string="International Fees" attrs="{'invisible': [('cr_eupago_is_extra_fees', '=', False)]}">
+                            <field name="cr_eupago_fix_international_fees" attrs="{'required': [('cr_eupago_is_extra_fees', '=', True)]}"/>
+                            <field name="cr_eupago_var_international_fees" attrs="{'required': [('cr_eupago_is_extra_fees', '=', True)]}"/>
+                            <field name="cr_eupago_is_free_international"/>
+                            <field name="cr_eupago_free_international_amount" attrs="{'invisible': [('cr_eupago_is_free_international', '=', False)], 'required': [('cr_eupago_is_free_international', '=', True)]}"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+
+        </field>
+    </record>
+
+</odoo>
