@@ -64,7 +64,6 @@ class EupagoRefundWizard(models.TransientModel):
                 "currency_id": self.currency_id.id,
                 "partner_id": self.transaction_id.partner_id.id,
                 "provider_id": self.transaction_id.provider_id.id,
-                "payment_method_id": self.transaction_id.payment_method_id.id,
                 "operation": "refund",
                 "source_transaction_id": self.transaction_id.id,
                 "payment_id": False, # CRITICAL: prevent inheriting the charge's payment_id

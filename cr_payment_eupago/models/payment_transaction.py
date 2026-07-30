@@ -1063,6 +1063,7 @@ class PaymentTransaction(models.Model):
                 "name": f"Payment Fee - {provider.name} ({self.reference})",
                 "product_uom_qty": 1.0,
                 "price_unit": self.cr_eupago_fees,
+                "tax_id": [(5, 0, 0)],
             }
             new_line = self.env["sale.order.line"].create(fee_line_vals)
             _logger.info("Added euPago fee line to SO %s: %s (amount: %.2f)", so.id, new_line.name, self.cr_eupago_fees)
@@ -1092,6 +1093,7 @@ class PaymentTransaction(models.Model):
                     "name": f"Payment Fee - {provider.name} ({self.reference})",
                     "quantity": 1.0,
                     "price_unit": self.cr_eupago_fees,
+                    "tax_ids": [(5, 0, 0)],
                 }
                 new_line = self.env["account.move.line"].with_context(check_move_validity=False).create(fee_line_vals)
                 _logger.info("Added euPago fee line to Invoice %s: %s (amount: %.2f)", invoice.id, new_line.name, self.cr_eupago_fees)
