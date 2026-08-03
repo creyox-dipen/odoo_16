@@ -2036,6 +2036,11 @@ class CalDAVSyncService(models.AbstractModel):
 
         events = non_recurring | recurring_base_events
 
+        # If a specific account is set on the event, do not push to other accounts
+        events = events.filtered(
+            lambda e: not e.caldav_account_id or e.caldav_account_id.id == account.id
+        )
+
         if account.server_type == "google":
             self._migrate_recurrence_mappings(account)
         if account.server_type == "icloud":
@@ -3877,6 +3882,8 @@ class CalDAVSyncService(models.AbstractModel):
         vals = self._ical_to_odoo_vals(vevent, account)
         if not vals:
             return
+
+        vals["caldav_account_id"] = account.id
 
         ctx_kwargs = {
             "dont_notify": True,
