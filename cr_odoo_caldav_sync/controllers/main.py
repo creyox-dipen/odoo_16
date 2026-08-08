@@ -166,3 +166,40 @@ class CalDAVGoogleOAuthController(http.Controller):
         return request.redirect(
             f"/web#action=cr_odoo_caldav_sync.action_caldav_account"
         )
+
+
+class CalDavWebhookController(http.Controller):
+    @http.route('/caldav/google/webhook', type='http', auth='public', methods=['POST'], csrf=False)
+    def receive_google_webhook(self, **kwargs):
+        """Receive push notifications from Google Calendar API."""
+        headers = request.httprequest.headers
+        channel_id = headers.get('X-Goog-Channel-ID')
+        resource_id = headers.get('X-Goog-Resource-ID')
+        resource_state = headers.get('X-Goog-Resource-State')
+
+        if not channel_id or not resource_id:
+            _logger.warning("Received invalid Google webhook request: missing headers.")
+            return request.make_response("Bad Request", status=400)
+
+        if resource_state == 'sync':
+            _logger.info("Google Webhook: Channel %s registered successfully.", channel_id)
+            return request.make_response("OK", status=200)
+
+        if resource_state == 'exists':
+            account = request.env['caldav.account'].sudo().search([
+                ('google_push_channel_id', '=', channel_id),
+                ('google_push_resource_id', '=', resource_id),
+            ], limit=1)
+
+            if account:
+                _logger.info("Google Webhook: Triggering sync for account '%s' (id=%s).", account.name, account.id)
+                try:
+                    account.with_user(1).action_sync_now()
+                except Exception as e:
+                    _logger.error("Google Webhook: Sync failed for account %s: %s", account.id, str(e))
+                return request.make_response("OK", status=200)
+            else:
+                _logger.warning("Google Webhook: No active account found for channel %s.", channel_id)
+                return request.make_response("Not Found", status=404)
+
+        return request.make_response("OK", status=200)

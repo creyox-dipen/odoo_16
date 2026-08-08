@@ -4702,7 +4702,17 @@ class CalDAVSyncService(models.AbstractModel):
             "confidential": "CONFIDENTIAL",
         }
         class_val = _privacy_to_class.get(event.privacy or "public", "PUBLIC")
-        vevent.add("class").value = class_val
+        
+        # Google CalDAV rejects adding CLASS to events originally created in Google
+        # (e.g. "Default" visibility). Those events have no CLASS on Google's side,
+        # so a PUT that adds CLASS returns 400. Google-origin events are identified
+        # by an iCal UID ending with @google.com. Odoo-origin events have @odoo
+        # and Google stores CLASS for them, making subsequent CLASS updates safe.
+        uid_val = getattr(vevent, "uid", None)
+        is_google_event = account.server_type == "google" and uid_val and uid_val.value and uid_val.value.endswith("@google.com")
+
+        if not is_google_event:
+            vevent.add("class").value = class_val
 
         is_nextcloud = account.server_type == "nextcloud" or (
             account.url and "remote.php/dav/calendars" in account.url

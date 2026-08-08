@@ -102,15 +102,27 @@
                             <field name="google_client_secret"
                                    password="True"
                                    attrs="{'invisible': [('server_type', '!=', 'google')]}"/>
-                            <div class="text-muted mt8" attrs="{'invisible': [('server_type', '!=', 'google')]}">
-                                Authorized Redirect URI: <code class="bg-light">/caldav/google/callback</code>
-                            </div>
                             <field name="user_id"/>
                         </group>
                         <group string="Sync Options">
                             <field name="sync_direction"/>
                             <field name="send_invitation_emails"/>
                             <field name="auto_create_contacts"/>
+                        </group>
+                    </group>
+                    <group>
+                        <div class="text-muted mt8" style="width: 700px" attrs="{'invisible': [('server_type', '!=', 'google')]}">
+                            Authorized Redirect URI: <code class="bg-light">/caldav/google/callback</code>
+                        </div>
+                    </group>
+                    <group>
+                        <group string="Real-Time Sync (Webhooks)" attrs="{'invisible': [('server_type', '!=', 'google')]}">
+                            <field name="google_push_status" readonly="1" decoration-success="google_push_status == 'active'" decoration-danger="google_push_status == 'inactive'"/>
+                            <field name="google_push_expiration" readonly="1" attrs="{'invisible': [('google_push_status', '!=', 'active')]}"/>
+                            <div colspan="2" class="oe_inline">
+                                <button string="Enable Webhook" type="object" name="action_register_google_webhook" class="btn-primary" attrs="{'invisible': [('google_push_status', '=', 'active')]}"/>
+                                <button string="Disable Webhook" type="object" name="action_stop_google_webhook" class="btn-secondary" attrs="{'invisible': [('google_push_status', '!=', 'active')]}"/>
+                            </div>
                         </group>
                     </group>
                     <group string="Sync Status" name="sync_status">
