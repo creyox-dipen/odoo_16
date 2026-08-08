@@ -5,3 +5,4 @@
 16.0.0.1(Date: 03rd Aug,2026)
 -------------------------------
 - Added the ability to select a specific target CalDAV account for each event to keep events separate and prevent mixing them between accounts.
+- Added support for webhook sync for Google server
