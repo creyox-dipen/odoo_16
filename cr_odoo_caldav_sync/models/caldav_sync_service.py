@@ -293,7 +293,9 @@ class CalDAVSyncService(models.AbstractModel):
                 "confidential": "CONFIDENTIAL",
             }
             class_val = _privacy_to_class.get(occ.privacy or "public", "PUBLIC")
-            ovr.add("class").value = class_val
+            is_google_origin_event = account.server_type == "google" and (base_event.caldav_uid or "").endswith("@google.com")
+            if not is_google_origin_event:
+                ovr.add("class").value = class_val
             ovr.add("transp").value = "TRANSPARENT" if occ.show_as == "free" else "OPAQUE"
 
             # Attendees & Organizer
@@ -433,7 +435,9 @@ class CalDAVSyncService(models.AbstractModel):
             }
             class_val = _privacy_to_class.get(base_event.privacy or "public", "PUBLIC")
             server_base.contents.pop("class", None)
-            server_base.add("class").value = class_val
+            is_google_origin_event = account.server_type == "google" and (base_event.caldav_uid or "").endswith("@google.com")
+            if not is_google_origin_event:
+                server_base.add("class").value = class_val
 
             server_base.contents.pop("url", None)
             if base_event.videocall_location:
@@ -769,7 +773,9 @@ class CalDAVSyncService(models.AbstractModel):
                 "confidential": "CONFIDENTIAL",
             }
             class_val = _privacy_to_class.get(occ.privacy or "public", "PUBLIC")
-            ovr.add("class").value = class_val
+            is_google_origin_event = account.server_type == "google" and (base_event.caldav_uid or "").endswith("@google.com")
+            if not is_google_origin_event:
+                ovr.add("class").value = class_val
 
             ovr.add("status").value = "CONFIRMED"
             ovr.add("transp").value = "OPAQUE"
@@ -5025,7 +5031,8 @@ class CalDAVSyncService(models.AbstractModel):
                     "confidential": "CONFIDENTIAL",
                 }
                 class_val = _privacy_to_class.get(occ.privacy or "public", "PUBLIC")
-                ovr.add("class").value = class_val
+                if not is_google_event:
+                    ovr.add("class").value = class_val
 
                 occ_other_partners = occ.partner_ids.filtered(
                     lambda p: p != account.user_id.partner_id
