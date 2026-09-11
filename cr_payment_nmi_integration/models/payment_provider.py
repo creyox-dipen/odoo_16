@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-# Part of Creyox Technologies
+# Part of Creyox Technologies.
+
 import base64
 import hashlib
 import logging
@@ -14,8 +15,8 @@ _logger = logging.getLogger(__name__)
 
 
 class PaymentProvider(models.Model):
-    """Extends the payment.provider model to add NMI (Ekashu) configuration fields
-    and business logic for card (Ekashu redirect) and ACH (NMI Direct Post) flows.
+    """Extends the payment.provider model to add NMI configuration fields
+    and business logic for card and ACH flows.
     """
 
     _inherit = "payment.provider"
@@ -78,7 +79,12 @@ class PaymentProvider(models.Model):
         )
 
     def _get_ach_rendering_values(self, data):
-        """Build the dict of values needed to render the ACH payment form."""
+        """Build the dict of values needed to render the ACH payment form.
+
+        :param dict data: Transaction data dictionary.
+        :return: Dict containing rendering values.
+        :rtype: dict
+        """
         return {
             "reference": data["reference"],
             "amount": "{:.2f}".format(data["amount"]),
@@ -98,6 +104,7 @@ class PaymentProvider(models.Model):
 
         :param str bin_number: The first 6 digits of the card number.
         :return: String 'credit', 'debit', or 'unknown'.
+        :rtype: str
         """
         if not self.nmi_v4_api_key or not bin_number or len(bin_number) < 6:
             return "unknown"
@@ -116,7 +123,6 @@ class PaymentProvider(models.Model):
         try:
             import requests as http_requests
 
-            # Use JSON payload and multiple header variations
             response = http_requests.post(
                 endpoint, json=payload, headers=headers, timeout=5
             )
@@ -124,8 +130,7 @@ class PaymentProvider(models.Model):
             _logger.info("NMI API Response Content: %s", response.text)
             response.raise_for_status()
             data = response.json()
-            # NMI returns "type": "credit", "debit", etc.
             return data.get("result", "unknown")
         except Exception as e:
-            _logger.error("NMI Card Type Lookup failed: %s", str(e))
+            _logger.info("NMI Card Type Lookup info: %s", str(e))
             return "unknown"

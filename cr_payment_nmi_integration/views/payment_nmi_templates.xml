@@ -185,4 +185,35 @@
         </div>
     </template>
 
+    <!-- Token Form Surcharge Fee Badge -->
+    <template id="token_form_nmi_fees" inherit_id="payment.checkout">
+        <xpath expr="//input[@name='o_payment_radio'][@data-payment-option-type='token']" position="after">
+            <t t-if="token.provider_id.code == 'nmi' and token.provider_id.is_nmi_card_fee">
+                <span class="nmi-token-fee-badge badge bg-primary text-white ms-2 d-none"
+                      style="color: #ffffff !important; font-weight: 600;"
+                      t-att-data-token-id="token.id"
+                      t-att-data-card-type="token.nmi_card_type"
+                      t-att-data-credit-fee="token.provider_id.nmi_credit_card_fee"
+                      t-att-data-debit-fee="token.provider_id.nmi_debit_card_fee">
+                </span>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Checkout Cart Total Surcharge Line -->
+    <template id="nmi_fee_total_line" inherit_id="website_sale.total">
+        <xpath expr="//tr[@id='order_total_untaxed']" position="before">
+            <t t-set="surcharge_line" t-value="website_sale_order.order_line.filtered(lambda l: l.product_id.default_code in ('CREDIT_CARD_FEE', 'DEBIT_CARD_FEE') or 'Surcharge' in l.name)"/>
+            <tr id="order_surcharge" t-att-class="'d-none' if not surcharge_line else ''">
+                <td class="text-end border-0">
+                    <span t-out="surcharge_line and surcharge_line[0].name or 'Payment Surcharge'"/>:
+                </td>
+                <td class="text-end border-0">
+                    <span t-out="surcharge_line and surcharge_line[0].price_total or 0.0"
+                          t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                </td>
+            </tr>
+        </xpath>
+    </template>
+
 </odoo>

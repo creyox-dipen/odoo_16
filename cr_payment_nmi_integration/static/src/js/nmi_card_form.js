@@ -123,25 +123,150 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
     });
 
     /**
-     * publicWidget to handle real-time fee summary updates based on BIN lookup.
+     * publicWidget to handle real-time fee summary updates based on BIN lookup and Token surcharge.
      */
     publicWidget.registry.NmiCardFeeDisplay = publicWidget.Widget.extend({
         selector: 'form[name="o_payment_checkout"]',
         events: {
             'input #nmi_ccnumber': '_onCardInput',
             'change input[name="o_payment_radio"]': '_onRadioChange',
+            'click div[name="o_payment_option_card"]': '_onCardClick',
+            'click input[name="o_payment_radio"]': '_onCardClick',
         },
 
-        _onRadioChange: function () {
-            this._updateFeeSummary(false);
+        start: function () {
             this.lastBin = null;
+            this._initTokenBadges();
+            this._onRadioChange();
+            return this._super.apply(this, arguments);
+        },
+
+        _initTokenBadges: function () {
+            const $paymentForm = this.$el;
+            const badges = this.$('.nmi-token-fee-badge');
+            if (!badges.length) return;
+
+            const baseAmount = parseFloat($paymentForm.data('amount')) || 0;
+            const currencyName = $paymentForm.data('currency-name') || 'USD';
+
+            badges.each(function () {
+                const badge = this;
+                const cardType = $(badge).data('card-type');
+                const creditFee = parseFloat($(badge).data('credit-fee')) || 0;
+                const debitFee = parseFloat($(badge).data('debit-fee')) || 0;
+
+                let feePercent = 0;
+                if (cardType === 'credit' || cardType === 'charge') {
+                    feePercent = creditFee;
+                } else if (cardType === 'debit') {
+                    feePercent = debitFee;
+                }
+
+                if (feePercent > 0 && baseAmount > 0) {
+                    const feeAmount = (baseAmount * feePercent) / 100;
+                    const formatter = new Intl.NumberFormat('en-US', {
+                        style: 'currency',
+                        currency: currencyName,
+                    });
+                    $(badge).text(`+ ${formatter.format(feeAmount)} Fees`).removeClass('d-none');
+                } else {
+                    $(badge).addClass('d-none');
+                }
+            });
+        },
+
+        _onCardClick: function (ev) {
+            setTimeout(() => {
+                this._onRadioChange();
+            }, 50);
+        },
+
+        _onRadioChange: async function () {
+            const checkedRadio = this.$('input[name="o_payment_radio"]:checked')[0];
+            if (!checkedRadio) return;
+
+            const providerCode = $(checkedRadio).data('provider');
+            const paymentOptionType = $(checkedRadio).data('payment-option-type');
+            const paymentOptionId = $(checkedRadio).data('payment-option-id');
+
+            if (providerCode === 'nmi' && paymentOptionType === 'token') {
+                this.lastBin = null;
+                this._updateFeeSummary(false);
+                try {
+                    const result = await this._rpc({
+                        route: '/payment/nmi/token_surcharge',
+                        params: { token_id: parseInt(paymentOptionId) }
+                    });
+                    this._updateOrderSummaryDOM(result);
+                } catch (err) {
+                    console.error('[NMI Token Surcharge] Error:', err);
+                }
+            } else if (providerCode === 'nmi' && paymentOptionType === 'provider') {
+                const inlineForm = this.$(`#o_payment_provider_inline_form_${paymentOptionId}`);
+                const isCardForm = inlineForm.find('.o_payment_nmi_card_form').length > 0;
+                const ccNumberInput = inlineForm.find('#nmi_ccnumber')[0] || this.$('#nmi_ccnumber')[0];
+                const cardNumber = ccNumberInput ? ccNumberInput.value.replace(/\s+/g, '') : '';
+
+                if (isCardForm && cardNumber.length >= 6) {
+                    const bin = cardNumber.substring(0, 6);
+                    this.lastBin = bin;
+                    try {
+                        const result = await this._rpc({
+                            route: '/payment/nmi/bin_lookup',
+                            params: {
+                                bin_number: bin,
+                                provider_id: parseInt(paymentOptionId),
+                            }
+                        });
+                        this._updateFeeSummary(result.type);
+                        this._updateOrderSummaryDOM(result);
+                    } catch (err) {
+                        console.error('[NMI BIN Lookup] Error:', err);
+                    }
+                } else {
+                    this.lastBin = null;
+                    this._updateFeeSummary(false);
+                    try {
+                        const result = await this._rpc({
+                            route: '/payment/nmi/clear_surcharge',
+                            params: {}
+                        });
+                        this._updateOrderSummaryDOM(result);
+                    } catch (err) {
+                        console.error('[NMI Clear Surcharge] Error:', err);
+                    }
+                }
+            } else {
+                this.lastBin = null;
+                this._updateFeeSummary(false);
+                try {
+                    const result = await this._rpc({
+                        route: '/payment/nmi/clear_surcharge',
+                        params: {}
+                    });
+                    this._updateOrderSummaryDOM(result);
+                } catch (err) {
+                    console.error('[NMI Clear Surcharge] Error:', err);
+                }
+            }
         },
 
         _onCardInput: async function (ev) {
             const cardNumber = ev.target.value.replace(/\s+/g, '');
             if (cardNumber.length < 6) {
-                this.lastBin = null;
-                this._updateFeeSummary(false);
+                if (this.lastBin !== null) {
+                    this.lastBin = null;
+                    this._updateFeeSummary(false);
+                    try {
+                        const result = await this._rpc({
+                            route: '/payment/nmi/clear_surcharge',
+                            params: {}
+                        });
+                        this._updateOrderSummaryDOM(result);
+                    } catch (err) {
+                        console.error('[NMI Clear Surcharge] Error:', err);
+                    }
+                }
                 return;
             }
 
@@ -160,6 +285,7 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
                     }
                 });
                 this._updateFeeSummary(result.type);
+                this._updateOrderSummaryDOM(result);
             } catch (error) {
                 console.error('[NMI BIN Lookup] Error:', error);
                 this._updateFeeSummary(false);
@@ -195,7 +321,42 @@ odoo.define('cr_payment_nmi_integration.nmi_card_form', function (require) {
                 $(summary).addClass('d-none');
             }
         },
+
+        _updateOrderSummaryDOM: function (data) {
+            if (!data) return;
+            _logger_info('[NMI] Updating Order Summary DOM:', data);
+
+            // 1. Cart total section (contains Subtotal, Surcharge, Tax, Total)
+            const summaryHtml = data.summary_html || data.total_html;
+            if (summaryHtml) {
+                const $cartTotal = $('#cart_total');
+                if ($cartTotal.length) {
+                    $cartTotal.replaceWith(summaryHtml);
+                }
+            }
+
+            // 2. Cart lines section (products list)
+            if (data.cart_lines_html) {
+                const $cartProducts = $('#cart_products');
+                if ($cartProducts.length) {
+                    $cartProducts.replaceWith(data.cart_lines_html);
+                }
+            }
+
+            // 3. Simple total summary badge/text if present
+            if (data.amount_total_html) {
+                const $amountTotalSummary = $('#amount_total_summary');
+                if ($amountTotalSummary.length) {
+                    $amountTotalSummary.replaceWith(data.amount_total_html);
+                }
+            }
+        },
     });
+
+    function _logger_info(...args) {
+        console.log(...args);
+    }
 
     return checkoutForm;
 });
+

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Creyox Technologies
+# Part of Creyox Technologies.
 
 import logging
 import urllib.parse
@@ -17,7 +17,7 @@ _logger = logging.getLogger(__name__)
 class PaymentTransaction(models.Model):
     """Extends the payment.transaction model with NMI-specific logic.
 
-    Compatible with Odoo 17 CE.
+    Compatible with Odoo 16 CE.
     """
 
     _inherit = "payment.transaction"
@@ -113,13 +113,13 @@ class PaymentTransaction(models.Model):
                 )
             elif response_code == "2":
                 # Declined
-                _logger.warning(
+                _logger.info(
                     "ACH transaction %s declined: %s", self.reference, response_text
                 )
                 self._set_canceled()
             else:
                 # Error
-                _logger.warning(
+                _logger.info(
                     "ACH transaction %s failed: %s", self.reference, response_text
                 )
                 self._set_error("NMI ACH: " + response_text)
@@ -140,19 +140,19 @@ class PaymentTransaction(models.Model):
             if self.tokenize:
                 self._tokenize_from_notification_data(notification_data)
         else:
-            _logger.warning(
+            _logger.info(
                 "Invalid auth result (%s) for %s.", auth_result, self.reference
             )
             self._set_error("NMI: " + _("Unknown success code: %s", auth_result))
 
-    # ===== TOKENIZATION HELPERS (Odoo 17 local methods) =====
+    # ===== TOKENIZATION HELPERS (Odoo 16 local methods) =====
 
     def _tokenize_from_notification_data(self, notification_data):
         """Local helper to create a payment token for NMI."""
         self.ensure_one()
         token_values = self._extract_token_values(notification_data)
         if not token_values.get("provider_ref"):
-            _logger.warning("NMI: Tokenization requested but no vault ID found.")
+            _logger.info("NMI: Tokenization requested but no vault ID found.")
             return
 
         token_values.update(
@@ -236,7 +236,7 @@ class PaymentTransaction(models.Model):
                     .search([("default_code", "=", fee_product_code)], limit=1)
                 )
                 existing_fee_line = order.order_line.filtered(
-                    lambda l: "Surcharge" in l.name
+                    lambda l: l.product_id.default_code in ("CREDIT_CARD_FEE", "DEBIT_CARD_FEE") or "Surcharge" in l.name
                 )
                 if not existing_fee_line:
                     self.env["sale.order.line"].sudo().create(
@@ -332,3 +332,4 @@ class PaymentTransaction(models.Model):
         result["amount"] = result.get("amount") or post_payload.get("amount")
         result["currency"] = result.get("currency") or post_payload.get("currency")
         self._handle_notification_data("nmi", result)
+

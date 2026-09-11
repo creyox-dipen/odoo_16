@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Part of Creyox Technologies
+# Part of Creyox Technologies.
 
 from . import controllers
 from . import models
@@ -11,6 +11,7 @@ from odoo.addons.payment import setup_provider, reset_payment_provider
 
 
 def post_init_hook(cr, registry):
+    """Post installation hook to setup NMI payment provider and create fee products."""
     setup_provider(cr, registry, "nmi")
     env = api.Environment(cr, SUPERUSER_ID, {})
 
@@ -45,4 +46,5 @@ def post_init_hook(cr, registry):
 
 
 def uninstall_hook(cr, registry):
+    """Uninstall hook to reset NMI payment provider."""
     reset_payment_provider(cr, registry, "nmi")

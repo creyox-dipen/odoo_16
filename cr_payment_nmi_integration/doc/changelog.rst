@@ -1,3 +1,8 @@
+16.0.0.3(Date: 11th September,2026)
+----------------------------------
+- Integrated dynamic card BIN lookup and real-time surcharge fee line addition on checkout.
+- Added support for token surcharge fee badges and automatic order total synchronization.
+
 16.0.0.2(Date: 25th May,2026)
 -------------------------------
 
