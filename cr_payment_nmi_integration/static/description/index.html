@@ -591,7 +591,7 @@
                     </center>
                     <div style="padding-left:40px;padding-right:40px;">
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            Navigate to <b>Invoicing</b> >> <b>Configuration</b> >> <b>Payment Providers</b> and click on <b>NMI Card</b>.
+                            Navigate to <b>Invoicing</b> >> <b>Configuration</b> >> <b>Payment Providers</b> and click on <b>NMI</b> Payment Provider.
                         </div>
                         <img src="images/payment_provider_menu.png"
                             class="img-fluid w-100 bg-white shadow rounded-3 mb-5"
@@ -602,7 +602,7 @@
 
 
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            Enable the <b>NMI Card</b> payment provider and set <b>NMI Payment Flow</b> to <b>Credit/Debit Card</b>.
+                            Enable the <b>NMI</b> payment provider.
                         </div>
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
                             Copy the <b>Private Key</b> from your NMI account and paste it into the <b>NMI Security Key (API Key)</b> field. This key is used to authenticate payment processing requests.
@@ -619,6 +619,9 @@
                             Then go to the <b>Configuration</b> tab, where you will find the <b>NMI Card Surcharges</b> section.
                         </div>
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
+                            Also enable both the <b>Card</b> and <b>ACH</b> payment methods to allow users to make payments through either option.
+                        </div>
+                        <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
                             Check the <b>Add Card Fees</b> checkbox and set the <b>Credit Card Fees</b> and <b>Debit Card Fees</b> percentages to apply card fees to transactions.
                         </div>
                         <img src="images/nmi_card_fees.png"
@@ -626,7 +629,7 @@
                             style="border: 1px solid rgb(242, 238, 247);" />
 
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            On the checkout page, you will see the card payment form. Enter the card details, and as soon as you enter the card number, a fees badge will appear showing the calculated card fees and the total amount based on the detected card type.
+                            On the checkout page, you will see the card payment form. Enter the card details, and as soon as you enter the card number, a fees badge will appear showing the calculated card fees and the total amount will be updated including the card fees based on the detected card type.
                         </div>
                         <img src="images/card_payment_on_checkout.png"
                             class="img-fluid w-100 bg-white shadow rounded-3 mb-5"
@@ -647,22 +650,16 @@
                             style="border: 1px solid rgb(242, 238, 247);" />
 
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            On the next payment attempt, you can use the saved card details to quickly complete the transaction without re-entering the details.
+                            On the next payment attempt, you can see the calculated fee badge next to your saved card token. As soon as you select it, a fee line will be added automatically and the total order amount will be updated.
                         </div>
                         <img src="images/card_saved_token_payment.png"
                             class="img-fluid w-100 bg-white shadow rounded-3 mb-5"
                             style="border: 1px solid rgb(242, 238, 247);" />
 
                         <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            Now again navigate to <b>Invoicing</b> >> <b>Configuration</b> >> <b>Payment Providers</b> and click on <b>NMI ACH</b> to configure the ACH settings.
+                            Now ensure that the <b>ACH Direct Debit</b> payment method is enabled on the <b>NMI</b> payment provider.
                         </div>
-                        <img src="images/payment_provider_menu.png"
-                            class="img-fluid w-100 bg-white shadow rounded-3 mb-5"
-                            style="border: 1px solid rgb(242, 238, 247);" />
-                        <div style="font-size:21px;color:#333;margin-bottom:15px;font-weight:500;"><i class="fa fa-arrow-right" style="color:#121130; margin-right: 10px;"></i>
-                            Enable the <b>NMI ACH</b> payment provider, set <b>NMI Payment Flow</b> to <b>Bank Account (ACH)</b>, and enter your NMI <b>Private Key</b> in the <b>NMI Security Key (API Key)</b> field.
-                        </div>
-                        <img src="images/nmi_ach_provider_configuration.png"
+                        <img src="images/payment_method.png"
                             class="img-fluid w-100 bg-white shadow rounded-3 mb-5"
                             style="border: 1px solid rgb(242, 238, 247);" />
 
