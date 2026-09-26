@@ -335,9 +335,52 @@ body.o_dark .o_recent_search_footer {
 }
 
 /* List View Column Header Inline Search Row */
+.o_list_renderer .o_list_table thead {
+    position: relative;
+    z-index: 5;
+}
+
 .o_list_search_row {
-    background-color: var(--o-list-search-bg, #f8f9fa);
+    position: relative;
+    z-index: 6;
+    background-color: var(--ListRenderer-thead-bg-color, var(--o-list-search-bg, #f8f9fa));
     border-bottom: 1px solid var(--o-input-border-color, #dee2e6);
+}
+
+.o_list_renderer .o_list_table thead .o_list_search_row th,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_list_search_cell,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_search_input_wrapper,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_date_range_wrapper,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_search_dropdown_wrapper {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_search_input,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_search_btn,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_clear_all_column_filters_btn,
+.o_list_renderer .o_list_table thead .o_list_search_row .o_column_date_input {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+
+/* Prevent sample data or no content mode from dimming the inline search row or disabling events */
+.o_list_view .o_view_sample_data thead .o_list_search_row,
+.o_list_view .o_view_sample_data thead .o_list_search_row th,
+.o_list_view .o_view_sample_data thead .o_list_search_row .o_list_record_selector,
+.o_list_view .o_view_sample_data thead .o_list_search_row input,
+.o_list_view .o_view_sample_data thead .o_list_search_row button,
+.o_list_view .o_view_sample_data thead .o_list_search_row span,
+.o_list_view .o_view_sample_data thead .o_list_search_row i {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    user-select: auto !important;
+}
+
+/* Position no content helper below the table header so its radial gradient never covers the search row */
+.o_list_renderer .o_view_nocontent {
+    top: var(--o-list-thead-height, 68px) !important;
+    z-index: 1 !important;
 }
 
 .o_list_search_cell {

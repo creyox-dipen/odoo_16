@@ -323,6 +323,13 @@ patch(ListRenderer.prototype, "cr_advance_search_more.ListRenderer", {
         searchRow.innerHTML = html;
         this.attachSearchRowEvents(searchRow);
 
+        if (thead && this.rootRef?.el) {
+            const theadHeight = thead.offsetHeight;
+            if (theadHeight > 0) {
+                this.rootRef.el.style.setProperty("--o-list-thead-height", `${theadHeight}px`);
+            }
+        }
+
         // Restore focus to active input after DOM replacement
         if (focusedInfo && focusedInfo.fieldName) {
             const restoreFocus = () => {
