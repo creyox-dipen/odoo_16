@@ -139,11 +139,11 @@
                         </div>
                     </div>
                     <!-- Search Modes Explanation Block -->
-                    <div class="my-5 rounded-5 p-4 p-md-5 position-relative" style="background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%); border: 1px solid #cbd5e1; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06);">
+                    <div class="my-5 rounded-5 p-4 p-md-5 position-relative" style="background-color: #f8fafc; border: 1px solid #cbd5e1; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.06);">
                         
                         <!-- Block Header -->
                         <div class="text-center mb-5">
-                            <span class="badge rounded-pill px-3 py-2 border border-primary-subtle bg-primary-subtle text-primary fw-bold text-uppercase mb-3" style="font-size: 11px; letter-spacing: 1px;">
+                            <span class="badge rounded-pill px-3 py-2 fw-bold text-uppercase mb-3" style="background-color: #3b82f6; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">
                                 <i class="fa fa-sliders me-1"></i> ADVANCED SEARCH LOGIC OPERATORS
                             </span>
                             <h2 style="font-weight: 900; color: #1e293b; font-size: 38px;" class="mb-3">
@@ -159,29 +159,28 @@
                             
                             <!-- Mode 1: Default Search Mode (Royal Blue) -->
                             <div class="col-lg-3 col-md-6">
-                                <div class="h-100 p-4 position-relative shadow-sm d-flex flex-column bg-white overflow-hidden" style="border-radius: 24px; border: 2px solid #bfdbfe; background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%) !important;">
-                                    <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: #2563eb;"></div>
-                                    <div class="d-flex justify-content-between align-items-center mb-4 mt-1">
-                                        <div class="d-flex justify-content-center align-items-center" style="width: 46px; height: 46px; background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); border-radius: 14px; color: #ffffff; font-size: 18px; box-shadow: 0 6px 14px -3px rgba(37, 99, 235, 0.4);">
+                                <div class="h-100 p-4 position-relative shadow d-flex flex-column" style="background-color: #eff6ff; border-radius: 24px; border: 2px solid #bfdbfe;">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 58px; height: 58px; background-color: #2563eb; border-radius: 18px; color: #ffffff; font-size: 24px; box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.4);">
                                             <i class="fa fa-cogs"></i>
                                         </div>
-                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #2563eb; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">DEFAULT</span>
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #2563eb; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">DEFAULT</span>
                                     </div>
                                     <h4 class="fw-bolder mb-2" style="color: #1e40af; font-size: 22px; line-height: 1.25;">Default Mode</h4>
-                                    <p style="font-size: 13.5px; color: #3966fb; margin-bottom: 0; line-height: 1.6; flex-grow: 1;">
+                                    <p style="font-size: 13.5px; color: #1d4ed8; margin-bottom: 0; line-height: 1.6; flex-grow: 1;">
                                         Searches with standard Odoo default behavior. For example, searching <strong>"black chair"</strong> requires matching records to contain each word in exact sequence/order.
                                     </p>
 
                                     <!-- Visual Term Transformation Flow (Standing Order) -->
                                     <div class="p-2 rounded-3 my-3 border bg-white text-center" style="border-color: #bfdbfe !important;">
                                         <div class="mb-1">
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">"black chair"</span>
+                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; border-color: #cbd5e1 !important;">"black chair"</span>
                                         </div>
                                         <div class="my-1">
                                             <i class="fa fa-long-arrow-down text-muted" style="font-size: 11px;"></i>
                                         </div>
                                         <div class="mb-1">
-                                            <span class="badge px-2 py-1 text-white" style="background-color: #2563eb; font-size: 11px;">"black chair"</span>
+                                            <span class="badge px-2 py-1" style="background-color: #2563eb; color: #ffffff; font-size: 11px; font-weight: 700;">"black chair"</span>
                                         </div>
                                         <div class="fw-semibold mt-1" style="font-size: 10.5px; color: #1e40af;">
                                             Matches exact phrase in sequence
@@ -191,7 +190,7 @@
                                     <div class="pt-3" style="border-top: 1px dashed #bfdbfe;">
                                         <div class="d-flex align-items-center justify-content-between" style="color: #1e40af; font-size: 12px; font-weight: 700;">
                                             <span><i class="fa fa-check-circle me-1" style="color: #2563eb;"></i> Sequential Match</span>
-                                            <span class="badge bg-white text-primary border border-primary-subtle" style="font-size: 10px;">Native</span>
+                                            <span class="badge bg-white border" style="color: #2563eb; border-color: #bfdbfe !important; font-size: 10px; font-weight: 700;">Native</span>
                                         </div>
                                     </div>
                                 </div>
@@ -199,13 +198,12 @@
 
                             <!-- Mode 2: OR Search Mode (Emerald Green) -->
                             <div class="col-lg-3 col-md-6">
-                                <div class="h-100 p-4 position-relative shadow-sm d-flex flex-column bg-white overflow-hidden" style="border-radius: 24px; border: 2px solid #a7f3d0; background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%) !important;">
-                                    <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: #10b981;"></div>
-                                    <div class="d-flex justify-content-between align-items-center mb-4 mt-1">
-                                        <div class="d-flex justify-content-center align-items-center" style="width: 46px; height: 46px; background: linear-gradient(135deg, #34d399 0%, #059669 100%); border-radius: 14px; color: #ffffff; font-size: 18px; box-shadow: 0 6px 14px -3px rgba(16, 185, 129, 0.4);">
+                                <div class="h-100 p-4 position-relative shadow d-flex flex-column" style="background-color: #f0fdf4; border-radius: 24px; border: 2px solid #a7f3d0;">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 58px; height: 58px; background-color: #10b981; border-radius: 18px; color: #ffffff; font-size: 24px; box-shadow: 0 8px 16px -4px rgba(16, 185, 129, 0.4);">
                                             <i class="fa fa-code-fork"></i>
                                         </div>
-                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #10b981; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">OR MODE</span>
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #10b981; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">OR MODE</span>
                                     </div>
                                     <h4 class="fw-bolder mb-2" style="color: #065f46; font-size: 22px; line-height: 1.25;">OR Search</h4>
                                     <p style="font-size: 13.5px; color: #047857; margin-bottom: 0; line-height: 1.6; flex-grow: 1;">
@@ -215,15 +213,15 @@
                                     <!-- Visual Term Transformation Flow (Standing Order) -->
                                     <div class="p-2 rounded-3 my-3 border bg-white text-center" style="border-color: #a7f3d0 !important;">
                                         <div class="mb-1">
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">"black chair"</span>
+                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; border-color: #cbd5e1 !important;">"black chair"</span>
                                         </div>
                                         <div class="my-1">
                                             <i class="fa fa-long-arrow-down text-muted" style="font-size: 11px;"></i>
                                         </div>
                                         <div class="d-flex flex-wrap align-items-center justify-content-center gap-1 mb-1">
-                                            <span class="badge bg-light text-success border border-success-subtle px-2 py-1" style="font-size: 11px;">"black"</span>
-                                            <span class="badge text-white px-2 py-1" style="background-color: #10b981; font-size: 9px; font-weight: 800;">OR</span>
-                                            <span class="badge bg-light text-success border border-success-subtle px-2 py-1" style="font-size: 11px;">"chair"</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #065f46; border-color: #a7f3d0 !important; font-size: 11px; font-weight: 600;">"black"</span>
+                                            <span class="badge px-2 py-1" style="background-color: #10b981; color: #ffffff; font-size: 9px; font-weight: 800;">OR</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #065f46; border-color: #a7f3d0 !important; font-size: 11px; font-weight: 600;">"chair"</span>
                                         </div>
                                         <div class="fw-semibold mt-1" style="font-size: 10.5px; color: #065f46;">
                                             Matches either "black" or "chair"
@@ -233,7 +231,7 @@
                                     <div class="pt-3" style="border-top: 1px dashed #a7f3d0;">
                                         <div class="d-flex align-items-center justify-content-between" style="color: #065f46; font-size: 12px; font-weight: 700;">
                                             <span><i class="fa fa-check-circle me-1" style="color: #10b981;"></i> Any Single Word</span>
-                                            <span class="badge bg-white text-success border border-success-subtle" style="font-size: 10px;">Broad Match</span>
+                                            <span class="badge bg-white border" style="color: #059669; border-color: #a7f3d0 !important; font-size: 10px; font-weight: 700;">Broad Match</span>
                                         </div>
                                     </div>
                                 </div>
@@ -241,13 +239,12 @@
 
                             <!-- Mode 3: AND Search Mode (Gold Yellow) -->
                             <div class="col-lg-3 col-md-6">
-                                <div class="h-100 p-4 position-relative shadow-sm d-flex flex-column bg-white overflow-hidden" style="border-radius: 24px; border: 2px solid #fef08a; background: linear-gradient(180deg, #ffffff 0%, #fefce8 100%) !important;">
-                                    <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: #eab308;"></div>
-                                    <div class="d-flex justify-content-between align-items-center mb-4 mt-1">
-                                        <div class="d-flex justify-content-center align-items-center" style="width: 46px; height: 46px; background: linear-gradient(135deg, #facc15 0%, #ca8a04 100%); border-radius: 14px; color: #ffffff; font-size: 18px; box-shadow: 0 6px 14px -3px rgba(234, 179, 8, 0.4);">
+                                <div class="h-100 p-4 position-relative shadow d-flex flex-column" style="background-color: #fefce8; border-radius: 24px; border: 2px solid #fef08a;">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 58px; height: 58px; background-color: #eab308; border-radius: 18px; color: #ffffff; font-size: 24px; box-shadow: 0 8px 16px -4px rgba(234, 179, 8, 0.4);">
                                             <i class="fa fa-bullseye"></i>
                                         </div>
-                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #eab308; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">AND MODE</span>
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #eab308; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">AND MODE</span>
                                     </div>
                                     <h4 class="fw-bolder mb-2" style="color: #854d0e; font-size: 22px; line-height: 1.25;">AND Search</h4>
                                     <p style="font-size: 13.5px; color: #a16207; margin-bottom: 0; line-height: 1.6; flex-grow: 1;">
@@ -257,15 +254,15 @@
                                     <!-- Visual Term Transformation Flow (Standing Order) -->
                                     <div class="p-2 rounded-3 my-3 border bg-white text-center" style="border-color: #fef08a !important;">
                                         <div class="mb-1">
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">"black chair"</span>
+                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; border-color: #cbd5e1 !important;">"black chair"</span>
                                         </div>
                                         <div class="my-1">
                                             <i class="fa fa-long-arrow-down text-muted" style="font-size: 11px;"></i>
                                         </div>
                                         <div class="d-flex flex-wrap align-items-center justify-content-center gap-1 mb-1">
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; color: #854d0e !important; border-color: #fef08a !important;">"black"</span>
-                                            <span class="badge text-white px-2 py-1" style="background-color: #eab308; font-size: 9px; font-weight: 800;">AND</span>
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; color: #854d0e !important; border-color: #fef08a !important;">"chair"</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #854d0e; border-color: #fef08a !important; font-size: 11px; font-weight: 600;">"black"</span>
+                                            <span class="badge px-2 py-1" style="background-color: #eab308; color: #ffffff; font-size: 9px; font-weight: 800;">AND</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #854d0e; border-color: #fef08a !important; font-size: 11px; font-weight: 600;">"chair"</span>
                                         </div>
                                         <div class="fw-semibold mt-1" style="font-size: 10.5px; color: #854d0e;">
                                             Matches both words in any order
@@ -275,7 +272,7 @@
                                     <div class="pt-3" style="border-top: 1px dashed #fef08a;">
                                         <div class="d-flex align-items-center justify-content-between" style="color: #854d0e; font-size: 12px; font-weight: 700;">
                                             <span><i class="fa fa-check-circle me-1" style="color: #eab308;"></i> Each Word Required</span>
-                                            <span class="badge bg-white text-warning border border-warning-subtle" style="font-size: 10px;">Exact Precision</span>
+                                            <span class="badge bg-white border" style="color: #ca8a04; border-color: #fef08a !important; font-size: 10px; font-weight: 700;">Exact Precision</span>
                                         </div>
                                     </div>
                                 </div>
@@ -283,13 +280,12 @@
 
                             <!-- Mode 4: NOT Search Mode (Crimson Red) -->
                             <div class="col-lg-3 col-md-6">
-                                <div class="h-100 p-4 position-relative shadow-sm d-flex flex-column bg-white overflow-hidden" style="border-radius: 24px; border: 2px solid #fecaca; background: linear-gradient(180deg, #ffffff 0%, #fef2f2 100%) !important;">
-                                    <div class="position-absolute top-0 start-0 end-0" style="height: 5px; background: #ef4444;"></div>
-                                    <div class="d-flex justify-content-between align-items-center mb-4 mt-1">
-                                        <div class="d-flex justify-content-center align-items-center" style="width: 46px; height: 46px; background: linear-gradient(135deg, #f87171 0%, #dc2626 100%); border-radius: 14px; color: #ffffff; font-size: 18px; box-shadow: 0 6px 14px -3px rgba(239, 68, 68, 0.4);">
+                                <div class="h-100 p-4 position-relative shadow d-flex flex-column" style="background-color: #fef2f2; border-radius: 24px; border: 2px solid #fecaca;">
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="d-flex justify-content-center align-items-center" style="width: 58px; height: 58px; background-color: #ef4444; border-radius: 18px; color: #ffffff; font-size: 24px; box-shadow: 0 8px 16px -4px rgba(239, 68, 68, 0.4);">
                                             <i class="fa fa-minus-circle"></i>
                                         </div>
-                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800; letter-spacing: 0.5px;">NOT MODE</span>
+                                        <span class="badge rounded-pill px-3 py-2" style="background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">NOT MODE</span>
                                     </div>
                                     <h4 class="fw-bolder mb-2" style="color: #991b1b; font-size: 22px; line-height: 1.25;">NOT Search</h4>
                                     <p style="font-size: 13.5px; color: #b91c1c; margin-bottom: 0; line-height: 1.6; flex-grow: 1;">
@@ -299,15 +295,15 @@
                                     <!-- Visual Term Transformation Flow (Standing Order) -->
                                     <div class="p-2 rounded-3 my-3 border bg-white text-center" style="border-color: #fecaca !important;">
                                         <div class="mb-1">
-                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px;">"black chair"</span>
+                                            <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 11px; border-color: #cbd5e1 !important;">"black chair"</span>
                                         </div>
                                         <div class="my-1">
                                             <i class="fa fa-long-arrow-down text-muted" style="font-size: 11px;"></i>
                                         </div>
                                         <div class="d-flex flex-wrap align-items-center justify-content-center gap-1 mb-1">
-                                            <span class="badge text-white px-2 py-1" style="background-color: #ef4444; font-size: 9px; font-weight: 800;">NOT</span>
-                                            <span class="badge bg-light text-danger border border-danger-subtle px-2 py-1" style="font-size: 11px;">"black"</span>
-                                            <span class="badge bg-light text-danger border border-danger-subtle px-2 py-1" style="font-size: 11px;">"chair"</span>
+                                            <span class="badge px-2 py-1" style="background-color: #ef4444; color: #ffffff; font-size: 9px; font-weight: 800;">NOT</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #991b1b; border-color: #fecaca !important; font-size: 11px; font-weight: 600;">"black"</span>
+                                            <span class="badge bg-white border px-2 py-1" style="color: #991b1b; border-color: #fecaca !important; font-size: 11px; font-weight: 600;">"chair"</span>
                                         </div>
                                         <div class="fw-semibold mt-1" style="font-size: 10.5px; color: #991b1b;">
                                             Excludes records with either word
@@ -317,7 +313,7 @@
                                     <div class="pt-3" style="border-top: 1px dashed #fecaca;">
                                         <div class="d-flex align-items-center justify-content-between" style="color: #991b1b; font-size: 12px; font-weight: 700;">
                                             <span><i class="fa fa-times-circle me-1" style="color: #ef4444;"></i> Exclude Each Word</span>
-                                            <span class="badge bg-white text-danger border border-danger-subtle" style="font-size: 10px;">Exclusion Filter</span>
+                                            <span class="badge bg-white border" style="color: #dc2626; border-color: #fecaca !important; font-size: 10px; font-weight: 700;">Exclusion Filter</span>
                                         </div>
                                     </div>
                                 </div>
@@ -638,7 +634,7 @@
                         
                         <!-- Section Header -->
                         <div class="text-center mb-5 pb-2">
-                            <span class="badge rounded-pill px-3 py-2 text-uppercase mb-2" style="background-color: rgba(59, 130, 246, 0.12); color: #2563eb; font-weight: 700; font-size: 12px; letter-spacing: 1px;">
+                            <span class="badge rounded-pill px-3 py-2 text-uppercase mb-2" style="background-color: #3b82f6; color: #ffffff; font-weight: 700; font-size: 11px; letter-spacing: 0.5px;">
                                 Visual Walkthrough
                             </span>
                             <h2 class="mb-3" style="font-weight: 900; color: #1e293b; font-size: 36px;">
@@ -652,10 +648,10 @@
                         <!-- 1) Search Mode -->
                         <div class="p-4 p-md-5 mb-5 rounded-4 border bg-white shadow-sm" style="border-color: #e2e8f0 !important; border-radius: 28px !important;">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #ecfdf5; color: #059669; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #10b981; color: #ffffff; font-weight: 700; font-size: 13px;">
                                     01 • Search Modes
                                 </span>
-                                <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(59, 130, 246, 0.1); color: #2563eb; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-weight: 700; font-size: 13px;">
                                     Default | OR | AND | NOT
                                 </span>
                             </div>
@@ -680,23 +676,23 @@
                             <div class="position-relative d-flex justify-content-center align-items-center rounded-3 overflow-hidden p-1 shadow-sm my-4" style="background-color: #0f172a !important; border: 1px solid #1e293b !important;">
                                 <img src="images/search_mode_animation.gif" alt="Multi-Keyword Search Modes" class="img-fluid rounded-2 w-100" style="display: block; height: auto;">
                             </div>
-                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border-left: 4px solid #10b981;">
+                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #10b981; border-radius: 14px;">
                                 <div class="d-flex align-items-start">
                                     <i class="fa fa-lightbulb-o text-warning fs-5 me-2 mt-1"></i>
                                     <div class="w-100">
-                                        <strong style="color: #0f172a; font-size: 16px;">Real-World Example with <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">Desk Chair</span>:</strong>
-                                        <ul class="list-unstyled mt-2 mb-0" style="color: #475569; font-size: 15px; line-height: 1.65;">
-                                            <li class="mb-1">
-                                                <span class="badge rounded-pill px-2 py-1 me-1" style="background-color: #ecfdf5; color: #059669; border: 1px solid #a7f3d0; font-size: 12.5px; font-weight: 700;">OR</span>
-                                                Finds all records containing <em>either</em> "Desk" <strong>or</strong> "Chair" (or both).
+                                        <strong style="color: #0f172a; font-size: 16px;">Real-World Example with <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">Desk Chair</span>:</strong>
+                                        <ul class="list-unstyled mt-3 mb-0" style="color: #334155; font-size: 14.5px; line-height: 1.8;">
+                                            <li class="mb-2 d-flex align-items-center">
+                                                <span class="badge rounded-pill me-2" style="background-color: #10b981; color: #ffffff; font-size: 11px; font-weight: 800; min-width: 44px; text-align: center; padding: 4px 8px; letter-spacing: 0.5px;">OR</span>
+                                                <span>Finds all records containing <em>either</em> <strong>"Desk"</strong> or <strong>"Chair"</strong> (or both).</span>
                                             </li>
-                                            <li class="mb-1">
-                                                <span class="badge rounded-pill px-2 py-1 me-1" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-size: 12.5px; font-weight: 700;">AND</span>
-                                                Finds only records that contain <em>both</em> "Desk" <strong>and</strong> "Chair".
+                                            <li class="mb-2 d-flex align-items-center">
+                                                <span class="badge rounded-pill me-2" style="background-color: #2563eb; color: #ffffff; font-size: 11px; font-weight: 800; min-width: 44px; text-align: center; padding: 4px 8px; letter-spacing: 0.5px;">AND</span>
+                                                <span>Finds only records that contain <em>both</em> <strong>"Desk"</strong> and <strong>"Chair"</strong>.</span>
                                             </li>
-                                            <li class="mb-0">
-                                                <span class="badge rounded-pill px-2 py-1 me-1" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-size: 12.5px; font-weight: 700;">NOT</span>
-                                                Finds all records while <strong>excluding</strong> any that match "Desk" or "Chair".
+                                            <li class="mb-0 d-flex align-items-center">
+                                                <span class="badge rounded-pill me-2" style="background-color: #ef4444; color: #ffffff; font-size: 11px; font-weight: 800; min-width: 44px; text-align: center; padding: 4px 8px; letter-spacing: 0.5px;">NOT</span>
+                                                <span>Finds all records while <strong>excluding</strong> any that match <strong>"Desk"</strong> or <strong>"Chair"</strong>.</span>
                                             </li>
                                         </ul>
                                     </div>
@@ -707,10 +703,10 @@
                         <!-- 2) Search History -->
                         <div class="p-4 p-md-5 mb-5 rounded-4 border bg-white shadow-sm" style="border-color: #e2e8f0 !important; border-radius: 28px !important;">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #fef2f2; color: #dc2626; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #ef4444; color: #ffffff; font-weight: 700; font-size: 13px;">
                                     02 • Search History
                                 </span>
-                                <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(239, 68, 68, 0.1); color: #dc2626; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: #fef2f2; color: #dc2626; border: 1px solid #fecaca; font-weight: 700; font-size: 13px;">
                                     Up to 15 per Model
                                 </span>
                             </div>
@@ -734,13 +730,13 @@
                             <div class="position-relative d-flex justify-content-center align-items-center rounded-3 overflow-hidden p-1 shadow-sm my-4" style="background-color: #0f172a !important; border: 1px solid #1e293b !important;">
                                 <img src="images/search_history_animation.gif" alt="Recent Search History Memory" class="img-fluid rounded-2 w-100" style="display: block; height: auto;">
                             </div>
-                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border-left: 4px solid #ef4444;">
+                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #ef4444; border-radius: 14px;">
                                 <div class="d-flex align-items-start">
                                     <i class="fa fa-lightbulb-o text-warning fs-5 me-2 mt-1"></i>
                                     <div>
                                         <strong style="color: #0f172a; font-size: 16px;">Real-World Example:</strong>
-                                        <p class="mb-0 text-muted" style="font-size: 15px; line-height: 1.65;">
-                                            If you frequently search for <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">Deco Addict</span> or <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">Ready Mat</span>, simply click the History icon in the search bar to execute the search in 1 click.
+                                        <p class="mb-0 mt-1" style="color: #334155; font-size: 14.5px; line-height: 1.65;">
+                                            If you frequently search for <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">Deco Addict</span> or <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">Ready Mat</span>, simply click the History icon in the search bar to execute the search in 1 click.
                                         </p>
                                     </div>
                                 </div>
@@ -750,10 +746,10 @@
                         <!-- 3) Saved Custom Filter -->
                         <div class="p-4 p-md-5 mb-5 rounded-4 border bg-white shadow-sm" style="border-color: #e2e8f0 !important; border-radius: 28px !important;">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #fffbeb; color: #d97706; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #f59e0b; color: #ffffff; font-weight: 700; font-size: 13px;">
                                     03 • Custom Filters
                                 </span>
-                                <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(245, 158, 11, 0.1); color: #d97706; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: #fffbeb; color: #d97706; border: 1px solid #fde68a; font-weight: 700; font-size: 13px;">
                                     Inline Rename &amp; Delete
                                 </span>
                             </div>
@@ -777,13 +773,13 @@
                             <div class="position-relative d-flex justify-content-center align-items-center rounded-3 overflow-hidden p-1 shadow-sm my-4" style="background-color: #0f172a !important; border: 1px solid #1e293b !important;">
                                 <img src="images/custom_filter_animation.gif" alt="Saved Custom Filters" class="img-fluid rounded-2 w-100" style="display: block; height: auto;">
                             </div>
-                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border-left: 4px solid #f59e0b;">
+                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #f59e0b; border-radius: 14px;">
                                 <div class="d-flex align-items-start">
                                     <i class="fa fa-lightbulb-o text-warning fs-5 me-2 mt-1"></i>
                                     <div>
                                         <strong style="color: #0f172a; font-size: 16px;">Real-World Example:</strong>
-                                        <p class="mb-0 text-muted" style="font-size: 15px; line-height: 1.65;">
-                                            Create a filter for <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">Total &gt; $10,000 &amp; Status = Sale</span>, rename it to <em>"VIP High-Value Deals"</em>, and re-apply it with one click anytime.
+                                        <p class="mb-0 mt-1" style="color: #334155; font-size: 14.5px; line-height: 1.65;">
+                                            Create a filter for <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">Total &gt; $10,000 &amp; Status = Sale</span>, rename it to <em>"VIP High-Value Deals"</em>, and re-apply it with one click anytime.
                                         </p>
                                     </div>
                                 </div>
@@ -793,7 +789,7 @@
                         <!-- 4) Saved Custom Group By -->
                         <div class="p-4 p-md-5 mb-5 rounded-4 border bg-white shadow-sm" style="border-color: #e2e8f0 !important; border-radius: 28px !important;">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #faf5ff; color: #9333ea; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #a855f7; color: #ffffff; font-weight: 700; font-size: 13px;">
                                     04 • Custom Group By
                                 </span>
                             </div>
@@ -817,13 +813,13 @@
                             <div class="position-relative d-flex justify-content-center align-items-center rounded-3 overflow-hidden p-1 shadow-sm my-4" style="background-color: #0f172a !important; border: 1px solid #1e293b !important;">
                                 <img src="images/group_by_animation.gif" alt="Saved Custom Group By" class="img-fluid rounded-2 shadow-sm w-100" style="display: block; height: auto;">
                             </div>
-                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border-left: 4px solid #a855f7;">
+                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #a855f7; border-radius: 14px;">
                                 <div class="d-flex align-items-start">
                                     <i class="fa fa-lightbulb-o text-warning fs-5 me-2 mt-1"></i>
                                     <div>
                                         <strong style="color: #0f172a; font-size: 16px;">Real-World Example:</strong>
-                                        <p class="mb-0 text-muted" style="font-size: 15px; line-height: 1.65;">
-                                            Save a custom group by like <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">Product Category</span> in Products named <em>"Category Wise"</em> to group records in 1 click anytime.
+                                        <p class="mb-0 mt-1" style="color: #334155; font-size: 14.5px; line-height: 1.65;">
+                                            Save a custom group by like <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">Product Category</span> in Products named <em>"Category Wise"</em> to group records in 1 click anytime.
                                         </p>
                                     </div>
                                 </div>
@@ -833,10 +829,10 @@
                         <!-- 5) Inline Search in List View -->
                         <div class="p-4 p-md-5 mb-5 rounded-4 border bg-white shadow-sm" style="border-color: #e2e8f0 !important; border-radius: 28px !important;">
                             <div class="d-flex align-items-center mb-3">
-                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #eff6ff; color: #2563eb; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2 me-2" style="background-color: #2563eb; color: #ffffff; font-weight: 700; font-size: 13px;">
                                     05 • List View Search
                                 </span>
-                                <span class="badge rounded-pill px-3 py-2" style="background-color: rgba(37, 99, 235, 0.1); color: #2563eb; font-weight: 700; font-size: 13px;">
+                                <span class="badge rounded-pill px-3 py-2" style="background-color: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; font-weight: 700; font-size: 13px;">
                                     Real-Time &amp; Highlights
                                 </span>
                             </div>
@@ -860,13 +856,13 @@
                             <div class="position-relative d-flex justify-content-center align-items-center rounded-3 overflow-hidden p-1 shadow-sm my-4" style="background-color: #0f172a !important; border: 1px solid #1e293b !important;">
                                 <img src="images/inline_search_animation.gif" alt="Inline Column Header Search in List View" class="img-fluid rounded-2 shadow-sm w-100" style="display: block; height: auto;">
                             </div>
-                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border-left: 4px solid #2563eb;">
+                            <div class="p-3 p-md-4 rounded-3" style="background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-left: 5px solid #2563eb; border-radius: 14px;">
                                 <div class="d-flex align-items-start">
                                     <i class="fa fa-lightbulb-o text-warning fs-5 me-2 mt-1"></i>
                                     <div>
                                         <strong style="color: #0f172a; font-size: 16px;">Real-World Example:</strong>
-                                        <p class="mb-0 text-muted" style="font-size: 15px; line-height: 1.65;">
-                                            On the Sales list view, set <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">From Date</span> and <span class="badge bg-white text-dark border px-2 py-1" style="font-size: 13px;">To Date</span> under Order Date to filter sales orders between specific dates instantly.
+                                        <p class="mb-0 mt-1" style="color: #334155; font-size: 14.5px; line-height: 1.65;">
+                                            On the Sales list view, set <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">From Date</span> and <span class="badge px-2 py-1 mx-1" style="background-color: #ffffff; color: #0f172a; border: 1.5px solid #cbd5e1; border-radius: 6px; font-size: 13px; font-weight: 700;">To Date</span> under Order Date to filter sales orders between specific dates instantly.
                                         </p>
                                     </div>
                                 </div>
